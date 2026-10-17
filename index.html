@@ -122,28 +122,36 @@ p{margin:0 0 10px}
 .ph svg{width:42%;height:42%;max-width:64px;max-height:64px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .t .ph svg{width:60%;height:60%}
 
-/* ---------- Promos and singles ---------- */
-.promos{display:grid;gap:10px;margin:0 0 14px}
-.promo{display:flex;gap:12px;align-items:flex-start;padding:12px 16px;border-radius:16px;background:var(--blue-soft);border:1.5px solid #BCD0EA}
-.promo .i{margin-top:2px;color:var(--blue-deep)}
-.promo strong{display:block}
-.promo span{display:block;font-size:15px}
-.promo-card .pic{background:var(--blue-soft)}
-.promo-card .ph{background:var(--blue-soft);color:var(--blue-deep)}
-.promo-card h3{margin:0}
-.promo-card p{margin:0;font-size:15px}
-.singles{display:grid;gap:12px;grid-template-columns:1fr}
-@media(min-width:640px){.singles{grid-template-columns:repeat(2,1fr)}}
-@media(min-width:940px){.singles{grid-template-columns:repeat(3,1fr)}}
-.srow{display:flex;align-items:center;gap:12px;background:var(--paper);border:1.5px solid var(--line);border-radius:18px;padding:10px 12px}
-.srow .sp{width:64px;height:64px;border-radius:14px;overflow:hidden;flex:none;background:var(--cream)}
+/* ---------- Single cookies (small vertical cards, 2 per row) ---------- */
+.singles{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(min-width:640px){.singles{gap:16px}}
+@media(min-width:940px){.singles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.srow{display:flex;flex-direction:column;gap:8px;background:var(--paper);border:1.5px solid var(--line);border-radius:var(--r-card);overflow:hidden;padding:0 0 12px}
+.srow .sp{width:100%;aspect-ratio:4/3;overflow:hidden;background:var(--cream)}
 .srow .sp img{width:100%;height:100%;object-fit:cover}
-.srow .sm{flex:1;min-width:0}
+.srow .sm{flex:1;min-width:0;padding:0 12px}
 .srow .sn{font:700 17px/1.25 var(--font-display);overflow-wrap:anywhere}
-.srow .spr{font-weight:700;color:var(--cocoa-soft)}
-.srow .qty{flex:none}
-.srow .sd{font-size:14px;color:var(--cocoa-soft);margin-top:2px;overflow-wrap:anywhere}
-.grid+.singles,.singles+.grid{margin-top:16px}
+.srow .spr{font:800 18px/1.2 var(--font-display);color:var(--cocoa);margin-top:2px}
+.srow .sd{font-size:14px;color:var(--cocoa-soft);margin-top:4px;overflow-wrap:anywhere}
+.srow>.btn{margin:0 12px}
+.srow .qty{justify-content:space-between;margin:0 12px}
+.sec-note{margin:-4px 0 12px}
+
+/* ---------- Running promo banner (very top, above the logo) ---------- */
+.promo-bar{background:var(--blue-deep);color:#fff;overflow:hidden;white-space:nowrap;position:relative}
+.promo-track{display:inline-flex;min-width:100%;animation:promo-run var(--promo-secs,24s) linear infinite;will-change:transform}
+.promo-bar:hover .promo-track,.promo-bar:active .promo-track,.promo-bar:focus-within .promo-track{animation-play-state:paused}
+.promo-set{display:inline-flex;align-items:center;flex:none}
+.promo-item{display:inline-flex;align-items:center;gap:8px;padding:10px 28px;font-weight:700;font-size:15px;line-height:1.2}
+.promo-item svg.i{width:18px;height:18px}
+.promo-item em{font-style:normal;font-weight:600;opacity:.92}
+@keyframes promo-run{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){
+  .promo-bar{white-space:normal}
+  .promo-track{animation:none;display:block;min-width:0}
+  .promo-set[aria-hidden="true"]{display:none}
+  .promo-set{display:flex;flex-wrap:wrap;justify-content:center}
+}
 .tile .nd{padding:0 10px 8px;font-size:13px;line-height:1.3;color:var(--cocoa-soft);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .offers{display:grid;gap:8px;margin-top:12px}
 .offer{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:14px;background:var(--blue-soft);font-size:15px}
@@ -317,6 +325,8 @@ input[aria-invalid=true]{border-color:var(--berry)}
     <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol>
   </defs>
 </svg>
+
+<div class="promo-bar" id="promoBar" role="region" aria-label="Promotions" hidden><div class="promo-track" id="promoTrack"></div></div>
 
 <div class="wrap">
   <header class="top">
@@ -749,6 +759,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
   async function loadCatalog() {
     var c = await rpc('get_catalog');
     catalog = { packages: (c && c.packages) || [], flavors: (c && c.flavors) || [], promotions: (c && c.promotions) || [] };
+    renderPromoBar();
     return catalog;
   }
   async function refreshStore(rerender) {
@@ -865,12 +876,26 @@ input[aria-invalid=true]{border-color:var(--berry)}
     return '<article class="card"><div class="pic">' + photo(p.image_url) + '</div><div class="body"><h3>' + esc(p.name) + '</h3>' + body +
       '<div class="foot"><span class="price">' + rp(p.price) + '</span>' + action + '</div></div></article>';
   }
-  // A promo is shown as a card of the same size as a bundle card; it has no button because it is applied automatically.
-  function promoCard(pr) {
-    return '<article class="card promo-card"><div class="pic"><div class="ph">' + icon('gift') + '</div></div><div class="body"><h3>' + esc(pr.name) + '</h3>' +
-      '<p class="muted">' + esc(promoCond(pr) + ', ' + promoGet(pr) + '. ' + (pr.repeats ? 'Repeats for every ' + pr.buy_qty + '.' : 'Once per order.')) + '</p>' +
-      '<div class="foot"><span class="price">Promo</span><span class="muted">Applied automatically</span></div></div></article>';
+  // Promos run as a banner at the very top of the page (above the logo); they are applied automatically.
+  function renderPromoBar() {
+    var bar = $('#promoBar'), track = $('#promoTrack');
+    if (!bar || !track) return;
+    var list = (catalog && catalog.promotions) || [];
+    if (!list.length) { bar.hidden = true; track.innerHTML = ''; return; }
+    var set = list.map(function (pr) {
+      return '<span class="promo-item">' + icon('gift') + '<span>' + esc(pr.name) + '</span><em>' + esc(promoCond(pr) + ', ' + promoGet(pr)) + '</em></span>';
+    }).join('');
+    var chars = list.reduce(function (n, pr) { return n + (pr.name + promoCond(pr) + promoGet(pr)).length + 12; }, 0);
+    bar.hidden = false;
+    track.innerHTML = '<div class="promo-set">' + set + '</div>';
+    var w = track.firstChild.offsetWidth || 1, n = Math.max(1, Math.ceil(bar.clientWidth / w));
+    var one = new Array(n + 1).join(set);
+    track.style.setProperty('--promo-secs', Math.max(14, Math.round(chars * 0.22 * n)) + 's');
+    track.innerHTML = '<div class="promo-set">' + one + '</div><div class="promo-set" aria-hidden="true">' + one + '</div>';
   }
+  var promoResizeTimer = null;
+  window.addEventListener('resize', function () { clearTimeout(promoResizeTimer); promoResizeTimer = setTimeout(renderPromoBar, 250); });
+
   function singleQty(fid) {
     var l = cart.filter(function (x) { return x.type === 'SINGLE' && x.flavor_id === fid; })[0];
     return l ? l.qty : 0;
@@ -924,28 +949,20 @@ input[aria-invalid=true]{border-color:var(--berry)}
   function viewCatalog() {
     var open = isOpen();
     var singles = catalog.flavors.filter(function (f) { return typeof f.single_price === 'number'; });
-    var html = '<h1>' + (open ? 'Choose your cookies' : 'Our menu') + '</h1>' + statusNotice() + allergyNotice() + '<h2>Menu</h2>';
-    if (singles.length) {
-      html += '<p class="muted" style="margin-top:-4px">Single cookies can be ordered one at a time. Bundle prices are applied automatically when they save you money.</p>';
+    var bundles = catalog.packages.map(function (p, i) { return { p: p, pos: typeof p.sort_order === 'number' ? p.sort_order : i + 1, id: p.id }; });
+    bundles.sort(function (a, b) { return (a.pos - b.pos) || (a.id - b.id); });
+    var singleItems = singles.map(function (f, i) { return { f: f, pos: typeof f.single_sort === 'number' ? f.single_sort : 1000000 + i, id: f.id }; });
+    singleItems.sort(function (a, b) { return (a.pos - b.pos) || (a.id - b.id); });
+    var html = '<h1>' + (open ? 'Choose your cookies' : 'Our menu') + '</h1>' + statusNotice() + allergyNotice();
+    // bundles always first, single cookies below (the order inside each part is set in the admin Layout screen)
+    if (bundles.length) {
+      html += '<h2>Bundles</h2><div class="grid">' + bundles.map(function (it) { return packageCard(it.p, open); }).join('') + '</div>';
     }
-    // bundles and singles in the order the owner set (Layout screen); neighbours of the same kind form one block
-    var items = [];
-    catalog.packages.forEach(function (p, i) { items.push({ kind: 'P', p: p, pos: typeof p.sort_order === 'number' ? p.sort_order : i + 1, rank: 0, id: p.id }); });
-    singles.forEach(function (f, i) { items.push({ kind: 'S', f: f, pos: typeof f.single_sort === 'number' ? f.single_sort : 1000000 + i, rank: 1, id: f.id }); });
-    ((catalog && catalog.promotions) || []).forEach(function (r, i) { items.push({ kind: 'R', r: r, pos: typeof r.sort_order === 'number' ? r.sort_order : 2000000 + i, rank: 2, id: r.id }); });
-    items.sort(function (a, b) { return (a.pos - b.pos) || (a.rank - b.rank) || (a.id - b.id); });
-    var blocks = [];
-    items.forEach(function (it) {
-      var bk = it.kind === 'S' ? 'S' : 'C';   // bundles and promos share the card grid
-      var b = blocks[blocks.length - 1];
-      if (b && b.kind === bk) b.items.push(it); else blocks.push({ kind: bk, items: [it] });
-    });
-    blocks.forEach(function (b) {
-      html += b.kind === 'C'
-        ? '<div class="grid">' + b.items.map(function (it) { return it.kind === 'R' ? promoCard(it.r) : packageCard(it.p, open); }).join('') + '</div>'
-        : '<div class="singles">' + b.items.map(function (it) { return singleRowHtml(it.f, open); }).join('') + '</div>';
-    });
-    if (!items.length) {
+    if (singleItems.length) {
+      html += '<h2>Singles</h2><p class="muted sec-note">Single cookies can be ordered one at a time. Bundle prices are applied automatically when they save you money.</p>' +
+        '<div class="singles">' + singleItems.map(function (it) { return singleRowHtml(it.f, open); }).join('') + '</div>';
+    }
+    if (!bundles.length && !singleItems.length) {
       html += '<div class="empty"><p class="muted">No packages are available right now. Please check back soon.</p></div>';
     }
     setApp(html);
