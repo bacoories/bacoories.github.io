@@ -305,6 +305,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
      ====================================================================== */
   var CART_KEY = 'ck_cart_v1';
   var RECEIPT_KEY = 'ck_receipt_v1';
+  var DRAFT_KEY = 'ck_draft_v1';   // name, WhatsApp and payment method typed at checkout (kept on this phone only)
   var MAX_LINES = 20, MAX_QTY = 20;
   var MAX_PROOF_BYTES = 500000;           // server limit is 512000 bytes
   var SVG_NS = 'http://www.w3.org/2000/svg';
@@ -839,6 +840,21 @@ input[aria-invalid=true]{border-color:var(--berry)}
       '</form></div>';
     setApp(html);
     renderCheckoutLines();
+    restoreDraft();
+  }
+  function saveDraft() {
+    var n = $('#f-name'), w = $('#f-wa'), pm = $('input[name="pm"]:checked');
+    if (!n || !w) return;
+    lsSet(DRAFT_KEY, JSON.stringify({ name: n.value, wa: w.value, pm: pm ? pm.value : '' }));
+  }
+  function restoreDraft() {
+    var d = null;
+    try { d = JSON.parse(lsGet(DRAFT_KEY) || 'null'); } catch (e) { d = null; }
+    if (!d) return;
+    var n = $('#f-name'), w = $('#f-wa');
+    if (n && d.name) n.value = String(d.name).slice(0, 60);
+    if (w && d.wa) w.value = String(d.wa).slice(0, 20);
+    if (d.pm) { var r = $('input[name="pm"][value="' + String(d.pm).replace(/[^A-Z_]/g, '') + '"]'); if (r) r.checked = true; }
   }
   function renderCheckoutLines() {
     var l = $('#co-lines'), t = $('#co-totals');
@@ -1004,6 +1020,8 @@ input[aria-invalid=true]{border-color:var(--berry)}
     try { await Promise.all([document.fonts.load('800 40px "Bricolage Grotesque"'), document.fonts.load('700 24px "Bricolage Grotesque"')]); } catch (e) { /* use fallback font */ }
     var s = store || {};
     var qrImg = d.payment_method === 'QRIS' && d.payment_status !== 'PAID' ? await loadImage(s.qris_image_url) : null;
+    var logoImg = null;      // shop logo on top of the receipt (same website, so the picture can be drawn safely)
+    try { if (LOGO_URL) logoImg = await loadImage(new URL(LOGO_URL, location.href.split('#')[0]).href); } catch (e) { logoImg = null; }
     var W = 720, M = 24, PAD = 40, IN = W - 2 * M - 2 * PAD, X0 = M + PAD;
     function run(ctx, draw, H) {
       var y = M + PAD;
@@ -1042,7 +1060,13 @@ input[aria-invalid=true]{border-color:var(--berry)}
         y += 4;
       }
 
-      txt(s.store_name || 'Cookies', { size: 38, weight: 800, display: true });
+      if (logoImg && logoImg.naturalWidth) {
+        var lgH = 96, lgW = Math.min(IN, Math.round(logoImg.naturalWidth * lgH / logoImg.naturalHeight));
+        if (draw) ctx.drawImage(logoImg, X0 - 8, y, lgW, lgH);
+        y += lgH + 8;
+      } else {
+        txt(s.store_name || 'Cookies', { size: 38, weight: 800, display: true });
+      }
       txt(d.heading || 'Order receipt', { size: 22, color: '#6E5248' });
       gap(18);
       // tracking code box
@@ -1097,7 +1121,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
       }
       dash(); gap(14);
       if (s.receipt_text) { txt(s.receipt_text, { size: 20, color: '#6E5248' }); gap(10); }
-      txt('Track your order: ' + location.href.split('#')[0] + '#/track/' + d.tracking_code, { size: 19, color: '#6E5248' });
+      txt('Track your order: ' + location.href.split('#')[0].split('?')[0] + '#/track/' + d.tracking_code, { size: 19, color: '#6E5248' });
       gap(PAD);
       return y + M;
     }
@@ -1139,8 +1163,8 @@ input[aria-invalid=true]{border-color:var(--berry)}
       '<form id="track-form" novalidate><div id="tf-code"' + (track.mode === 'code' ? '' : ' hidden') + '><div class="field"><label for="t-code">Tracking code</label>' +
       '<input type="text" id="t-code" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="12" placeholder="8 letters and numbers"></div></div>' +
       '<div id="tf-number"' + (track.mode === 'number' ? '' : ' hidden') + '><div class="field"><label for="t-no">Order number</label>' +
-      '<input type="text" id="t-no" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="16" placeholder="CK1026-0001"></div>' +
-      '<div class="field"><label for="t-last4">Last 4 digits of your WhatsApp number</label><input type="text" id="t-last4" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="1234"></div></div>' +
+      '<input type="text" id="t-no" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="16"></div>' +
+      '<div class="field"><label for="t-last4">Last 4 digits of your WhatsApp number</label><input type="text" id="t-last4" inputmode="numeric" autocomplete="off" maxlength="4"></div></div>' +
       '<p class="err" id="track-err" role="alert" hidden></p>' +
       '<button class="btn big block" type="submit" id="track-btn">Check status</button></form>' +
       '<div id="track-result" style="margin-top:20px"></div></div>';
@@ -1394,7 +1418,15 @@ input[aria-invalid=true]{border-color:var(--berry)}
         else if (track.data) downloadReceipt(normalizeTrack(track.data), el);
         break;
       }
-      case 'track-mode': track.mode = el.getAttribute('data-mode'); viewTrack('', true); break;
+      case 'track-mode': {
+        track.mode = el.getAttribute('data-mode');
+        $$('[data-action="track-mode"]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-mode') === track.mode)); });
+        var tc = $('#tf-code'), tn = $('#tf-number'), te = $('#track-err');
+        if (tc) tc.hidden = track.mode !== 'code';
+        if (tn) tn.hidden = track.mode !== 'number';
+        if (te) te.hidden = true;
+        break;
+      }
       case 'track-refresh': runTrack(); break;
       case 'proof-send': sendProof(); break;
       case 'star': {
@@ -1411,8 +1443,12 @@ input[aria-invalid=true]{border-color:var(--berry)}
     if (ev.target.id === 'co-form') { ev.preventDefault(); submitOrder(); }
     else if (ev.target.id === 'track-form') { ev.preventDefault(); runTrack(); }
   });
-  document.addEventListener('change', function (ev) { if (ev.target.id === 'proof-file') onProofChosen(ev.target); });
+  document.addEventListener('change', function (ev) {
+    if (ev.target.id === 'proof-file') onProofChosen(ev.target);
+    else if (ev.target.name === 'pm') saveDraft();
+  });
   document.addEventListener('input', function (ev) {
+    if (ev.target.id === 'f-name' || ev.target.id === 'f-wa') saveDraft();
     if (ev.target.id === 'rv-text') { track.draft.text = ev.target.value; var c = $('#rv-count'); if (c) c.textContent = ev.target.value.length + ' / 1000'; }
   });
   document.addEventListener('keydown', function (ev) {
