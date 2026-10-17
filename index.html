@@ -122,6 +122,39 @@ p{margin:0 0 10px}
 .ph svg{width:42%;height:42%;max-width:64px;max-height:64px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .t .ph svg{width:60%;height:60%}
 
+/* ---------- Promos and singles ---------- */
+.promos{display:grid;gap:10px;margin:0 0 14px}
+.promo{display:flex;gap:12px;align-items:flex-start;padding:12px 16px;border-radius:16px;background:var(--blue-soft);border:1.5px solid #BCD0EA}
+.promo .i{margin-top:2px;color:var(--blue-deep)}
+.promo strong{display:block}
+.promo span{display:block;font-size:15px}
+.promo-card .pic{background:var(--blue-soft)}
+.promo-card .ph{background:var(--blue-soft);color:var(--blue-deep)}
+.promo-card h3{margin:0}
+.promo-card p{margin:0;font-size:15px}
+.singles{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:640px){.singles{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:940px){.singles{grid-template-columns:repeat(3,1fr)}}
+.srow{display:flex;align-items:center;gap:12px;background:var(--paper);border:1.5px solid var(--line);border-radius:18px;padding:10px 12px}
+.srow .sp{width:64px;height:64px;border-radius:14px;overflow:hidden;flex:none;background:var(--cream)}
+.srow .sp img{width:100%;height:100%;object-fit:cover}
+.srow .sm{flex:1;min-width:0}
+.srow .sn{font:700 17px/1.25 var(--font-display);overflow-wrap:anywhere}
+.srow .spr{font-weight:700;color:var(--cocoa-soft)}
+.srow .qty{flex:none}
+.srow .sd{font-size:14px;color:var(--cocoa-soft);margin-top:2px;overflow-wrap:anywhere}
+.grid+.singles,.singles+.grid{margin-top:16px}
+.tile .nd{padding:0 10px 8px;font-size:13px;line-height:1.3;color:var(--cocoa-soft);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.offers{display:grid;gap:8px;margin-top:12px}
+.offer{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:14px;background:var(--blue-soft);font-size:15px}
+.offer .i{margin-top:2px;color:var(--blue-deep)}
+.offer strong{display:block}
+.offer span{display:block;color:var(--cocoa-soft)}
+.offer.tip{background:var(--cream)}
+.line.free .lt{color:var(--ok)}
+.freetag{font:800 18px var(--font-display);color:var(--ok)}
+.totals .r.save{color:var(--ok);font-weight:600}
+
 /* ---------- Skeleton ---------- */
 .sk{background:linear-gradient(90deg,#EFE6D8 25%,#F7F1E7 50%,#EFE6D8 75%);background-size:200% 100%;animation:shine 1.3s linear infinite;border-radius:var(--r-card)}
 .sk.card-sk{height:330px}
@@ -280,6 +313,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
     <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.9l-5.2 2.8 1-5.9L3.5 9.7l5.9-.8z"/></symbol>
     <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.5"/></symbol>
     <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+    <symbol id="i-gift" viewBox="0 0 24 24"><path d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13"/><path d="M12 7c-1-3-5-3.5-5-1.5S10 7 12 7zM12 7c1-3 5-3.5 5-1.5S14 7 12 7z"/></symbol>
     <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol>
   </defs>
 </svg>
@@ -311,7 +345,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
   var CART_KEY = 'ck_cart_v1';
   var RECEIPT_KEY = 'ck_receipt_v1';
   var DRAFT_KEY = 'ck_draft_v1';   // name, WhatsApp and payment method typed at checkout (kept on this phone only)
-  var MAX_LINES = 20, MAX_QTY = 20;
+  var MAX_LINES = 40, MAX_QTY = 20, MAX_SINGLE = 99;   // lines per order; bundles per line; singles per flavor
   var MAX_PROOF_BYTES = 500000;           // server limit is 512000 bytes
   var SVG_NS = 'http://www.w3.org/2000/svg';
 
@@ -323,7 +357,8 @@ input[aria-invalid=true]{border-color:var(--berry)}
     INVALID_PAYMENT_METHOD: 'Please choose a payment method.',
     INVALID_ITEMS: 'Your cart is invalid. Please check the quantities.',
     TOO_MANY_PENDING: 'This number already has several orders waiting for confirmation. Please contact the admin first.',
-    PACKAGE_UNAVAILABLE: 'A package is no longer available. The menu has been updated.',
+    PACKAGE_UNAVAILABLE: 'A menu item or package is no longer available. The menu has been updated.',
+    TOO_MANY_LINES: 'Your order has too many different items. Please remove some items.',
     INVALID_PACKAGE: 'This package has a problem. Please contact the admin.',
     INVALID_FLAVOR: 'A flavor is not available. Please choose your flavors again.',
     WRONG_PICK_COUNT: 'The number of flavors chosen is not correct yet.',
@@ -477,22 +512,26 @@ input[aria-invalid=true]{border-color:var(--berry)}
     try {
       var a = JSON.parse(lsGet(CART_KEY) || '[]');
       cart = Array.isArray(a) ? a.filter(function (l) {
-        return l && Number.isInteger(l.package_id) && typeof l.name === 'string' && Number.isInteger(l.qty) && l.qty >= 1 && Array.isArray(l.flavors);
+        if (!l || typeof l.name !== 'string' || !Number.isInteger(l.qty) || l.qty < 1 || typeof l.price !== 'number') return false;
+        if (l.type === 'SINGLE') return Number.isInteger(l.flavor_id) && l.qty <= MAX_SINGLE;
+        return Number.isInteger(l.package_id) && Array.isArray(l.flavors);
       }).slice(0, MAX_LINES) : [];
     } catch (e) { cart = []; }
   }
   function saveCart() { lsSet(CART_KEY, JSON.stringify(cart)); }
   function lineKey(item) {
+    if (item.type === 'SINGLE') return 'S|' + item.flavor_id;
     return item.package_id + '|' + item.flavors.map(function (f) { return f.id + ':' + f.qty; }).sort().join(',');
   }
   function cartCount() { return cart.reduce(function (n, l) { return n + l.qty; }, 0); }
-  function cartTotal() { return cart.reduce(function (n, l) { return n + l.price * l.qty; }, 0); }
+  function cartTotal() { return getPlan().total; }
+  function maxQtyOf(l) { return l.type === 'SINGLE' ? MAX_SINGLE : MAX_QTY; }
 
   function addToCart(item) {
     var key = lineKey(item);
     var ex = cart.filter(function (l) { return lineKey(l) === key; })[0];
     if (ex) {
-      if (ex.qty >= MAX_QTY) { toast('You can order at most ' + MAX_QTY + ' of the same item.', true); return false; }
+      if (ex.qty >= maxQtyOf(ex)) { toast('You can order at most ' + maxQtyOf(ex) + ' of the same item.', true); return false; }
       ex.qty += 1;
     } else {
       if (cart.length >= MAX_LINES) { toast('Your order can have at most ' + MAX_LINES + ' different items.', true); return false; }
@@ -509,6 +548,13 @@ input[aria-invalid=true]{border-color:var(--berry)}
     if (!catalog) return { removed: 0, priceChanged: false };
     var removed = 0, priceChanged = false, keep = [];
     cart.forEach(function (l) {
+      if (l.type === 'SINGLE') {
+        var sf = singleFlavor(l.flavor_id);
+        if (!sf || typeof sf.single_price !== 'number') { removed++; return; }
+        if (l.price !== sf.single_price) priceChanged = true;
+        l.price = sf.single_price; l.name = sf.name; l.image_url = sf.image_url || null;
+        keep.push(l); return;
+      }
       var p = catalog.packages.filter(function (x) { return x.id === l.package_id; })[0];
       if (!p) { removed++; return; }
       if (p.type === 'PICK') {
@@ -529,6 +575,148 @@ input[aria-invalid=true]{border-color:var(--berry)}
     cart = keep; saveCart();
     return { removed: removed, priceChanged: priceChanged };
   }
+
+  /* ======================================================================
+     Offers (blueprint K40/K41). Every cookie is used once, in this order:
+     1) "buy N get M free" promos, 2) bundle price on the leftover singles, 3) plain singles.
+     The server prices everything again; this only shows the buyer what to expect.
+     ====================================================================== */
+  function singleFlavor(fid) { return catalog && catalog.flavors.filter(function (f) { return f.id === fid; })[0]; }
+  function catPackage(id) { return catalog && catalog.packages.filter(function (p) { return p.id === id; })[0]; }
+
+  // Can one copy of bundle p be made from the loose singles in L (flavor id -> count)?
+  // PICK takes the most expensive allowed singles first. COMBO needs its exact contents.
+  function tryBundle(p, L, price) {
+    var use = {}, cookies = 0, value = 0, i;
+    if (p.type === 'COMBO') {
+      for (i = 0; i < p.flavors.length; i++) {
+        var cf = p.flavors[i];
+        if (!(L[cf.id] >= cf.qty) || typeof price[cf.id] !== 'number') return null;
+        use[cf.id] = cf.qty; cookies += cf.qty; value += cf.qty * price[cf.id];
+      }
+      return cookies ? { use: use, cookies: cookies, value: value } : null;
+    }
+    var allowed = p.flavors.filter(function (f) { return L[f.id] > 0 && typeof price[f.id] === 'number'; })
+      .sort(function (a, b) { return (price[b.id] - price[a.id]) || (a.id - b.id); });
+    var need = p.pick_count;
+    for (i = 0; i < allowed.length && need > 0; i++) {
+      var f = allowed[i], take = p.allow_same_flavor ? Math.min(L[f.id], need) : 1;
+      use[f.id] = take; need -= take; cookies += take; value += take * price[f.id];
+    }
+    return need === 0 && cookies ? { use: use, cookies: cookies, value: value } : null;
+  }
+
+  function buildPlan(auto) {
+    var cat = catalog || { packages: [], flavors: [], promotions: [] };
+    var promos = cat.promotions || [];
+    var counts = {}, price = {}, info = {}, manual = [], rawTotal = 0, pool = 0;
+    cart.forEach(function (l) {
+      rawTotal += l.price * l.qty;
+      if (l.type === 'SINGLE') {
+        counts[l.flavor_id] = (counts[l.flavor_id] || 0) + l.qty; price[l.flavor_id] = l.price; info[l.flavor_id] = l; pool += l.qty;
+      } else manual.push(l);
+    });
+
+    // 1) promos on singles use up singles (the cheapest first, which leaves the dearer ones for a bundle price)
+    var left = pool, got = {}, hint = {};
+    promos.forEach(function (pr) {
+      if (pr.condition_type !== 'SINGLES') return;
+      if (left >= pr.buy_qty) {
+        var times = pr.repeats ? Math.floor(left / pr.buy_qty) : 1;
+        left -= times * pr.buy_qty;
+        got[pr.id] = times * pr.free_qty;
+      } else if (pool > 0) hint[pr.id] = pr.buy_qty - left;
+    });
+    var L = {}, ids = Object.keys(counts).map(Number);
+    ids.forEach(function (id) { L[id] = counts[id]; });
+    var rem = pool - left;
+    ids.slice().sort(function (a, b) { return (price[a] - price[b]) || (b - a); }).forEach(function (id) {
+      var t = Math.min(L[id], rem); L[id] -= t; rem -= t;
+    });
+
+    // 2) bundle price on what is left (largest saving per cookie first; on a tie the bigger bundle)
+    var absorbed = {}, groups = {}, groupOrder = [], saving = 0, guard = 0;
+    while (auto && guard++ < 2000) {
+      var best = null;
+      cat.packages.forEach(function (p) {
+        var t = tryBundle(p, L, price);
+        if (!t) return;
+        var gain = t.value - p.price;
+        if (gain <= 0) return;
+        var per = gain / t.cookies;
+        if (!best || per > best.per + 1e-9 || (Math.abs(per - best.per) < 1e-9 && t.cookies > best.t.cookies)) best = { p: p, t: t, per: per, gain: gain };
+      });
+      if (!best) break;
+      var key = best.p.id + '|' + Object.keys(best.t.use).sort().map(function (k) { return k + ':' + best.t.use[k]; }).join(',');
+      if (!groups[key]) {
+        groups[key] = { pkg: best.p, qty: 0, gain: 0, flavors: Object.keys(best.t.use).map(Number).sort(function (a, b) { return a - b; }).map(function (id) {
+          return { id: id, name: (singleFlavor(id) || info[id] || {}).name || '', qty: best.t.use[id] };
+        }) };
+        groupOrder.push(key);
+      }
+      groups[key].qty++; groups[key].gain += best.gain; saving += best.gain;
+      Object.keys(best.t.use).forEach(function (id) { L[id] -= best.t.use[id]; absorbed[id] = (absorbed[id] || 0) + best.t.use[id]; });
+    }
+
+    // 3) what stays a single
+    var singleLines = [];
+    ids.forEach(function (id) {
+      var n = counts[id] - (absorbed[id] || 0);
+      if (n > 0) singleLines.push({ flavor_id: id, name: info[id].name, price: price[id], qty: n, image_url: info[id].image_url || null });
+    });
+    // bundles made automatically (a line holds at most MAX_QTY)
+    var autoLines = [];
+    groupOrder.forEach(function (k) {
+      var g = groups[k], q = g.qty;
+      while (q > 0) {
+        var c = Math.min(q, MAX_QTY);
+        autoLines.push({ package_id: g.pkg.id, name: g.pkg.name, type: g.pkg.type, price: g.pkg.price, image_url: g.pkg.image_url || null, qty: c, flavors: g.flavors, auto: true, gain: g.gain * c / g.qty });
+        q -= c;
+      }
+    });
+
+    // promos on bundles count the bundles in the final order (also the ones made automatically)
+    var pcount = {};
+    manual.concat(autoLines).forEach(function (l) { pcount[l.package_id] = (pcount[l.package_id] || 0) + l.qty; });
+    promos.forEach(function (pr) {
+      if (pr.condition_type !== 'PACKAGE') return;
+      var c = pcount[pr.package_id] || 0;
+      if (c >= pr.buy_qty) got[pr.id] = (pr.repeats ? Math.floor(c / pr.buy_qty) : 1) * pr.free_qty;
+      else if (c > 0) hint[pr.id] = pr.buy_qty - c;
+    });
+    var bonus = [], hints = [];
+    promos.forEach(function (pr) {
+      if (got[pr.id]) bonus.push({ promo: pr, qty: got[pr.id] });
+      else if (hint[pr.id]) hints.push({ promo: pr, need: hint[pr.id] });
+    });
+
+    var total = singleLines.reduce(function (n, l) { return n + l.price * l.qty; }, 0) +
+      manual.concat(autoLines).reduce(function (n, l) { return n + l.price * l.qty; }, 0);
+    return { singleLines: singleLines, manual: manual, autoLines: autoLines, bonus: bonus, hints: hints,
+      rawTotal: rawTotal, total: total, saving: Math.max(0, rawTotal - total),
+      lineCount: singleLines.length + manual.length + autoLines.length };
+  }
+  function getPlan() {
+    var p = buildPlan(true);
+    if (p.lineCount > MAX_LINES) p = buildPlan(false);     // too many different bundles: send plain singles instead
+    return p;
+  }
+  // Lines sent to the server (prices are decided there).
+  function planItems(plan) {
+    var items = [];
+    plan.singleLines.forEach(function (l) { items.push({ flavor_id: l.flavor_id, qty: l.qty }); });
+    plan.manual.concat(plan.autoLines).forEach(function (l) {
+      var it = { package_id: l.package_id, qty: l.qty };
+      if (l.type === 'PICK') it.flavors = l.flavors.map(function (f) { return { flavor_id: f.id, qty: f.qty }; });
+      items.push(it);
+    });
+    return items;
+  }
+  function promoCond(pr) {
+    if (pr.condition_type === 'PACKAGE') { var p = catPackage(pr.package_id); return 'Buy ' + pr.buy_qty + ' × ' + (p ? p.name : 'bundle'); }
+    return 'Buy ' + pr.buy_qty + ' ' + plural(pr.buy_qty, 'single', 'singles');
+  }
+  function promoGet(pr) { return 'get ' + pr.free_qty + ' × ' + pr.free_name + ' free'; }
 
   function getReceipt() { try { return JSON.parse(lsGet(RECEIPT_KEY) || 'null'); } catch (e) { return null; } }
 
@@ -560,7 +748,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
   }
   async function loadCatalog() {
     var c = await rpc('get_catalog');
-    catalog = { packages: (c && c.packages) || [], flavors: (c && c.flavors) || [] };
+    catalog = { packages: (c && c.packages) || [], flavors: (c && c.flavors) || [], promotions: (c && c.promotions) || [] };
     return catalog;
   }
   async function refreshStore(rerender) {
@@ -677,12 +865,89 @@ input[aria-invalid=true]{border-color:var(--berry)}
     return '<article class="card"><div class="pic">' + photo(p.image_url) + '</div><div class="body"><h3>' + esc(p.name) + '</h3>' + body +
       '<div class="foot"><span class="price">' + rp(p.price) + '</span>' + action + '</div></div></article>';
   }
+  // A promo is shown as a card of the same size as a bundle card; it has no button because it is applied automatically.
+  function promoCard(pr) {
+    return '<article class="card promo-card"><div class="pic"><div class="ph">' + icon('gift') + '</div></div><div class="body"><h3>' + esc(pr.name) + '</h3>' +
+      '<p class="muted">' + esc(promoCond(pr) + ', ' + promoGet(pr) + '. ' + (pr.repeats ? 'Repeats for every ' + pr.buy_qty + '.' : 'Once per order.')) + '</p>' +
+      '<div class="foot"><span class="price">Promo</span><span class="muted">Applied automatically</span></div></div></article>';
+  }
+  function singleQty(fid) {
+    var l = cart.filter(function (x) { return x.type === 'SINGLE' && x.flavor_id === fid; })[0];
+    return l ? l.qty : 0;
+  }
+  function flavorDesc(fid) {
+    var f = singleFlavor(fid);
+    return f && typeof f.description === 'string' ? f.description : '';
+  }
+  function singleRowHtml(f, open) {
+    var q = singleQty(f.id), ctl = '';
+    if (open) {
+      ctl = q === 0
+        ? '<button class="btn small" type="button" data-action="sg-inc" data-fid="' + f.id + '" aria-label="Add one ' + esc(f.name) + '">Add</button>'
+        : '<div class="qty" role="group" aria-label="Quantity of ' + esc(f.name) + '">' +
+          '<button class="qbtn" type="button" data-action="sg-dec" data-fid="' + f.id + '" aria-label="Remove one ' + esc(f.name) + '">' + icon('minus') + '</button>' +
+          '<output>' + q + '</output>' +
+          '<button class="qbtn" type="button" data-action="sg-inc" data-fid="' + f.id + '" aria-label="Add one ' + esc(f.name) + '"' + (q >= MAX_SINGLE ? ' disabled' : '') + '>' + icon('plus') + '</button></div>';
+    }
+    return '<div class="srow" id="sg-' + f.id + '"><div class="sp">' + photo(f.image_url) + '</div><div class="sm"><div class="sn">' + esc(f.name) + '</div>' +
+      '<div class="spr">' + rp(f.single_price) + '</div>' + (f.description ? '<div class="sd">' + esc(f.description) + '</div>' : '') + '</div>' + ctl + '</div>';
+  }
+  function refreshSingleRow(fid, focusAction) {
+    var f = singleFlavor(fid), row = $('#sg-' + fid);
+    if (!f || !row) return;
+    var d = document.createElement('div');
+    d.innerHTML = singleRowHtml(f, isOpen());
+    row.replaceWith(d.firstChild);
+    var b = $('#sg-' + fid + ' [data-action="' + focusAction + '"]') || $('#sg-' + fid + ' button');
+    if (b && !b.disabled) b.focus();
+  }
+  function changeSingle(fid, delta) {
+    var f = singleFlavor(fid);
+    if (!f || typeof f.single_price !== 'number' || !isOpen()) return;
+    var ex = cart.filter(function (x) { return x.type === 'SINGLE' && x.flavor_id === fid; })[0];
+    if (delta > 0) {
+      if (ex) {
+        if (ex.qty >= MAX_SINGLE) { toast('You can order at most ' + MAX_SINGLE + ' of the same item.', true); return; }
+        ex.qty++;
+      } else {
+        if (cart.length >= MAX_LINES) { toast('Your order can have at most ' + MAX_LINES + ' different items.', true); return; }
+        cart.push({ type: 'SINGLE', package_id: null, flavor_id: fid, name: f.name, price: f.single_price, image_url: f.image_url || null, flavors: [], qty: 1 });
+      }
+    } else if (ex) {
+      ex.qty--;
+      if (ex.qty < 1) cart = cart.filter(function (x) { return x !== ex; });
+    }
+    saveCart();
+    refreshSingleRow(fid, delta > 0 ? 'sg-inc' : 'sg-dec');
+    renderCartBar();
+  }
   function viewCatalog() {
     var open = isOpen();
+    var singles = catalog.flavors.filter(function (f) { return typeof f.single_price === 'number'; });
     var html = '<h1>' + (open ? 'Choose your cookies' : 'Our menu') + '</h1>' + statusNotice() + allergyNotice() + '<h2>Menu</h2>';
-    html += catalog.packages.length
-      ? '<div class="grid">' + catalog.packages.map(function (p) { return packageCard(p, open); }).join('') + '</div>'
-      : '<div class="empty"><p class="muted">No packages are available right now. Please check back soon.</p></div>';
+    if (singles.length) {
+      html += '<p class="muted" style="margin-top:-4px">Single cookies can be ordered one at a time. Bundle prices are applied automatically when they save you money.</p>';
+    }
+    // bundles and singles in the order the owner set (Layout screen); neighbours of the same kind form one block
+    var items = [];
+    catalog.packages.forEach(function (p, i) { items.push({ kind: 'P', p: p, pos: typeof p.sort_order === 'number' ? p.sort_order : i + 1, rank: 0, id: p.id }); });
+    singles.forEach(function (f, i) { items.push({ kind: 'S', f: f, pos: typeof f.single_sort === 'number' ? f.single_sort : 1000000 + i, rank: 1, id: f.id }); });
+    ((catalog && catalog.promotions) || []).forEach(function (r, i) { items.push({ kind: 'R', r: r, pos: typeof r.sort_order === 'number' ? r.sort_order : 2000000 + i, rank: 2, id: r.id }); });
+    items.sort(function (a, b) { return (a.pos - b.pos) || (a.rank - b.rank) || (a.id - b.id); });
+    var blocks = [];
+    items.forEach(function (it) {
+      var bk = it.kind === 'S' ? 'S' : 'C';   // bundles and promos share the card grid
+      var b = blocks[blocks.length - 1];
+      if (b && b.kind === bk) b.items.push(it); else blocks.push({ kind: bk, items: [it] });
+    });
+    blocks.forEach(function (b) {
+      html += b.kind === 'C'
+        ? '<div class="grid">' + b.items.map(function (it) { return it.kind === 'R' ? promoCard(it.r) : packageCard(it.p, open); }).join('') + '</div>'
+        : '<div class="singles">' + b.items.map(function (it) { return singleRowHtml(it.f, open); }).join('') + '</div>';
+    });
+    if (!items.length) {
+      html += '<div class="empty"><p class="muted">No packages are available right now. Please check back soon.</p></div>';
+    }
     setApp(html);
   }
 
@@ -711,10 +976,10 @@ input[aria-invalid=true]{border-color:var(--berry)}
       // choose-one style: whole tile toggles
       return '<button type="button" class="tile pickone" data-fid="' + fid + '" data-action="pk-toggle" aria-pressed="false">' +
         '<span class="shot">' + photo(f.image_url) + '<span class="badge">' + icon('check') + '</span></span>' +
-        '<span class="nm">' + esc(f.name) + '</span></button>';
+        '<span class="nm">' + esc(f.name) + '</span>' + (flavorDesc(fid) ? '<span class="nd">' + esc(flavorDesc(fid)) + '</span>' : '') + '</button>';
     }
     return '<div class="tile" data-fid="' + fid + '"><button type="button" class="shot" data-action="pk-add" data-fid="' + fid + '" aria-label="Add one ' + esc(f.name) + '">' +
-      photo(f.image_url) + '<span class="badge"></span></button><div class="nm">' + esc(f.name) + '</div>' +
+      photo(f.image_url) + '<span class="badge"></span></button><div class="nm">' + esc(f.name) + '</div>' + (flavorDesc(fid) ? '<div class="nd">' + esc(flavorDesc(fid)) + '</div>' : '') +
       '<div class="ctl"><button class="qbtn" type="button" data-action="pk-sub" data-fid="' + fid + '" aria-label="Remove one ' + esc(f.name) + '">' + icon('minus') + '</button>' +
       '<output aria-live="off">0</output>' +
       '<button class="qbtn" type="button" data-action="pk-add" data-fid="' + fid + '" aria-label="Add one ' + esc(f.name) + '">' + icon('plus') + '</button></div></div>';
@@ -805,13 +1070,39 @@ input[aria-invalid=true]{border-color:var(--berry)}
       var key = lineKey(l);
       return '<article class="line"><div class="lp">' + photo(l.image_url) + '</div><div class="lm">' +
         '<div class="ln">' + esc(l.name) + '</div>' +
-        '<div class="lf">' + esc(flavText(l.flavors, l.type === 'COMBO')) + '</div>' +
+        '<div class="lf">' + (l.type === 'SINGLE' ? 'Single · ' + rp(l.price) + ' each' : esc(flavText(l.flavors, l.type === 'COMBO'))) + '</div>' +
         '<div class="lr"><div class="qty" role="group" aria-label="Quantity of ' + esc(l.name) + '">' +
         '<button class="qbtn" type="button" data-action="qty-dec" data-key="' + esc(key) + '" aria-label="Decrease quantity of ' + esc(l.name) + '"' + (l.qty <= 1 ? ' disabled' : '') + '>' + icon('minus') + '</button>' +
         '<output>' + l.qty + '</output>' +
-        '<button class="qbtn" type="button" data-action="qty-inc" data-key="' + esc(key) + '" aria-label="Increase quantity of ' + esc(l.name) + '"' + (l.qty >= MAX_QTY ? ' disabled' : '') + '>' + icon('plus') + '</button></div>' +
+        '<button class="qbtn" type="button" data-action="qty-inc" data-key="' + esc(key) + '" aria-label="Increase quantity of ' + esc(l.name) + '"' + (l.qty >= maxQtyOf(l) ? ' disabled' : '') + '>' + icon('plus') + '</button></div>' +
         '<span class="lt">' + rp(l.price * l.qty) + '</span></div>' +
         '<button class="link-btn" type="button" data-action="remove" data-key="' + esc(key) + '">Remove</button></div></article>';
+    }).join('');
+  }
+  function offersHtml(plan) {
+    var out = '';
+    plan.bonus.forEach(function (b) {
+      out += '<div class="offer">' + icon('gift') + '<div><strong>' + esc(b.promo.name) + '</strong><span>You get ' + b.qty + ' × ' + esc(b.promo.free_name) + ' free</span></div></div>';
+    });
+    if (plan.autoLines.length) {
+      out += '<div class="offer">' + icon('check') + '<div><strong>Bundle price applied: you save ' + rp(plan.saving) + '</strong>' +
+        plan.autoLines.map(function (l) {
+          return '<span>' + esc(l.qty + ' × ' + l.name + (l.type === 'PICK' ? ' (' + flavText(l.flavors, true) + ')' : '')) + '</span>';
+        }).join('') + '</div></div>';
+    }
+    plan.hints.forEach(function (h) {
+      var pr = h.promo;
+      out += '<div class="offer tip">' + icon('gift') + '<div><strong>' + esc(pr.name) + '</strong><span>Add ' + h.need + ' more ' +
+        (pr.condition_type === 'PACKAGE' ? plural(h.need, 'bundle', 'bundles') : plural(h.need, 'single', 'singles')) + ' to ' + esc(promoGet(pr)) + '.</span></div></div>';
+    });
+    return out ? '<div class="offers">' + out + '</div>' : '';
+  }
+  function freeLinesHtml(plan) {
+    return plan.bonus.map(function (b) {
+      var f = b.promo.free_flavor_id ? singleFlavor(b.promo.free_flavor_id) : null;
+      return '<article class="line free"><div class="lp">' + (f ? photo(f.image_url) : placeholder()) + '</div><div class="lm">' +
+        '<div class="ln">' + esc(b.qty + ' × ' + b.promo.free_name) + '</div><div class="lf">Free · ' + esc(b.promo.name) + '</div>' +
+        '<div class="lr"><span class="freetag">FREE</span></div></div></article>';
     }).join('');
   }
   function bankLabel() { return (store && store.bank_name) || 'BCA'; }
@@ -865,8 +1156,11 @@ input[aria-invalid=true]{border-color:var(--berry)}
     var l = $('#co-lines'), t = $('#co-totals');
     if (!l) return;
     if (!cart.length) { route(true); return; }
-    l.innerHTML = linesHtml();
-    t.innerHTML = '<div class="r"><span>Subtotal (estimate)</span><span>' + rp(cartTotal()) + '</span></div>';
+    var plan = getPlan();
+    l.innerHTML = linesHtml() + freeLinesHtml(plan);
+    t.innerHTML = (plan.saving > 0 ? '<div class="r"><span>Items</span><span>' + rp(plan.rawTotal) + '</span></div>' +
+        '<div class="r save"><span>Bundle price applied</span><span>−' + rp(plan.saving) + '</span></div>' : '') +
+      '<div class="r"><span>Subtotal (estimate)</span><span>' + rp(plan.total) + '</span></div>' + offersHtml(plan);
   }
   function setErr(id, msg) {
     var e = $('#' + id); if (!e) return;
@@ -891,12 +1185,10 @@ input[aria-invalid=true]{border-color:var(--berry)}
     if (!cart.length) { box.textContent = errText('INVALID_ITEMS'); box.hidden = false; return; }
     if (bad) { bad.focus(); bad.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
 
-    var items = cart.map(function (l) {
-      var it = { package_id: l.package_id, qty: l.qty };
-      if (l.type === 'PICK') it.flavors = l.flavors.map(function (f) { return { flavor_id: f.id, qty: f.qty }; });
-      return it;
-    });
-    var estimate = cartTotal();
+    var plan = getPlan();
+    if (plan.lineCount > MAX_LINES) { box.textContent = errText('TOO_MANY_LINES'); box.hidden = false; return; }
+    var items = planItems(plan);
+    var estimate = plan.total;
     var btn = $('#co-submit');
     submitting = true; btn.disabled = true; btn.textContent = 'Placing order…';
     try {
@@ -956,9 +1248,11 @@ input[aria-invalid=true]{border-color:var(--berry)}
   }
   function itemsHtml(items) {
     return '<div class="items">' + items.map(function (it) {
-      var fl = it.flavors && it.flavors.length ? '<div class="sub">' + esc(flavText(it.flavors, it.type === 'COMBO')) + '</div>' : '';
-      return '<div class="it"><div class="row"><span>' + esc(it.qty + ' × ' + it.name) + '</span><span>' + rp(it.line_total) + '</span></div>' + fl +
-        (it.qty > 1 ? '<div class="sub">' + rp(it.price) + ' each</div>' : '') + '</div>';
+      var free = it.type === 'BONUS', single = it.type === 'SINGLE';
+      var fl = !free && !single && it.flavors && it.flavors.length ? '<div class="sub">' + esc(flavText(it.flavors, it.type === 'COMBO')) + '</div>' : '';
+      var note = free ? '<div class="sub">Free item</div>' : single ? '<div class="sub">Single' + (it.qty > 1 ? ' · ' + rp(it.price) + ' each' : '') + '</div>'
+        : (it.qty > 1 ? '<div class="sub">' + rp(it.price) + ' each</div>' : '');
+      return '<div class="it"><div class="row"><span>' + esc(it.qty + ' × ' + it.name) + '</span><span>' + (free ? 'FREE' : rp(it.line_total)) + '</span></div>' + fl + note + '</div>';
     }).join('') + '</div>';
   }
   function totalsHtml(d) {
@@ -1093,9 +1387,14 @@ input[aria-invalid=true]{border-color:var(--berry)}
       row('Payment method', methodLabel(d.payment_method), { size: 24 });
       gap(14); dash(); gap(16);
       (d.items || []).forEach(function (it) {
-        row(it.qty + ' × ' + it.name, rp(it.line_total), { size: 26, weight: 700, display: true });
-        if (it.flavors && it.flavors.length) txt(flavText(it.flavors, it.type === 'COMBO'), { size: 21, color: '#7B6450' });
-        if (it.qty > 1) txt(rp(it.price) + ' each', { size: 21, color: '#7B6450' });
+        var isFree = it.type === 'BONUS', isSingle = it.type === 'SINGLE';
+        row(it.qty + ' × ' + it.name, isFree ? 'FREE' : rp(it.line_total), { size: 26, weight: 700, display: true });
+        if (isFree) txt('Free item', { size: 21, color: '#7B6450' });
+        else if (isSingle) txt('Single' + (it.qty > 1 ? ' · ' + rp(it.price) + ' each' : ''), { size: 21, color: '#7B6450' });
+        else {
+          if (it.flavors && it.flavors.length) txt(flavText(it.flavors, it.type === 'COMBO'), { size: 21, color: '#7B6450' });
+          if (it.qty > 1) txt(rp(it.price) + ' each', { size: 21, color: '#7B6450' });
+        }
         gap(10);
       });
       dash(); gap(14);
@@ -1413,7 +1712,9 @@ input[aria-invalid=true]{border-color:var(--berry)}
       case 'pk-sub': pickerSub(fid); break;
       case 'pk-toggle': if (picker.counts[fid]) pickerSub(fid); else pickerAdd(fid); break;
       case 'pk-confirm': pickerConfirm(); break;
-      case 'qty-inc': { var l1 = findLine(key); if (l1 && l1.qty < MAX_QTY) { l1.qty++; saveCart(); renderCheckoutLines(); } break; }
+      case 'sg-inc': changeSingle(fid, 1); break;
+      case 'sg-dec': changeSingle(fid, -1); break;
+      case 'qty-inc': { var l1 = findLine(key); if (l1 && l1.qty < maxQtyOf(l1)) { l1.qty++; saveCart(); renderCheckoutLines(); } break; }
       case 'qty-dec': { var l2 = findLine(key); if (l2 && l2.qty > 1) { l2.qty--; saveCart(); renderCheckoutLines(); } break; }
       case 'remove': cart = cart.filter(function (l) { return lineKey(l) !== key; }); saveCart(); renderCheckoutLines(); break;
       case 'copy': copyText(el.getAttribute('data-text'), el.getAttribute('data-msg')); break;
