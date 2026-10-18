@@ -5,7 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#3F6BA6">
-<title>Cookies</title>
+<title>bacoories,</title>
+<!-- Link preview (WhatsApp, Instagram, etc.). Chat apps read these fixed lines, not the store name from Settings.
+     The preview picture is og-image.jpg, uploaded next to this file. -->
+<meta name="description" content="your fav bakes">
+<meta property="og:type" content="website">
+<meta property="og:title" content="bacoories,">
+<meta property="og:description" content="your fav bakes">
+<meta property="og:url" content="https://bacoories.github.io/">
+<meta property="og:image" content="https://bacoories.github.io/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="bacoories,">
+<meta name="twitter:description" content="your fav bakes">
+<meta name="twitter:image" content="https://bacoories.github.io/og-image.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%AA%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -967,6 +981,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
 
   async function route(soft) {
     closePicker();
+    clearRcProof();
     var r = parseRoute(), seq = ++routeSeq;
     document.body.dataset.route = r.name;
     $('#menuBtn').hidden = r.name === 'catalog';       // F10: "Menu" button on every page except the main menu
@@ -1646,6 +1661,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
       '<hr class="sep"><dl class="kv"><dt>Name</dt><dd>' + esc(d.customer_name) + '</dd><dt>Placed on</dt><dd>' + esc(fmtDate(d.created_at)) + '</dd><dt>Payment</dt><dd>' + esc(methodLabel(d.payment_method)) + '</dd>' + voucherKvHtml(d) + '</dl>' +
       '<hr class="sep">' + itemsHtml(d.items || []) + '<hr class="sep">' + totalsHtml(d) + '</section>' +
       payBlock(d.payment_method, d.total) +
+      rcProofBoxHtml(d) +
       '<div class="actions"><button class="btn" type="button" data-action="dl-receipt" data-src="receipt">' + icon('down') + 'Download receipt (PNG)</button>' +
       '<a class="btn sec" href="#/track/' + esc(d.tracking_code) + '">Track this order</a></div>' +
       '<p style="margin-top:14px"><a href="#/">Back to menu</a></p></div>');
@@ -1837,6 +1853,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
      Tracking page
      ====================================================================== */
   var track = { mode: 'code', data: null, proofBlob: null, proofUrl: null, draft: { rating: 0, text: '' } };
+  var rcProof = { blob: null, url: null };      // payment proof chosen on the receipt page (optional)
 
   function viewTrack(code, keep) {
     var h = '<div class="narrow"><h1>Track your order</h1><p class="lead">Enter your tracking code, or your order number with the last 4 digits of your WhatsApp number.</p>' +
@@ -2047,6 +2064,72 @@ input[aria-invalid=true]{border-color:var(--berry)}
     }
   }
 
+  /* ---------- Payment proof on the receipt page (optional, BCA and QRIS only) ---------- */
+  function clearRcProof() {
+    if (rcProof.url) { try { URL.revokeObjectURL(rcProof.url); } catch (e) { /* ignore */ } }
+    rcProof.blob = null; rcProof.url = null;
+  }
+  function rcProofBoxHtml(d) {
+    if (d.payment_method !== 'BCA' && d.payment_method !== 'QRIS') return '';
+    return '<div class="panel" id="rc-proof-box">' + rcProofInnerHtml(d) + '</div>';
+  }
+  function rcProofInnerHtml(d) {
+    var sent = Number(d.proof_sent) || 0;
+    var left = typeof d.proof_uploads_left === 'number' ? d.proof_uploads_left : 3 - sent;
+    if (sent > 0 && left <= 0) {
+      return '<h3>Payment proof</h3><p style="margin:6px 0 0">Your payment proof was received. Thank you!</p>';
+    }
+    return '<h3>Upload payment proof <span class="muted" style="font-weight:600">(optional)</span></h3>' +
+      (sent > 0
+        ? '<p class="ok-line" style="margin:6px 0 4px">Your payment proof was received. Thank you!</p><p class="muted" style="margin:0 0 10px">You can upload another photo to replace it. You have ' + left + ' ' + plural(left, 'upload', 'uploads') + ' left.</p>'
+        : '<p class="muted" style="margin:6px 0 10px">Already paid? Upload a photo or screenshot of your payment now. You can also skip this and upload it later from Track this order.</p>') +
+      '<input class="sr-only" type="file" id="rc-proof-file" accept="image/*">' +
+      '<label class="btn sec" for="rc-proof-file" id="rc-proof-pick">' + icon('cam') + (rcProof.blob ? 'Choose another photo' : 'Choose photo') + '</label>' +
+      '<div id="rc-proof-prev">' + (rcProof.url ? '<img class="preview" src="' + esc(rcProof.url) + '" alt="Preview of your payment proof">' : '') + '</div>' +
+      '<p class="muted" id="rc-proof-info" style="font-size:14px;margin:0 0 10px"></p>' +
+      '<p class="err" id="rc-proof-err" role="alert" hidden></p>' +
+      '<button class="btn block" type="button" id="rc-proof-send" data-action="rc-proof-send"' + (rcProof.blob ? '' : ' disabled') + '>Upload payment proof</button>';
+  }
+  async function onRcProofChosen(input) {
+    var file = input.files && input.files[0];
+    var info = $('#rc-proof-info'), err = $('#rc-proof-err'), send = $('#rc-proof-send');
+    if (!file || !info) return;
+    err.hidden = true; send.disabled = true; info.textContent = 'Preparing photo…';
+    clearRcProof(); $('#rc-proof-prev').innerHTML = '';
+    try {
+      var blob = await compressImage(file);
+      if (!$('#rc-proof-box')) return;                       // the buyer already left the page
+      rcProof.blob = blob; rcProof.url = URL.createObjectURL(blob);
+      $('#rc-proof-prev').innerHTML = '<img class="preview" src="' + esc(rcProof.url) + '" alt="Preview of your payment proof">';
+      info.textContent = 'Photo ready (' + Math.max(1, Math.round(blob.size / 1000)) + ' KB). Tap Upload payment proof to send it.';
+      send.disabled = false;
+      var pk = $('#rc-proof-pick'); if (pk) pk.lastChild.textContent = 'Choose another photo';
+    } catch (e) {
+      if (!$('#rc-proof-box')) return;
+      info.textContent = ''; err.textContent = errText(e.code || 'INVALID_FILE_TYPE'); err.hidden = false;
+    }
+    input.value = '';
+  }
+  async function sendRcProof() {
+    var d = getReceipt(), send = $('#rc-proof-send'), err = $('#rc-proof-err');
+    if (!d || !rcProof.blob || !send) return;
+    err.hidden = true; send.disabled = true; send.textContent = 'Uploading…';
+    try {
+      var r = await uploadProof(d.tracking_code, rcProof.blob);
+      clearRcProof();
+      d.proof_sent = (Number(d.proof_sent) || 0) + 1;
+      d.proof_uploads_left = typeof r.uploads_left === 'number' ? r.uploads_left : Math.max(0, 3 - d.proof_sent);
+      lsSet(RECEIPT_KEY, JSON.stringify(d));
+      toast('Payment proof uploaded');
+      var box = $('#rc-proof-box');
+      if (box) box.innerHTML = rcProofInnerHtml(d);
+    } catch (e) {
+      var s2 = $('#rc-proof-send'), e2 = $('#rc-proof-err');
+      if (s2) { s2.disabled = !rcProof.blob; s2.textContent = 'Upload payment proof'; }
+      if (e2) { e2.textContent = errText(e.code); e2.hidden = false; }
+    }
+  }
+
   /* ---------- Review ---------- */
   async function sendReview() {
     var d = track.data, err = $('#rv-err'), btn = $('#rv-send');
@@ -2114,6 +2197,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
       }
       case 'track-refresh': runTrack(); break;
       case 'proof-send': sendProof(); break;
+      case 'rc-proof-send': sendRcProof(); break;
       case 'star': {
         track.draft.rating = Number(el.getAttribute('data-n'));
         track.draft.text = ($('#rv-text') || {}).value || track.draft.text;
@@ -2132,6 +2216,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
   });
   document.addEventListener('change', function (ev) {
     if (ev.target.id === 'proof-file') onProofChosen(ev.target);
+    else if (ev.target.id === 'rc-proof-file') onRcProofChosen(ev.target);
     else if (ev.target.name === 'pm') saveDraft();
     else if (ev.target.id === 'f-name' || ev.target.id === 'f-wa') recheckVoucher();
   });
