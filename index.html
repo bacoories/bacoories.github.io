@@ -582,7 +582,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
      State: shop, catalog, cart, last receipt
      ====================================================================== */
   var store = null, catalog = null, cart = [], picker = null, storeTimer = null, routeSeq = 0, submitting = false;
-  var voucher = null, vErrText = '', vBusy = false;        // voucher applied at checkout: { data: check_voucher result, key: who it was checked for }
+  var voucher = null, vErrText = '', vBusy = false, vPending = false;        // voucher applied at checkout: { data: check_voucher result, key: who it was checked for }
   var skew = 0, cdKey = null, cdTries = 0, cdBusy = false;  // countdown: server clock minus phone clock, retry bookkeeping
   var topSig = '';
 
@@ -1426,11 +1426,12 @@ input[aria-invalid=true]{border-color:var(--berry)}
     if (!code) { vErrText = errText('VOUCHER_EMPTY'); setErr('err-voucher', vErrText); if (inp) inp.setAttribute('aria-invalid', 'true'); return; }
     var nameEl = $('#f-name'), waEl = $('#f-wa'), name = nameEl ? nameEl.value.trim() : '', wa = waEl ? waEl.value : '';
     var btn = $('#v-apply');
+    var keyNow = personKey();
     vBusy = true;
     if (btn) { btn.disabled = true; btn.textContent = 'Checking…'; }
     try {
       var d = await rpc('check_voucher', { p_code: code, p_name: name.length >= 2 ? name : null, p_wa: normalizeWa(wa) ? wa : null });
-      voucher = { data: d, key: personKey() };
+      voucher = { data: d, key: keyNow };
       vErrText = '';
       renderVoucherPanel(true);
       renderCheckoutLines();
@@ -1442,11 +1443,12 @@ input[aria-invalid=true]{border-color:var(--berry)}
       var again = $('#f-voucher');
       if (again) { again.value = code; again.setAttribute('aria-invalid', 'true'); if (!silent) again.focus(); }
       renderCheckoutLines();
-    } finally { vBusy = false; }
+    } finally { vBusy = false; if (vPending) { vPending = false; recheckVoucher(); } }
   }
   // The name or WhatsApp number changed: vouchers with customer rules are checked again for the new person.
   async function recheckVoucher() {
-    if (!voucher || vBusy) return;
+    if (!voucher) return;
+    if (vBusy) { vPending = true; return; }
     var v = voucher.data;
     if (!(v.min_completed > 0 || v.once_per_customer)) return;
     if (v.customer_checked === true && personKey() === voucher.key) return;
