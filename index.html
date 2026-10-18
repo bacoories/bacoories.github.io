@@ -16,13 +16,17 @@
    SETTINGS - the only values you may ever need to edit in this file.
    - SUPABASE_URL and SUPABASE_PUBLIC_KEY come from your Supabase project
      (public values only; NEVER paste a key that starts with sb_secret_).
-   - LOGO_URL is the logo picture. To change the logo, upload a new file
-     named logo.png next to this file (same folder on GitHub).
+   - LOGO_URL is the logo picture shown in the page header. To change the
+     logo, upload a new file named logo.png next to this file (same folder
+     on GitHub).
+   - LOGO_RECEIPT_URL is the logo drawn on the receipt picture (a version
+     without the cream border). If this file is missing, logo.png is used.
    ===================================================================== */
 var SUPABASE_URL = 'https://wjqkybllzfshtfasvwib.supabase.co';
 var SUPABASE_PUBLIC_KEY = 'sb_publishable_kVVIjZDJKJCdvwBEt8j9xA_wDGsK4zz';
 var EDGE_UPLOAD_URL = SUPABASE_URL + '/functions/v1/upload-proof';
 var LOGO_URL = 'logo.png';
+var LOGO_RECEIPT_URL = 'logo-receipt.png';
 </script>
 
 <style>
@@ -162,6 +166,50 @@ p{margin:0 0 10px}
 .line.free .lt{color:var(--ok)}
 .freetag{font:800 18px var(--font-display);color:var(--ok)}
 .totals .r.save{color:var(--ok);font-weight:600}
+
+/* ---------- Header: "Menu" button (F10) ---------- */
+.top{gap:8px}
+.top-left{display:flex;align-items:center;gap:8px;min-width:0;flex:1 1 auto}
+.menu-btn{display:inline-flex;align-items:center;gap:2px;min-height:44px;padding:0 14px 0 8px;border:2px solid var(--blue);border-radius:999px;background:var(--paper);color:var(--blue-deep);font-weight:700;text-decoration:none;white-space:nowrap;flex:none}
+.menu-btn svg.i{width:18px;height:18px}
+.brand{min-width:0;max-width:190px;flex:0 1 auto}
+.brand img{max-width:100%}
+.top .pill{flex:none}
+@media(max-width:400px){.top .pill{padding:0 12px}.menu-btn{padding:0 12px 0 6px}}
+
+/* ---------- Owner's running text (F2) ---------- */
+.promo-bar.owner{background:var(--cocoa)}
+.promo-item.ann-item{font-weight:700}
+
+/* ---------- Countdown (F1) ---------- */
+.cd-row{margin-top:6px;font-weight:600}
+.cd{font:800 20px/1.2 var(--font-display);font-variant-numeric:tabular-nums;letter-spacing:.01em;white-space:nowrap}
+.cd-top{margin:-4px 0 10px;color:var(--cocoa-soft)}
+.cd-top .cd{color:var(--cocoa)}
+
+/* ---------- Best seller label (F6) ---------- */
+.card .pic,.srow .sp{position:relative}
+.bs{position:absolute;top:8px;right:8px;z-index:2;display:inline-flex;align-items:center;gap:4px;padding:4px 10px 4px 5px;border-radius:999px;background:var(--berry);color:#fff;border:2px solid #fff;font:800 12px/1 var(--font-display);letter-spacing:.02em;white-space:nowrap;overflow:hidden;box-shadow:0 2px 8px rgba(70,48,28,.35);animation:bs-pulse 2.4s ease-in-out infinite}
+.bs svg{width:20px;height:20px;flex:none;animation:bs-wobble 2.4s ease-in-out infinite}
+.bs::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:36%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);transform:skewX(-20deg);animation:bs-shine 3.2s ease-in-out infinite}
+@keyframes bs-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@keyframes bs-wobble{0%,55%,100%{transform:rotate(0)}65%{transform:rotate(-20deg)}75%{transform:rotate(16deg)}85%{transform:rotate(-8deg)}}
+@keyframes bs-shine{0%,50%{left:-60%}100%{left:140%}}
+
+/* ---------- Checkout note (F7) and voucher (F12) ---------- */
+.notice.note{background:var(--blue-soft);border-color:#C5D6EE}
+.notice.note span{display:block;white-space:pre-line;overflow-wrap:anywhere}
+.vbox{display:flex;gap:8px;align-items:stretch}
+.vbox input[type=text]{width:auto;flex:1 1 auto;min-width:0;text-transform:uppercase}
+.vbox .btn{flex:none}
+.vok{background:var(--ok-soft);border:1.5px solid #B9E0C8;border-radius:14px;padding:12px 14px}
+.vok .vt{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.vok .vname{font:700 17px/1.25 var(--font-display);overflow-wrap:anywhere}
+.vok .vcode{display:inline-block;margin-top:4px;padding:2px 10px;border-radius:999px;background:var(--paper);border:1.5px solid #B9E0C8;font:800 14px var(--font-display);letter-spacing:.06em}
+.vok .vsave{font-weight:700;color:var(--ok);margin:8px 0 0}
+.vok .vsmall{font-size:14px;color:var(--cocoa-soft);margin:6px 0 0;overflow-wrap:anywhere}
+.vok .vterms{white-space:pre-line}
+.vwarn{margin:10px 0 0}
 
 /* ---------- Skeleton ---------- */
 .sk{background:linear-gradient(90deg,#EFE6D8 25%,#F7F1E7 50%,#EFE6D8 75%);background-size:200% 100%;animation:shine 1.3s linear infinite;border-radius:var(--r-card)}
@@ -322,19 +370,26 @@ input[aria-invalid=true]{border-color:var(--berry)}
     <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.5"/></symbol>
     <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
     <symbol id="i-gift" viewBox="0 0 24 24"><path d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13"/><path d="M12 7c-1-3-5-3.5-5-1.5S10 7 12 7zM12 7c1-3 5-3.5 5-1.5S14 7 12 7z"/></symbol>
+    <symbol id="i-mega" viewBox="0 0 24 24"><path d="M4 10v4h3l7 4V6L7 10z"/><path d="M17.5 9a4 4 0 0 1 0 6"/></symbol>
+    <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3 9a2 2 0 0 0 0 6v3h18v-3a2 2 0 0 1 0-6V6H3z"/><path d="M14 6v12" stroke-dasharray="2 2.4"/></symbol>
+    <symbol id="i-cookiebs" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9 4 4 0 0 1-4-4 4 4 0 0 1-5-5z" fill="#F2C14E" stroke="#6B4B2C" stroke-width="1.6"/><circle cx="8.5" cy="11" r="1.2" fill="#6B4B2C" stroke="none"/><circle cx="12.5" cy="15.5" r="1.2" fill="#6B4B2C" stroke="none"/><circle cx="16" cy="12.5" r="1.2" fill="#6B4B2C" stroke="none"/><circle cx="8" cy="15.5" r="1.2" fill="#6B4B2C" stroke="none"/></symbol>
     <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol>
   </defs>
 </svg>
 
+<div class="promo-bar owner" id="annBar" role="region" aria-label="Announcement" hidden><div class="promo-track" id="annTrack"></div></div>
 <div class="promo-bar" id="promoBar" role="region" aria-label="Promotions" hidden><div class="promo-track" id="promoTrack"></div></div>
 
 <div class="wrap">
   <header class="top">
-    <a class="brand" id="brand" href="#/" aria-label="Home">
-      <img id="logo" alt="" hidden>
-      <span class="brand-name" id="brand-name">Cookies</span>
-    </a>
-    <a class="pill" href="#/track">Track order</a>
+    <div class="top-left">
+      <a class="menu-btn" id="menuBtn" href="#/" hidden><svg class="i" aria-hidden="true"><use href="#i-back"/></svg>Menu</a>
+      <a class="brand" id="brand" href="#/" aria-label="Home">
+        <img id="logo" alt="" hidden>
+        <span class="brand-name" id="brand-name">Cookies</span>
+      </a>
+    </div>
+    <a class="pill" id="trackPill" href="#/track">Track order</a>
   </header>
   <main id="app" aria-live="polite">
     <noscript><div class="notice error"><div>This website needs JavaScript to work. Please enable it in your browser settings.</div></div></noscript>
@@ -355,6 +410,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
   var CART_KEY = 'ck_cart_v1';
   var RECEIPT_KEY = 'ck_receipt_v1';
   var DRAFT_KEY = 'ck_draft_v1';   // name, WhatsApp and payment method typed at checkout (kept on this phone only)
+  var SALES_KEY = 'ck_sales_v1';   // sales code from the last sales link opened on this phone (kept until another sales link is opened)
   var MAX_LINES = 40, MAX_QTY = 20, MAX_SINGLE = 99;   // lines per order; bundles per line; singles per flavor
   var MAX_PROOF_BYTES = 500000;           // server limit is 512000 bytes
   var SVG_NS = 'http://www.w3.org/2000/svg';
@@ -383,6 +439,15 @@ input[aria-invalid=true]{border-color:var(--berry)}
     INVALID_FILE_TYPE: 'This photo cannot be opened. Take a screenshot of it and upload the screenshot.',
     UPLOAD_LIMIT_REACHED: 'Upload limit (3 times) reached. Please contact the admin.',
     UPLOAD_NOT_ALLOWED: 'Payment proof cannot be uploaded for this order.',
+    VOUCHER_INVALID: 'This voucher code is not valid.',
+    VOUCHER_NOT_STARTED: 'This voucher cannot be used yet.',
+    VOUCHER_EXPIRED: 'This voucher has expired.',
+    VOUCHER_QUOTA_REACHED: 'This voucher has been fully used.',
+    VOUCHER_MIN_SPEND: 'Your order does not reach the minimum spend for this voucher.',
+    VOUCHER_NOT_ELIGIBLE: 'This voucher is only for customers who have ordered with us before.',
+    VOUCHER_ALREADY_USED: 'You have already used this voucher.',
+    VOUCHER_UNAVAILABLE: 'This voucher is not available right now.',
+    VOUCHER_EMPTY: 'Enter your voucher code first.',
     FAILED: 'Failed, please try again.',
     NETWORK: 'Connection problem. Please check your internet and try again.'
   };
@@ -517,6 +582,9 @@ input[aria-invalid=true]{border-color:var(--berry)}
      State: shop, catalog, cart, last receipt
      ====================================================================== */
   var store = null, catalog = null, cart = [], picker = null, storeTimer = null, routeSeq = 0, submitting = false;
+  var voucher = null, vErrText = '', vBusy = false;        // voucher applied at checkout: { data: check_voucher result, key: who it was checked for }
+  var skew = 0, cdKey = null, cdTries = 0, cdBusy = false;  // countdown: server clock minus phone clock, retry bookkeeping
+  var topSig = '';
 
   function loadCart() {
     try {
@@ -728,6 +796,22 @@ input[aria-invalid=true]{border-color:var(--berry)}
   }
   function promoGet(pr) { return 'get ' + pr.free_qty + ' × ' + pr.free_name + ' free'; }
 
+  /* ---------- Sales link (F11): ?s=<code> is remembered on this phone until another sales link is opened ---------- */
+  var SALES_RE = /^[a-z0-9][a-z0-9-]{1,29}$/;
+  function readSalesFromLink() {
+    var q = null;
+    try { q = new URLSearchParams(location.search).get('s'); } catch (e) { q = null; }
+    if (!q) return;
+    q = q.trim().toLowerCase();
+    if (SALES_RE.test(q)) lsSet(SALES_KEY, JSON.stringify({ code: q }));
+  }
+  function salesCode() {
+    try {
+      var o = JSON.parse(lsGet(SALES_KEY) || 'null');
+      return o && typeof o.code === 'string' && SALES_RE.test(o.code) ? o.code : null;
+    } catch (e) { return null; }
+  }
+
   function getReceipt() { try { return JSON.parse(lsGet(RECEIPT_KEY) || 'null'); } catch (e) { return null; } }
 
   /* ======================================================================
@@ -739,19 +823,22 @@ input[aria-invalid=true]{border-color:var(--berry)}
     $('#brand-name').textContent = store.store_name || 'Cookies';
     var logo = $('#logo');
     if (logo) logo.alt = store.store_name || '';
+    renderTopBars();
   }
   function scheduleStoreRefresh() {
     clearTimeout(storeTimer);
     if (!store) return;
     var at = store.is_open ? store.close_at : store.open_at;
     if (!at) return;
-    var ms = new Date(at).getTime() - Date.now();
+    var ms = new Date(at).getTime() - serverNow();
     if (ms > 0 && ms < 2000000000) {
       storeTimer = setTimeout(function () { refreshStore(true); }, ms + 1500);
     }
   }
   async function loadStore() {
     store = await rpc('get_store_status');
+    var sn = Date.parse(store && store.server_now);
+    if (!isNaN(sn)) skew = sn - Date.now();      // the phone clock may be wrong; the countdown follows the server clock
     applyStore();
     scheduleStoreRefresh();
     return store;
@@ -759,7 +846,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
   async function loadCatalog() {
     var c = await rpc('get_catalog');
     catalog = { packages: (c && c.packages) || [], flavors: (c && c.flavors) || [], promotions: (c && c.promotions) || [] };
-    renderPromoBar();
+    renderTopBars();
     return catalog;
   }
   async function refreshStore(rerender) {
@@ -773,6 +860,52 @@ input[aria-invalid=true]{border-color:var(--berry)}
     } catch (e) { /* keep what we have */ }
   }
   function isOpen() { return !!(store && store.is_open === true); }
+
+  /* ---------- Countdown to opening / closing (F1) ---------- */
+  function serverNow() { return Date.now() + skew; }
+  function cdTarget() {
+    if (!store) return null;
+    if (store.is_open) {
+      var c = store.close_at ? Date.parse(store.close_at) : NaN;
+      return isNaN(c) ? null : { at: c, mode: 'close' };
+    }
+    var o = store.open_at ? Date.parse(store.open_at) : NaN;
+    return !isNaN(o) && o > serverNow() ? { at: o, mode: 'open' } : null;
+  }
+  function fmtDur(ms) {
+    var s = Math.max(0, Math.floor(ms / 1000)), d = Math.floor(s / 86400), h, m, p = [];
+    s -= d * 86400; h = Math.floor(s / 3600); s -= h * 3600; m = Math.floor(s / 60); s -= m * 60;
+    if (d) p.push(d + 'd');
+    if (d || h) p.push(h + 'h');
+    if (d || h || m) p.push(m + 'm');
+    p.push(s + 's');
+    return p.join(' ');
+  }
+  function countdownHtml(cls) {
+    var t = cdTarget();
+    if (!t) return '';
+    var rem = t.at - serverNow();
+    if (rem <= 0) return '';
+    return '<div class="cd-row' + (cls ? ' ' + cls : '') + '" role="timer" aria-live="off">Orders ' + (t.mode === 'close' ? 'close' : 'open') +
+      ' in <b class="cd" data-cd>' + fmtDur(rem) + '</b></div>';
+  }
+  function tickCountdown() {
+    var t = cdTarget();
+    if (!t) return;
+    var rem = t.at - serverNow();
+    if (rem > 0) {
+      $$('[data-cd]').forEach(function (n) { n.textContent = fmtDur(rem); });
+      return;
+    }
+    // zero: ask the server again; the page switches by itself (a few quick retries in case the server clock is a moment behind)
+    var r = parseRoute().name;
+    if (r !== 'catalog' && r !== 'checkout') return;
+    var key = t.mode + t.at;
+    if (cdKey !== key) { cdKey = key; cdTries = 0; }
+    if (cdBusy || cdTries >= 10) return;
+    cdTries++; cdBusy = true;
+    refreshStore(true).then(function () { cdBusy = false; }, function () { cdBusy = false; });
+  }
 
   /* ======================================================================
      Router
@@ -799,6 +932,8 @@ input[aria-invalid=true]{border-color:var(--berry)}
     closePicker();
     var r = parseRoute(), seq = ++routeSeq;
     document.body.dataset.route = r.name;
+    $('#menuBtn').hidden = r.name === 'catalog';       // F10: "Menu" button on every page except the main menu
+    $('#trackPill').hidden = r.name === 'track';
     if (!soft) window.scrollTo(0, 0);
     if (!configOk() || !keyOk()) {
       setApp('<div class="notice error"><div>This website is not set up correctly. Please contact the shop.</div></div>');
@@ -839,16 +974,21 @@ input[aria-invalid=true]{border-color:var(--berry)}
   function statusNotice() {
     var s = store;
     if (s.is_open) {
-      return '<div class="notice open">' + icon('check') + '<div><strong>Open for orders</strong>' +
+      return '<div class="notice open">' + icon('check') + '<div><strong>Open for orders</strong>' + countdownHtml() +
         (s.close_at ? '<span>Orders close on ' + esc(fmtDate(s.close_at)) + '.</span>' : '') + '</div></div>';
     }
     return '<div class="notice closed">' + icon('info') + '<div><strong>Orders are closed</strong>' +
-      (s.closed_message ? '<p>' + esc(s.closed_message) + '</p>' : '') +
+      (s.closed_message ? '<p>' + esc(s.closed_message) + '</p>' : '') + countdownHtml() +
       (isFuture(s.open_at) ? '<span>Orders open on ' + esc(fmtDate(s.open_at)) + '.</span>' : '') + '</div></div>';
   }
   function allergyNotice() {
     return store && store.allergy_warning
-      ? '<div class="notice allergy">' + icon('info') + '<div><strong>Allergy information</strong><span>' + esc(store.allergy_warning) + '</span></div></div>' : '';
+      ? '<div class="notice allergy">' + icon('info') + '<div><strong>Allergy Information</strong><span>' + esc(store.allergy_warning) + '</span></div></div>' : '';
+  }
+  // F7: the owner's note, only on the checkout page, above the allergy information
+  function checkoutNoteHtml() {
+    var t = store && typeof store.checkout_note === 'string' ? store.checkout_note.trim() : '';
+    return t ? '<div class="notice note">' + icon('info') + '<div><span>' + esc(t) + '</span></div></div>' : '';
   }
   function pickRule(p) {
     var n = p.pick_count;
@@ -856,6 +996,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
     if (n === 1) return 'Choose 1 flavor.';
     return 'Choose ' + n + ' flavors. You can repeat a flavor.';
   }
+  function bsLabel() { return '<span class="bs"><svg class="i" aria-hidden="true"><use href="#i-cookiebs"/></svg>Best seller</span>'; }
   function packageCard(p, open) {
     var body = '';
     if (p.description) body += '<p class="desc">' + esc(p.description) + '</p>';
@@ -873,28 +1014,42 @@ input[aria-invalid=true]{border-color:var(--berry)}
     var action = !open ? '<span class="muted">Ordering is closed</span>' :
       p.type === 'COMBO' ? '<button class="btn small" type="button" data-action="add-combo" data-id="' + p.id + '">Add to order</button>'
         : '<button class="btn small" type="button" data-action="pick" data-id="' + p.id + '">Choose flavors</button>';
-    return '<article class="card"><div class="pic">' + photo(p.image_url) + '</div><div class="body"><h3>' + esc(p.name) + '</h3>' + body +
+    return '<article class="card"><div class="pic">' + photo(p.image_url) + (p.best_seller === true ? bsLabel() : '') + '</div><div class="body"><h3>' + esc(p.name) + '</h3>' + body +
       '<div class="foot"><span class="price">' + rp(p.price) + '</span>' + action + '</div></div></article>';
   }
-  // Promos run as a banner at the very top of the page (above the logo); they are applied automatically.
-  function renderPromoBar() {
-    var bar = $('#promoBar'), track = $('#promoTrack');
-    if (!bar || !track) return;
-    var list = (catalog && catalog.promotions) || [];
-    if (!list.length) { bar.hidden = true; track.innerHTML = ''; return; }
-    var set = list.map(function (pr) {
-      return '<span class="promo-item">' + icon('gift') + '<span>' + esc(pr.name) + '</span><em>' + esc(promoCond(pr) + ', ' + promoGet(pr)) + '</em></span>';
-    }).join('');
-    var chars = list.reduce(function (n, pr) { return n + (pr.name + promoCond(pr) + promoGet(pr)).length + 12; }, 0);
+  // Running banners at the very top of the page (above the logo): the owner's text (F2) and the promos.
+  // "Combine with promos" on = one running line holding both; off = two lines, the owner's text above the promos.
+  function marquee(bar, track, setHtml, chars) {
     bar.hidden = false;
-    track.innerHTML = '<div class="promo-set">' + set + '</div>';
+    track.innerHTML = '<div class="promo-set">' + setHtml + '</div>';
     var w = track.firstChild.offsetWidth || 1, n = Math.max(1, Math.ceil(bar.clientWidth / w));
-    var one = new Array(n + 1).join(set);
+    var one = new Array(n + 1).join(setHtml);
     track.style.setProperty('--promo-secs', Math.max(14, Math.round(chars * 0.22 * n)) + 's');
     track.innerHTML = '<div class="promo-set">' + one + '</div><div class="promo-set" aria-hidden="true">' + one + '</div>';
   }
+  function renderTopBars(force) {
+    var ann = $('#annBar'), annT = $('#annTrack'), bar = $('#promoBar'), track = $('#promoTrack');
+    if (!ann || !bar) return;
+    var list = (catalog && catalog.promotions) || [];
+    var text = store && store.announcement_on === true && typeof store.announcement_text === 'string' ? store.announcement_text.replace(/\s+/g, ' ').trim() : '';
+    var combined = !store || store.announcement_with_promos !== false;
+    var promoSet = list.map(function (pr) {
+      return '<span class="promo-item">' + icon('gift') + '<span>' + esc(pr.name) + '</span><em>' + esc(promoCond(pr) + ', ' + promoGet(pr)) + '</em></span>';
+    }).join('');
+    var promoChars = list.reduce(function (n, pr) { return n + (pr.name + promoCond(pr) + promoGet(pr)).length + 12; }, 0);
+    var annItem = text ? '<span class="promo-item ann-item">' + icon('mega') + '<span>' + esc(text) + '</span></span>' : '';
+    var sig = JSON.stringify([text, combined, promoSet]);
+    if (!force && sig === topSig) return;               // nothing changed: let the running text keep running
+    topSig = sig;
+    ann.hidden = true; annT.innerHTML = ''; bar.hidden = true; track.innerHTML = '';
+    if (text && list.length && combined) marquee(bar, track, annItem + promoSet, text.length + promoChars);
+    else {
+      if (text) marquee(ann, annT, annItem, text.length + 8);
+      if (list.length) marquee(bar, track, promoSet, promoChars);
+    }
+  }
   var promoResizeTimer = null;
-  window.addEventListener('resize', function () { clearTimeout(promoResizeTimer); promoResizeTimer = setTimeout(renderPromoBar, 250); });
+  window.addEventListener('resize', function () { clearTimeout(promoResizeTimer); promoResizeTimer = setTimeout(function () { renderTopBars(true); }, 250); });
 
   function singleQty(fid) {
     var l = cart.filter(function (x) { return x.type === 'SINGLE' && x.flavor_id === fid; })[0];
@@ -914,7 +1069,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
           '<output>' + q + '</output>' +
           '<button class="qbtn" type="button" data-action="sg-inc" data-fid="' + f.id + '" aria-label="Add one ' + esc(f.name) + '"' + (q >= MAX_SINGLE ? ' disabled' : '') + '>' + icon('plus') + '</button></div>';
     }
-    return '<div class="srow" id="sg-' + f.id + '"><div class="sp">' + photo(f.image_url) + '</div><div class="sm"><div class="sn">' + esc(f.name) + '</div>' +
+    return '<div class="srow" id="sg-' + f.id + '"><div class="sp">' + photo(f.image_url) + (f.best_seller === true ? bsLabel() : '') + '</div><div class="sm"><div class="sn">' + esc(f.name) + '</div>' +
       '<div class="spr">' + rp(f.single_price) + '</div>' + (f.description ? '<div class="sd">' + esc(f.description) + '</div>' : '') + '</div>' + ctl + '</div>';
   }
   function refreshSingleRow(fid, focusAction) {
@@ -1123,8 +1278,26 @@ input[aria-invalid=true]{border-color:var(--berry)}
     }).join('');
   }
   function bankLabel() { return (store && store.bank_name) || 'BCA'; }
+
+  /* ---------- Payment methods (F3): the shop decides which ones are on and in what order ---------- */
+  var PM_TEXT = {
+    CASH_COD: function () { return ['Cash (COD)', 'Pay in cash when you receive your order.']; },
+    BCA: function () { return ['Bank transfer, ' + bankLabel(), 'A unique code is added to your total so we can match your payment.']; },
+    QRIS: function () { return ['QRIS', 'Pay by scanning our QR code. A unique code is added to your total.']; }
+  };
+  function activeMethods() {
+    if (!store || !Array.isArray(store.payment_methods)) return ['CASH_COD', 'BCA', 'QRIS'];
+    return store.payment_methods.filter(function (m) { return PM_TEXT[m]; });
+  }
+  function pmHtml() {
+    var list = activeMethods();
+    return list.map(function (m) {
+      var t = PM_TEXT[m]();
+      return '<label><input type="radio" name="pm" value="' + m + '"' + (list.length === 1 ? ' checked' : '') + '><span><strong>' + esc(t[0]) + '</strong><span class="sub">' + esc(t[1]) + '</span></span></label>';
+    }).join('');
+  }
   function viewCheckout(priceChanged) {
-    var back = '<a class="back" href="#/">' + icon('back') + 'Back to menu</a>';
+    var back = '';       // the "Menu" button in the page header takes the buyer back (F10)
     if (!isOpen()) {
       setApp(back + '<div class="narrow"><h1>Your order</h1>' + statusNotice() + '<a class="btn" href="#/">See the menu</a></div>');
       return;
@@ -1133,19 +1306,16 @@ input[aria-invalid=true]{border-color:var(--berry)}
       setApp(back + '<div class="empty"><h1>Your order is empty</h1><p class="muted">Add a package from the menu to get started.</p><a class="btn" href="#/">Browse the menu</a></div>');
       return;
     }
-    var html = back + '<div class="narrow"><h1>Your order</h1>' +
+    var html = back + '<div class="narrow"><h1>Your order</h1>' + countdownHtml('cd-top') +
       (priceChanged ? '<div class="notice allergy">' + icon('info') + '<div>Prices have been updated by the store.</div></div>' : '') +
       '<div class="panel"><div id="co-lines"></div><div class="totals" id="co-totals"></div></div>' +
       '<form id="co-form" novalidate>' +
       '<div class="panel"><h3 style="margin-bottom:12px">Your details</h3>' +
       '<div class="field"><label for="f-name">Your name</label><input type="text" id="f-name" name="name" autocomplete="name" maxlength="60" aria-describedby="err-name"><p class="err" id="err-name" hidden></p></div>' +
       '<div class="field" style="margin-bottom:0"><label for="f-wa">WhatsApp number</label><input type="tel" id="f-wa" name="wa" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="081234567890" aria-describedby="err-wa"><p class="hint">We use it to confirm your order.</p><p class="err" id="err-wa" hidden></p></div></div>' +
-      '<div class="panel"><fieldset style="border:0;padding:0;margin:0"><legend class="lbl" style="padding:0">Payment method</legend><div class="pm" id="pm">' +
-      '<label><input type="radio" name="pm" value="CASH_COD"><span><strong>Cash (COD)</strong><span class="sub">Pay in cash when you receive your order.</span></span></label>' +
-      '<label><input type="radio" name="pm" value="BCA"><span><strong>Bank transfer, ' + esc(bankLabel()) + '</strong><span class="sub">A unique code is added to your total so we can match your payment.</span></span></label>' +
-      '<label><input type="radio" name="pm" value="QRIS"><span><strong>QRIS</strong><span class="sub">Pay by scanning our QR code. A unique code is added to your total.</span></span></label>' +
-      '</div></fieldset><p class="err" id="err-pm" hidden></p></div>' +
-      allergyNotice() +
+      voucherPanelHtml() +
+      '<div class="panel"><fieldset style="border:0;padding:0;margin:0"><legend class="lbl" style="padding:0">Payment method</legend><div class="pm" id="pm">' + pmHtml() + '</div></fieldset><p class="err" id="err-pm" hidden></p></div>' +
+      checkoutNoteHtml() + allergyNotice() +
       '<div class="hp" aria-hidden="true"><label>Website<input type="text" id="f-website" name="website" tabindex="-1" autocomplete="off"></label></div>' +
       '<div class="notice error" id="co-error" role="alert" hidden></div>' +
       '<button class="btn big block" type="submit" id="co-submit">Place order</button>' +
@@ -1173,12 +1343,121 @@ input[aria-invalid=true]{border-color:var(--berry)}
     var l = $('#co-lines'), t = $('#co-totals');
     if (!l) return;
     if (!cart.length) { route(true); return; }
-    var plan = getPlan();
-    l.innerHTML = linesHtml() + freeLinesHtml(plan);
+    var plan = getPlan(), vc = voucher ? voucherCalc(plan) : null;
+    // a voucher that cannot be combined replaces the promo free items (K52)
+    var shown = vc && vc.dropPromo ? Object.assign({}, plan, { bonus: [], hints: [] }) : plan;
+    var v = vc && vc.v;
+    l.innerHTML = linesHtml() + freeLinesHtml(shown) + (vc && vc.free ? voucherFreeLineHtml(v) : '');
     t.innerHTML = (plan.saving > 0 ? '<div class="r"><span>Items</span><span>' + rp(plan.rawTotal) + '</span></div>' +
         '<div class="r save"><span>Bundle price applied</span><span>−' + rp(plan.saving) + '</span></div>' : '') +
-      '<div class="r"><span>Subtotal (estimate)</span><span>' + rp(plan.total) + '</span></div>' + offersHtml(plan);
+      (vc && vc.ok && vc.disc > 0 ? '<div class="r save"><span>Voucher ' + esc(v.code) + '</span><span>−' + rp(vc.disc) + '</span></div>' : '') +
+      (vc && vc.free ? '<div class="r save"><span>Voucher ' + esc(v.code) + '</span><span>Free item</span></div>' : '') +
+      '<div class="r"><span>Subtotal (estimate)</span><span>' + rp(plan.total - (vc ? vc.disc : 0)) + '</span></div>' + offersHtml(shown);
+    renderVoucherPanel(false);
   }
+
+  /* ---------- Voucher (F12): the server decides; this only shows what to expect ---------- */
+  function voucherEnabled() { return !!store && store.vouchers_available !== false; }
+  function voucherPanelHtml() {
+    if (!voucherEnabled()) { voucher = null; vErrText = ''; return ''; }
+    return '<div class="panel" id="vp-panel"><h3 style="margin-bottom:12px">Voucher</h3><div id="vp"></div></div>';
+  }
+  function personKey() {
+    var n = $('#f-name'), w = $('#f-wa');
+    return (n ? n.value.trim().toLowerCase() : '') + '|' + (w ? normalizeWa(w.value) || '' : '');
+  }
+  function vDesc(v) {
+    if (v.discount_type === 'AMOUNT') return rp(v.discount_value) + ' off';
+    if (v.discount_type === 'PERCENT') return v.discount_value + '% off' + (v.max_discount ? ' (up to ' + rp(v.max_discount) + ')' : '');
+    return 'Free: ' + (v.free_qty || 1) + ' × ' + (v.free_name || 'item');
+  }
+  function voucherCalc(plan) {
+    var v = voucher && voucher.data;
+    if (!v) return null;
+    var base = plan.total, disc = 0, ok = base >= (v.min_spend || 0);
+    if (ok && v.discount_type === 'AMOUNT') disc = Math.min(v.discount_value || 0, base);
+    else if (ok && v.discount_type === 'PERCENT') {
+      disc = Math.floor(base * (v.discount_value || 0) / 100);
+      if (v.max_discount) disc = Math.min(disc, v.max_discount);
+      disc = Math.min(disc, base);
+    }
+    return { v: v, ok: ok, disc: disc, free: ok && v.discount_type === 'FREE_ITEM', need: (v.min_spend || 0) - base,
+      dropPromo: ok && v.combine_with_promos === false && plan.bonus.length > 0 };
+  }
+  function voucherFreeLineHtml(v) {
+    var f = v.free_flavor_id ? singleFlavor(v.free_flavor_id) : null;
+    return '<article class="line free"><div class="lp">' + (f ? photo(f.image_url) : placeholder()) + '</div><div class="lm">' +
+      '<div class="ln">' + esc((v.free_qty || 1) + ' × ' + (v.free_name || 'Free item')) + '</div><div class="lf">Free · voucher ' + esc(v.code) + '</div>' +
+      '<div class="lr"><span class="freetag">FREE</span></div></div></article>';
+  }
+  function renderVoucherPanel(rebuild) {
+    var box = $('#vp');
+    if (!box) return;
+    if (!voucher) {
+      if (!rebuild && $('#f-voucher')) return;           // keep what the buyer is typing
+      box.innerHTML = '<div class="field" style="margin-bottom:0"><label for="f-voucher">Have a voucher code?</label><div class="vbox">' +
+        '<input type="text" id="f-voucher" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="30" placeholder="Enter code" aria-describedby="err-voucher">' +
+        '<button class="btn" type="button" id="v-apply" data-action="v-apply">Apply</button></div>' +
+        '<p class="err" id="err-voucher" role="alert"' + (vErrText ? '' : ' hidden') + '>' + esc(vErrText) + '</p></div>';
+      return;
+    }
+    var plan = getPlan(), vc = voucherCalc(plan), v = voucher.data, small = [];
+    small.push(vDesc(v));
+    if (v.min_spend > 0) small.push('Minimum spend ' + rp(v.min_spend));
+    if (v.valid_until) small.push('Valid until ' + fmtDate(v.valid_until));
+    var h = '<div class="vok"><div class="vt"><div><div class="vname">' + esc(v.name) + '</div><span class="vcode">' + esc(v.code) + '</span></div>' +
+      '<button class="link-btn" type="button" data-action="v-remove">Remove</button></div>';
+    if (vc.ok) h += '<p class="vsave">' + (vc.free ? esc(vDesc(v)) : 'You save ' + rp(vc.disc)) + '</p>';
+    else h += '<p class="vsave" style="color:var(--berry)">Add ' + rp(vc.need) + ' more to use this voucher.</p>';
+    h += '<p class="vsmall">' + esc(small.join(' · ')) + '</p>';
+    if (v.customer_checked === false) h += '<p class="vsmall">Enter your name and WhatsApp number above so we can check this voucher for you. It is checked again when you place your order.</p>';
+    if (v.terms) h += '<p class="vsmall vterms"><strong>Terms:</strong> ' + esc(v.terms) + '</p>';
+    h += '</div>';
+    if (vc.dropPromo) {
+      h += '<div class="notice allergy vwarn">' + icon('info') + '<div>This voucher cannot be combined with promos. The promo for this order (' +
+        esc(plan.bonus.map(function (b) { return b.promo.name; }).join(', ')) + ') will not be applied. Remove the voucher if you prefer the promo.</div></div>';
+    }
+    box.innerHTML = h;
+  }
+  async function applyVoucher(codeArg, silent) {
+    if (vBusy) return;
+    var inp = $('#f-voucher');
+    var code = String(codeArg != null ? codeArg : inp ? inp.value : '').trim().toUpperCase();
+    if (!code) { vErrText = errText('VOUCHER_EMPTY'); setErr('err-voucher', vErrText); if (inp) inp.setAttribute('aria-invalid', 'true'); return; }
+    var nameEl = $('#f-name'), waEl = $('#f-wa'), name = nameEl ? nameEl.value.trim() : '', wa = waEl ? waEl.value : '';
+    var btn = $('#v-apply');
+    vBusy = true;
+    if (btn) { btn.disabled = true; btn.textContent = 'Checking…'; }
+    try {
+      var d = await rpc('check_voucher', { p_code: code, p_name: name.length >= 2 ? name : null, p_wa: normalizeWa(wa) ? wa : null });
+      voucher = { data: d, key: personKey() };
+      vErrText = '';
+      renderVoucherPanel(true);
+      renderCheckoutLines();
+      if (!silent && voucherCalc(getPlan()).ok) toast('Voucher applied');
+    } catch (e) {
+      voucher = null;
+      vErrText = errText(e.code);
+      renderVoucherPanel(true);
+      var again = $('#f-voucher');
+      if (again) { again.value = code; again.setAttribute('aria-invalid', 'true'); if (!silent) again.focus(); }
+      renderCheckoutLines();
+    } finally { vBusy = false; }
+  }
+  // The name or WhatsApp number changed: vouchers with customer rules are checked again for the new person.
+  async function recheckVoucher() {
+    if (!voucher || vBusy) return;
+    var v = voucher.data;
+    if (!(v.min_completed > 0 || v.once_per_customer)) return;
+    if (v.customer_checked === true && personKey() === voucher.key) return;
+    await applyVoucher(v.code, true);
+  }
+  function removeVoucher() {
+    voucher = null; vErrText = '';
+    renderVoucherPanel(true);
+    renderCheckoutLines();
+  }
+
   function setErr(id, msg) {
     var e = $('#' + id); if (!e) return;
     e.textContent = msg || ''; e.hidden = !msg;
@@ -1205,14 +1484,18 @@ input[aria-invalid=true]{border-color:var(--berry)}
     var plan = getPlan();
     if (plan.lineCount > MAX_LINES) { box.textContent = errText('TOO_MANY_LINES'); box.hidden = false; return; }
     var items = planItems(plan);
-    var estimate = plan.total;
+    var vc = voucher ? voucherCalc(plan) : null;
+    if (vc && !vc.ok) { box.textContent = errText('VOUCHER_MIN_SPEND'); box.hidden = false; box.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
+    var estimate = plan.total - (vc ? vc.disc : 0);
     var btn = $('#co-submit');
     submitting = true; btn.disabled = true; btn.textContent = 'Placing order…';
     try {
-      var r = await rpc('submit_order', { p_name: name, p_wa: wa, p_method: pmEl.value, p_items: items, p_website: $('#f-website').value });
+      var r = await rpc('submit_order', { p_name: name, p_wa: wa, p_method: pmEl.value, p_items: items, p_website: $('#f-website').value,
+        p_voucher: vc ? voucher.data.code : null, p_sales: salesCode() });
       r.estimated_subtotal = estimate;
       lsSet(RECEIPT_KEY, JSON.stringify(r));
       cart = []; saveCart();
+      voucher = null; vErrText = '';
       submitting = false;
       location.hash = '#/receipt';
     } catch (e) {
@@ -1222,6 +1505,22 @@ input[aria-invalid=true]{border-color:var(--berry)}
       if (again) { again.disabled = false; again.textContent = 'Place order'; }
       var eb = $('#co-error');
       if (c === 'STORE_CLOSED') {
+        try { await loadStore(); } catch (x) { /* ignore */ }
+        route(true);
+        setTimeout(function () { toast(errText(c), true); }, 50);
+        return;
+      }
+      if (c.indexOf('VOUCHER_') === 0) {
+        // the order was NOT saved; a voucher the server refuses is removed so the buyer can place the order without it
+        var keep = c === 'VOUCHER_MIN_SPEND';
+        if (!keep) { voucher = null; vErrText = ''; renderVoucherPanel(true); renderCheckoutLines(); }
+        if (eb) {
+          eb.textContent = errText(c) + (keep ? '' : ' The voucher was removed from your order. Please check your order and press Place order again.');
+          eb.hidden = false; eb.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }
+        return;
+      }
+      if (c === 'INVALID_PAYMENT_METHOD') {
         try { await loadStore(); } catch (x) { /* ignore */ }
         route(true);
         setTimeout(function () { toast(errText(c), true); }, 50);
@@ -1272,10 +1571,19 @@ input[aria-invalid=true]{border-color:var(--berry)}
       return '<div class="it"><div class="row"><span>' + esc(it.qty + ' × ' + it.name) + '</span><span>' + (free ? 'FREE' : rp(it.line_total)) + '</span></div>' + fl + note + '</div>';
     }).join('') + '</div>';
   }
+  function voucherRowsHtml(d) {
+    if (!d.voucher_code) return '';
+    var disc = Number(d.voucher_discount) || 0;
+    return (disc > 0 && typeof d.items_total === 'number' ? '<div class="r"><span>Items total</span><span>' + rp(d.items_total) + '</span></div>' : '') +
+      '<div class="r save"><span>Voucher ' + esc(d.voucher_code) + '</span><span>' + (disc > 0 ? '−' + rp(disc) : 'Free item') + '</span></div>';
+  }
   function totalsHtml(d) {
-    return '<div class="totals"><div class="r"><span>Subtotal</span><span>' + rp(d.subtotal) + '</span></div>' +
+    return '<div class="totals">' + voucherRowsHtml(d) + '<div class="r"><span>Subtotal</span><span>' + rp(d.subtotal) + '</span></div>' +
       (d.unique_code ? '<div class="r"><span>Unique code</span><span>' + rp(d.unique_code) + '</span></div>' : '') +
       '<div class="r big"><span>Total</span><span>' + rp(d.total) + '</span></div></div>';
+  }
+  function voucherKvHtml(d) {
+    return d.voucher_code ? '<dt>Voucher</dt><dd>' + esc(d.voucher_code + (d.voucher_name ? ' · ' + d.voucher_name : '')) + '</dd>' : '';
   }
 
   /* ======================================================================
@@ -1291,10 +1599,11 @@ input[aria-invalid=true]{border-color:var(--berry)}
     var changed = typeof d.estimated_subtotal === 'number' && d.estimated_subtotal !== d.subtotal;
     setApp('<div class="narrow"><h1>Order received</h1><p class="lead">Waiting for admin confirmation.</p>' +
       (changed ? '<div class="notice allergy">' + icon('info') + '<div>Prices have been updated by the store.</div></div>' : '') +
+      (d.promos_removed ? '<div class="notice allergy">' + icon('info') + '<div>Voucher ' + esc(d.voucher_code || '') + ' cannot be combined with promos, so the promo was not applied to this order.</div></div>' : '') +
       '<section class="ticket"><div class="codebox"><div><div class="k">Tracking code</div><div class="v" id="code-v">' + esc(d.tracking_code) + '</div></div>' +
       '<button class="btn sec small" type="button" data-action="copy" data-text="' + esc(d.tracking_code) + '" data-msg="Tracking code copied">' + icon('copy') + 'Copy code</button></div>' +
       (store && store.receipt_text ? '<p class="muted" style="font-size:15px">' + esc(store.receipt_text) + '</p>' : '') +
-      '<hr class="sep"><dl class="kv"><dt>Name</dt><dd>' + esc(d.customer_name) + '</dd><dt>Placed on</dt><dd>' + esc(fmtDate(d.created_at)) + '</dd><dt>Payment</dt><dd>' + esc(methodLabel(d.payment_method)) + '</dd></dl>' +
+      '<hr class="sep"><dl class="kv"><dt>Name</dt><dd>' + esc(d.customer_name) + '</dd><dt>Placed on</dt><dd>' + esc(fmtDate(d.created_at)) + '</dd><dt>Payment</dt><dd>' + esc(methodLabel(d.payment_method)) + '</dd>' + voucherKvHtml(d) + '</dl>' +
       '<hr class="sep">' + itemsHtml(d.items || []) + '<hr class="sep">' + totalsHtml(d) + '</section>' +
       payBlock(d.payment_method, d.total) +
       '<div class="actions"><button class="btn" type="button" data-action="dl-receipt" data-src="receipt">' + icon('down') + 'Download receipt (PNG)</button>' +
@@ -1336,8 +1645,14 @@ input[aria-invalid=true]{border-color:var(--berry)}
     try { await Promise.all([document.fonts.load('800 40px "Bricolage Grotesque"'), document.fonts.load('700 24px "Bricolage Grotesque"')]); } catch (e) { /* use fallback font */ }
     var s = store || {};
     var qrImg = d.payment_method === 'QRIS' && d.payment_status !== 'PAID' ? await loadImage(s.qris_image_url) : null;
-    var logoImg = null;      // shop logo on top of the receipt (same website, so the picture can be drawn safely)
-    try { if (LOGO_URL) logoImg = await loadImage(new URL(LOGO_URL, location.href.split('#')[0]).href); } catch (e) { logoImg = null; }
+    // Shop logo on top of the receipt (same website, so the picture can be drawn safely).
+    // logo-receipt.png has no cream border; if it is missing the header logo (logo.png) is used instead.
+    var logoImg = null, logoTrimmed = false;
+    try {
+      var base = location.href.split('#')[0].split('?')[0];
+      if (LOGO_RECEIPT_URL) { logoImg = await loadImage(new URL(LOGO_RECEIPT_URL, base).href); logoTrimmed = !!logoImg; }
+      if (!logoImg && LOGO_URL) logoImg = await loadImage(new URL(LOGO_URL, base).href);
+    } catch (e) { logoImg = null; }
     var W = 720, M = 24, PAD = 40, IN = W - 2 * M - 2 * PAD, X0 = M + PAD;
     function run(ctx, draw, H) {
       var y = M + PAD;
@@ -1377,9 +1692,9 @@ input[aria-invalid=true]{border-color:var(--berry)}
       }
 
       if (logoImg && logoImg.naturalWidth) {
-        var lgH = 96, lgW = Math.min(IN, Math.round(logoImg.naturalWidth * lgH / logoImg.naturalHeight));
-        if (draw) ctx.drawImage(logoImg, X0 - 8, y, lgW, lgH);
-        y += lgH + 8;
+        var lgH = logoTrimmed ? 104 : 96, lgW = Math.min(IN, Math.round(logoImg.naturalWidth * lgH / logoImg.naturalHeight));
+        if (draw) ctx.drawImage(logoImg, logoTrimmed ? X0 : X0 - 8, y, lgW, lgH);
+        y += lgH + (logoTrimmed ? 14 : 8);
       } else {
         txt(s.store_name || 'Cookies', { size: 38, weight: 800, display: true });
       }
@@ -1402,6 +1717,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
       if (d.status_label) row('Order status', d.status_label, { size: 24 });
       if (d.payment_label) row('Payment status', d.payment_label, { size: 24 });
       row('Payment method', methodLabel(d.payment_method), { size: 24 });
+      if (d.voucher_code) row('Voucher', d.voucher_code, { size: 24 });
       gap(14); dash(); gap(16);
       (d.items || []).forEach(function (it) {
         var isFree = it.type === 'BONUS', isSingle = it.type === 'SINGLE';
@@ -1415,6 +1731,11 @@ input[aria-invalid=true]{border-color:var(--berry)}
         gap(10);
       });
       dash(); gap(14);
+      if (d.voucher_code) {
+        var vdisc = Number(d.voucher_discount) || 0;
+        if (vdisc > 0 && typeof d.items_total === 'number') row('Items total', rp(d.items_total), { size: 24 });
+        row('Voucher ' + d.voucher_code, vdisc > 0 ? '−' + rp(vdisc) : 'Free item', { size: 24, color: '#1D7A4B' });
+      }
       row('Subtotal', rp(d.subtotal), { size: 24 });
       if (d.unique_code) row('Unique code', rp(d.unique_code), { size: 24 });
       gap(4);
@@ -1535,7 +1856,8 @@ input[aria-invalid=true]{border-color:var(--berry)}
   function normalizeTrack(d) {
     return {
       tracking_code: d.tracking_code, order_number: d.order_number, customer_name: d.customer_name, created_at: d.created_at,
-      payment_method: d.payment_method, subtotal: d.subtotal, unique_code: d.unique_code, total: d.total,
+      payment_method: d.payment_method, items_total: d.items_total, voucher_code: d.voucher_code, voucher_name: d.voucher_name, voucher_discount: d.voucher_discount,
+      subtotal: d.subtotal, unique_code: d.unique_code, total: d.total,
       status: d.status, payment_status: d.payment_status, status_label: label(d.status), payment_label: label(d.payment_status),
       heading: 'Order receipt',
       items: (d.items || []).map(function (i) { return { name: i.package_name, type: i.package_type, price: i.unit_price, qty: i.qty, line_total: i.line_total, flavors: i.flavors || [] }; })
@@ -1601,7 +1923,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
       '<p style="font-weight:600;margin-bottom:4px">' + esc(STATUS_TEXT[d.status] || '') + '</p>' + stepperHtml(d.status) +
       '<hr class="sep"><dl class="kv">' + (d.order_number ? '<dt>Order no.</dt><dd>' + esc(d.order_number) + '</dd>' : '') +
       '<dt>Tracking code</dt><dd>' + esc(d.tracking_code) + '</dd><dt>Name</dt><dd>' + esc(d.customer_name) + '</dd><dt>Placed on</dt><dd>' + esc(fmtDate(d.created_at)) + '</dd>' +
-      '<dt>Payment</dt><dd>' + esc(methodLabel(d.payment_method)) + '</dd></dl>' +
+      '<dt>Payment</dt><dd>' + esc(methodLabel(d.payment_method)) + '</dd>' + voucherKvHtml(d) + '</dl>' +
       '<hr class="sep">' + itemsHtml(n.items) + '<hr class="sep">' + totalsHtml(d) + '</section>' +
       (showPay ? payBlock(d.payment_method, d.total) : '') +
       proofBlockHtml(d) + reviewBlockHtml(d) +
@@ -1760,6 +2082,8 @@ input[aria-invalid=true]{border-color:var(--berry)}
         break;
       }
       case 'review-send': sendReview(); break;
+      case 'v-apply': applyVoucher(); break;
+      case 'v-remove': removeVoucher(); break;
     }
   });
   document.addEventListener('submit', function (ev) {
@@ -1769,12 +2093,14 @@ input[aria-invalid=true]{border-color:var(--berry)}
   document.addEventListener('change', function (ev) {
     if (ev.target.id === 'proof-file') onProofChosen(ev.target);
     else if (ev.target.name === 'pm') saveDraft();
+    else if (ev.target.id === 'f-name' || ev.target.id === 'f-wa') recheckVoucher();
   });
   document.addEventListener('input', function (ev) {
     if (ev.target.id === 'f-name' || ev.target.id === 'f-wa') saveDraft();
     if (ev.target.id === 'rv-text') { track.draft.text = ev.target.value; var c = $('#rv-count'); if (c) c.textContent = ev.target.value.length + ' / 1000'; }
   });
   document.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter' && ev.target.id === 'f-voucher') { ev.preventDefault(); applyVoucher(); return; }   // Enter applies the voucher, it does not place the order
     if (!picker) return;
     if (ev.key === 'Escape') { closePicker(); return; }
     if (ev.key === 'Tab') {        // keep keyboard focus inside the picker
@@ -1807,8 +2133,10 @@ input[aria-invalid=true]{border-color:var(--berry)}
     logo.onerror = function () { logo.hidden = true; brand.classList.remove('has-logo'); };
     logo.src = LOGO_URL;
   })();
+  readSalesFromLink();
   loadCart();
   route();
+  setInterval(tickCountdown, 1000);
 })();
 </script>
 </body>
