@@ -181,11 +181,32 @@ p{margin:0 0 10px}
 .promo-bar.owner{background:var(--cocoa)}
 .promo-item.ann-item{font-weight:700}
 
-/* ---------- Countdown (F1) ---------- */
-.cd-row{margin-top:6px;font-weight:600}
-.cd{font:800 20px/1.2 var(--font-display);font-variant-numeric:tabular-nums;letter-spacing:.01em;white-space:nowrap}
-.cd-top{margin:-4px 0 10px;color:var(--cocoa-soft)}
-.cd-top .cd{color:var(--cocoa)}
+/* ---------- Countdown (F1): top centre of the header, only in the last 24 hours ---------- */
+.top{flex-wrap:wrap}
+.top-cd{order:3;flex:1 1 100%;display:flex;flex-direction:column;align-items:center;gap:6px;padding:2px 0 10px;text-align:center}
+.top-cd[hidden]{display:none}
+.tcd-label{font:700 12px/1.2 var(--font-display);letter-spacing:.09em;text-transform:uppercase;color:var(--cocoa-soft)}
+.tcd-tiles{display:flex;align-items:flex-start;gap:6px;font-variant-numeric:tabular-nums}
+.tcd-t{display:flex;flex-direction:column;align-items:center;min-width:62px;padding:7px 8px 6px;border-radius:14px;background:var(--blue-deep);color:#fff;box-shadow:0 4px 0 rgba(47,86,136,.28),0 8px 16px rgba(47,86,136,.18)}
+.tcd-t b{font:800 32px/1 var(--font-display);letter-spacing:.01em}
+.tcd-t i{font:600 10px/1 var(--font-body);font-style:normal;letter-spacing:.1em;text-transform:uppercase;opacity:.82;margin-top:4px}
+.tcd-sep{font:800 28px/1 var(--font-display);color:var(--blue-deep);padding-top:8px;opacity:.55}
+.top-cd[data-mode="open"] .tcd-t{background:var(--cocoa);box-shadow:0 4px 0 rgba(70,48,28,.28),0 8px 16px rgba(70,48,28,.16)}
+.top-cd[data-mode="open"] .tcd-sep{color:var(--cocoa)}
+.top-cd[data-urgent="1"] .tcd-label{color:var(--berry)}
+.top-cd[data-urgent="1"] .tcd-t{background:var(--berry);box-shadow:0 4px 0 rgba(200,38,79,.28),0 8px 16px rgba(200,38,79,.2)}
+.top-cd[data-urgent="1"] .tcd-sep{color:var(--berry)}
+.top-cd[data-urgent="1"] .tcd-t.sec{animation:tcd-beat 1s ease-in-out infinite}
+@keyframes tcd-beat{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@media(min-width:900px){
+  .top{position:relative}
+  .top-cd{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);order:0;flex:none;padding:0;gap:4px}
+  .tcd-t{min-width:54px;padding:5px 7px 5px}
+  .tcd-t b{font-size:26px}
+  .tcd-sep{font-size:22px;padding-top:6px}
+}
+@media(max-width:380px){.tcd-t{min-width:56px}.tcd-t b{font-size:28px}}
+@media(prefers-reduced-motion:reduce){.top-cd[data-urgent="1"] .tcd-t.sec{animation:none}}
 
 /* ---------- Best seller label (F6) ---------- */
 .card .pic,.srow .sp{position:relative}
@@ -389,6 +410,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
         <span class="brand-name" id="brand-name">Cookies</span>
       </a>
     </div>
+    <div class="top-cd" id="topCd" role="timer" aria-live="off" hidden></div>
     <a class="pill" id="trackPill" href="#/track">Track order</a>
   </header>
   <main id="app" aria-live="polite">
@@ -881,20 +903,35 @@ input[aria-invalid=true]{border-color:var(--berry)}
     p.push(s + 's');
     return p.join(' ');
   }
-  function countdownHtml(cls) {
-    var t = cdTarget();
-    if (!t) return '';
-    var rem = t.at - serverNow();
-    if (rem <= 0) return '';
-    return '<div class="cd-row' + (cls ? ' ' + cls : '') + '" role="timer" aria-live="off">Orders ' + (t.mode === 'close' ? 'close' : 'open') +
-      ' in <b class="cd" data-cd>' + fmtDur(rem) + '</b></div>';
+  var CD_WINDOW = 24 * 3600 * 1000;      // the countdown only appears when 1 day or less is left
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+  function renderTopCd() {
+    var box = $('#topCd'); if (!box) return;
+    var t = cdTarget(), r = parseRoute().name, rem = t ? t.at - serverNow() : 0;
+    if (!t || rem <= 0 || rem > CD_WINDOW || (r !== 'catalog' && r !== 'checkout')) {
+      if (!box.hidden) { box.hidden = true; box.innerHTML = ''; box.removeAttribute('data-key'); }
+      return;
+    }
+    var urgent = t.mode === 'close' && rem <= 10 * 60 * 1000;
+    var key = t.mode + (urgent ? 'u' : '');
+    if (box.getAttribute('data-key') !== key) {
+      box.setAttribute('data-key', key); box.setAttribute('data-mode', t.mode); box.setAttribute('data-urgent', urgent ? '1' : '0');
+      box.innerHTML = '<div class="tcd-label">' + (t.mode === 'close' ? (urgent ? 'Last call! Orders close in' : 'Orders close in') : 'Orders open in') + '</div>' +
+        '<div class="tcd-tiles"><div class="tcd-t"><b data-u="h">00</b><i>hrs</i></div><span class="tcd-sep" aria-hidden="true">:</span>' +
+        '<div class="tcd-t"><b data-u="m">00</b><i>min</i></div><span class="tcd-sep" aria-hidden="true">:</span>' +
+        '<div class="tcd-t sec"><b data-u="s">00</b><i>sec</i></div></div>';
+      box.hidden = false;
+    }
+    var sec = Math.floor(rem / 1000), h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), x = sec % 60;
+    var eh = box.querySelector('[data-u="h"]'), em = box.querySelector('[data-u="m"]'), es = box.querySelector('[data-u="s"]');
+    if (eh) eh.textContent = pad2(h); if (em) em.textContent = pad2(m); if (es) es.textContent = pad2(x);
   }
   function tickCountdown() {
     var t = cdTarget();
-    if (!t) return;
+    if (!t) { renderTopCd(); return; }
     var rem = t.at - serverNow();
     if (rem > 0) {
-      $$('[data-cd]').forEach(function (n) { n.textContent = fmtDur(rem); });
+      renderTopCd();
       return;
     }
     // zero: ask the server again; the page switches by itself (a few quick retries in case the server clock is a moment behind)
@@ -934,6 +971,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
     document.body.dataset.route = r.name;
     $('#menuBtn').hidden = r.name === 'catalog';       // F10: "Menu" button on every page except the main menu
     $('#trackPill').hidden = r.name === 'track';
+    renderTopCd();
     if (!soft) window.scrollTo(0, 0);
     if (!configOk() || !keyOk()) {
       setApp('<div class="notice error"><div>This website is not set up correctly. Please contact the shop.</div></div>');
@@ -974,11 +1012,11 @@ input[aria-invalid=true]{border-color:var(--berry)}
   function statusNotice() {
     var s = store;
     if (s.is_open) {
-      return '<div class="notice open">' + icon('check') + '<div><strong>Open for orders</strong>' + countdownHtml() +
+      return '<div class="notice open">' + icon('check') + '<div><strong>Open for orders</strong>' +
         (s.close_at ? '<span>Orders close on ' + esc(fmtDate(s.close_at)) + '.</span>' : '') + '</div></div>';
     }
     return '<div class="notice closed">' + icon('info') + '<div><strong>Orders are closed</strong>' +
-      (s.closed_message ? '<p>' + esc(s.closed_message) + '</p>' : '') + countdownHtml() +
+      (s.closed_message ? '<p>' + esc(s.closed_message) + '</p>' : '') +
       (isFuture(s.open_at) ? '<span>Orders open on ' + esc(fmtDate(s.open_at)) + '.</span>' : '') + '</div></div>';
   }
   function allergyNotice() {
@@ -1306,7 +1344,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
       setApp(back + '<div class="empty"><h1>Your order is empty</h1><p class="muted">Add a package from the menu to get started.</p><a class="btn" href="#/">Browse the menu</a></div>');
       return;
     }
-    var html = back + '<div class="narrow"><h1>Your order</h1>' + countdownHtml('cd-top') +
+    var html = back + '<div class="narrow"><h1>Your order</h1>' +
       (priceChanged ? '<div class="notice allergy">' + icon('info') + '<div>Prices have been updated by the store.</div></div>' : '') +
       '<div class="panel"><div id="co-lines"></div><div class="totals" id="co-totals"></div></div>' +
       '<form id="co-form" novalidate>' +
