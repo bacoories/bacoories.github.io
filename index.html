@@ -116,6 +116,11 @@ p{margin:0 0 10px}
 .notice.allergy{background:#FBF1DC;border-color:#E6CF9A}
 .notice.error{background:var(--berry-soft);border-color:#F2BBC8}
 .notice p:last-child{margin-bottom:0}
+/* Stage 9: Info line under "Orders close on", buyer note, unique code text */
+.notice .info{display:block;margin-top:6px;font-weight:600;white-space:pre-line;overflow-wrap:anywhere}
+.bnote{margin:10px 0 0;padding:8px 12px;border-radius:12px;background:var(--blue-soft);font-size:14px;white-space:pre-line;overflow-wrap:anywhere}
+.bnote strong{display:block;font-size:13px;color:var(--blue-deep)}
+.ucnote{margin:12px 0 0;padding:10px 14px;border-radius:14px;background:#FBF1DC;border:1.5px solid #E6CF9A;font-size:15px;font-weight:600}
 
 /* ---------- Package cards ---------- */
 .grid{display:grid;gap:16px;grid-template-columns:1fr}
@@ -445,7 +450,9 @@ input[aria-invalid=true]{border-color:var(--berry)}
      ====================================================================== */
   var CART_KEY = 'ck_cart_v1';
   var RECEIPT_KEY = 'ck_receipt_v1';
-  var DRAFT_KEY = 'ck_draft_v1';   // name, WhatsApp and payment method typed at checkout (kept on this phone only)
+  var DRAFT_KEY = 'ck_draft_v1';   // name, WhatsApp, payment method and note typed at checkout (kept on this phone only)
+  var MAX_NOTE = 200;              // Stage 9: note for the shop
+  var UC_TEXT = 'The unique code helps us match your payment quickly. Please pay the exact total, including the unique code.';
   var SALES_KEY = 'ck_sales_v1';   // sales code from the last sales link opened on this phone (kept until another sales link is opened)
   var MAX_LINES = 40, MAX_QTY = 20, MAX_SINGLE = 99;   // lines per order; bundles per line; singles per flavor
   var MAX_PROOF_BYTES = 500000;           // server limit is 512000 bytes
@@ -469,6 +476,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
     ORDER_NOT_FOUND: 'Order not found. Please check the code.',
     ORDER_NOT_COMPLETED: 'You can leave a review after your order is completed.',
     INVALID_RATING: 'Please choose 1–5 stars.',
+    NOTE_TOO_LONG: 'Your note can be at most 200 characters.',
     REVIEW_TOO_LONG: 'Review can be at most 1000 characters.',
     EDIT_LIMIT_REACHED: 'This review can no longer be edited.',
     FILE_TOO_LARGE: 'Photo is too large (max 500 KB).',
@@ -1027,8 +1035,10 @@ input[aria-invalid=true]{border-color:var(--berry)}
   function statusNotice() {
     var s = store;
     if (s.is_open) {
+      var info = typeof s.store_info === 'string' ? s.store_info.trim() : '';      // Stage 9: Info from Settings
       return '<div class="notice open">' + icon('check') + '<div><strong>Open for orders</strong>' +
-        (s.close_at ? '<span>Orders close on ' + esc(fmtDate(s.close_at)) + '.</span>' : '') + '</div></div>';
+        (s.close_at ? '<span>Orders close on ' + esc(fmtDate(s.close_at)) + '.</span>' : '') +
+        (info ? '<span class="info" id="store-info">' + esc(info) + '</span>' : '') + '</div></div>';
     }
     return '<div class="notice closed">' + icon('info') + '<div><strong>Orders are closed</strong>' +
       (s.closed_message ? '<p>' + esc(s.closed_message) + '</p>' : '') +
@@ -1369,6 +1379,9 @@ input[aria-invalid=true]{border-color:var(--berry)}
       voucherPanelHtml() +
       '<div class="panel"><fieldset style="border:0;padding:0;margin:0"><legend class="lbl" style="padding:0">Payment method</legend><div class="pm" id="pm">' + pmHtml() + '</div></fieldset><p class="err" id="err-pm" hidden></p></div>' +
       checkoutNoteHtml() + allergyNotice() +
+      '<div class="panel"><div class="field" style="margin-bottom:0"><label for="f-note">Note for the shop (optional)</label>' +
+      '<textarea id="f-note" name="note" maxlength="' + MAX_NOTE + '" rows="3" aria-describedby="note-count err-note"></textarea>' +
+      '<p class="hint" id="note-count">0 / ' + MAX_NOTE + '</p><p class="err" id="err-note" hidden></p></div></div>' +
       '<div class="hp" aria-hidden="true"><label>Website<input type="text" id="f-website" name="website" tabindex="-1" autocomplete="off"></label></div>' +
       '<div class="notice error" id="co-error" role="alert" hidden></div>' +
       '<button class="btn big block" type="submit" id="co-submit">Place order</button>' +
@@ -1379,9 +1392,19 @@ input[aria-invalid=true]{border-color:var(--berry)}
     restoreDraft();
   }
   function saveDraft() {
-    var n = $('#f-name'), w = $('#f-wa'), pm = $('input[name="pm"]:checked');
+    var n = $('#f-name'), w = $('#f-wa'), pm = $('input[name="pm"]:checked'), nt = $('#f-note');
     if (!n || !w) return;
-    lsSet(DRAFT_KEY, JSON.stringify({ name: n.value, wa: w.value, pm: pm ? pm.value : '' }));
+    lsSet(DRAFT_KEY, JSON.stringify({ name: n.value, wa: w.value, pm: pm ? pm.value : '', note: nt ? nt.value : '' }));
+  }
+  // Stage 9: after an order is sent the note is cleared (name, WhatsApp and payment method stay)
+  function clearDraftNote() {
+    var d = null;
+    try { d = JSON.parse(lsGet(DRAFT_KEY) || 'null'); } catch (e) { d = null; }
+    if (d && d.note) { d.note = ''; lsSet(DRAFT_KEY, JSON.stringify(d)); }
+  }
+  function noteCount() {
+    var nt = $('#f-note'), c = $('#note-count');
+    if (nt && c) c.textContent = nt.value.length + ' / ' + MAX_NOTE;
   }
   function restoreDraft() {
     var d = null;
@@ -1391,6 +1414,8 @@ input[aria-invalid=true]{border-color:var(--berry)}
     if (n && d.name) n.value = String(d.name).slice(0, 60);
     if (w && d.wa) w.value = String(d.wa).slice(0, 20);
     if (d.pm) { var r = $('input[name="pm"][value="' + String(d.pm).replace(/[^A-Z_]/g, '') + '"]'); if (r) r.checked = true; }
+    var nt = $('#f-note');
+    if (nt && d.note) { nt.value = String(d.note).slice(0, MAX_NOTE); noteCount(); }
   }
   function renderCheckoutLines() {
     var l = $('#co-lines'), t = $('#co-totals');
@@ -1527,12 +1552,14 @@ input[aria-invalid=true]{border-color:var(--berry)}
     if (submitting) return;
     var name = $('#f-name').value.trim(), wa = $('#f-wa').value, pmEl = $('input[name="pm"]:checked');
     var bad = null;
-    setErr('err-name', ''); setErr('err-wa', ''); setErr('err-pm', '');
+    setErr('err-name', ''); setErr('err-wa', ''); setErr('err-pm', ''); setErr('err-note', '');
+    var note = $('#f-note') ? $('#f-note').value.replace(/\r\n?/g, '\n').trim() : '';
     $('#f-name').removeAttribute('aria-invalid'); $('#f-wa').removeAttribute('aria-invalid');
     var box = $('#co-error'); box.hidden = true;
     if (name.length < 2 || name.length > 60) { setErr('err-name', errText('INVALID_NAME')); $('#f-name').setAttribute('aria-invalid', 'true'); bad = bad || $('#f-name'); }
     if (!normalizeWa(wa)) { setErr('err-wa', errText('INVALID_WHATSAPP')); $('#f-wa').setAttribute('aria-invalid', 'true'); bad = bad || $('#f-wa'); }
     if (!pmEl) { setErr('err-pm', errText('INVALID_PAYMENT_METHOD')); bad = bad || $('input[name="pm"]'); }
+    if (note.length > MAX_NOTE) { setErr('err-note', errText('NOTE_TOO_LONG')); bad = bad || $('#f-note'); }
     if (!cart.length) { box.textContent = errText('INVALID_ITEMS'); box.hidden = false; return; }
     if (bad) { bad.focus(); bad.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
 
@@ -1545,10 +1572,13 @@ input[aria-invalid=true]{border-color:var(--berry)}
     var btn = $('#co-submit');
     submitting = true; btn.disabled = true; btn.textContent = 'Placing order…';
     try {
-      var r = await rpc('submit_order', { p_name: name, p_wa: wa, p_method: pmEl.value, p_items: items, p_website: $('#f-website').value,
-        p_voucher: vc ? voucher.data.code : null, p_sales: salesCode() });
+      var args = { p_name: name, p_wa: wa, p_method: pmEl.value, p_items: items, p_website: $('#f-website').value,
+        p_voucher: vc ? voucher.data.code : null, p_sales: salesCode() };
+      if (note) args.p_note = note;          // Stage 9: only sent when the buyer wrote a note
+      var r = await rpc('submit_order', args);
       r.estimated_subtotal = estimate;
       lsSet(RECEIPT_KEY, JSON.stringify(r));
+      clearDraftNote();
       cart = []; saveCart();
       voucher = null; vErrText = '';
       submitting = false;
@@ -1587,6 +1617,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
         setTimeout(function () { toast(errText(c), true); }, 50);
         return;
       }
+      if (c === 'NOTE_TOO_LONG') { setErr('err-note', errText(c)); var fn = $('#f-note'); if (fn) { fn.focus(); fn.scrollIntoView({ block: 'center', behavior: 'smooth' }); } return; }
       if (eb) { eb.textContent = errText(c); eb.hidden = false; eb.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
     }
   }
@@ -1601,18 +1632,26 @@ input[aria-invalid=true]{border-color:var(--berry)}
     }
     var amount = '<div class="copyrow"><div><div class="muted" style="font-size:14px">Transfer exactly</div><div class="big">' + rp(total) + '</div></div>' +
       '<button class="btn sec small" type="button" data-action="copy" data-text="' + esc(String(total)) + '" data-msg="Amount copied">' + icon('copy') + 'Copy amount</button></div>';
-    var hint = '<p class="muted" style="font-size:14px;margin:8px 0 0">The last digits of the amount are your unique code. Please pay the exact amount so we can match your payment.</p>';
     if (method === 'BCA') {
       if (!s.bank_account_number) return '<div class="paybox"><h3>Pay by bank transfer</h3><p style="margin:6px 0 0">Bank details are not available yet. Please contact the shop.</p></div>';
       return '<div class="paybox"><h3>Pay by bank transfer</h3>' + amount +
         '<div class="copyrow"><div><div class="muted" style="font-size:14px">' + esc(bankLabel()) + ' account number</div><div class="big">' + esc(s.bank_account_number) + '</div></div>' +
         '<button class="btn sec small" type="button" data-action="copy" data-text="' + esc(s.bank_account_number) + '" data-msg="Account number copied">' + icon('copy') + 'Copy number</button></div>' +
-        (s.bank_account_holder ? '<div class="muted" style="font-size:14px">Account holder</div><div style="font-weight:700">' + esc(s.bank_account_holder) + '</div>' : '') + hint + '</div>';
+        (s.bank_account_holder ? '<div class="muted" style="font-size:14px">Account holder</div><div style="font-weight:700">' + esc(s.bank_account_holder) + '</div>' : '') + '</div>';
     }
     var q = safeUrl(s.qris_image_url);
     if (!q) return '<div class="paybox"><h3>Pay with QRIS</h3><p style="margin:6px 0 0">The QR code is not available yet. Please contact the shop.</p></div>';
     return '<div class="paybox"><h3>Pay with QRIS</h3><p style="margin:6px 0 0">Scan this QR code with your e-wallet or mobile banking app.</p>' +
-      '<img class="qr" src="' + esc(q) + '" alt="QRIS code for payment" data-photo>' + amount + hint + '</div>';
+      '<img class="qr" src="' + esc(q) + '" alt="QRIS code for payment" data-photo>' + amount + '</div>';
+  }
+  // Stage 9: shown between the totals and the payment card, for bank transfer and QRIS only
+  function ucNoteHtml(method) {
+    return method === 'BCA' || method === 'QRIS' ? '<p class="ucnote" id="uc-note">' + esc(UC_TEXT) + '</p>' : '';
+  }
+  // Stage 9: the buyer's own note, small
+  function buyerNoteHtml(d) {
+    var t = d && typeof d.buyer_note === 'string' ? d.buyer_note.trim() : '';
+    return t ? '<p class="bnote" id="buyer-note"><strong>Your note</strong>' + esc(t) + '</p>' : '';
   }
   function methodLabel(m) {
     return m === 'CASH_COD' ? 'Cash (COD)' : m === 'QRIS' ? 'QRIS' : 'Bank transfer, ' + bankLabel();
@@ -1653,18 +1692,43 @@ input[aria-invalid=true]{border-color:var(--berry)}
     }
     var changed = typeof d.estimated_subtotal === 'number' && d.estimated_subtotal !== d.subtotal;
     setApp('<div class="narrow"><h1>Order received</h1><p class="lead">Waiting for admin confirmation.</p>' +
+      (d.method_changed ? '<div class="notice allergy" id="method-changed" role="status">' + icon('info') + '<div>The shop changed your payment method. Your new total is ' + esc(rp(d.total)) + '.</div></div>' : '') +
       (changed ? '<div class="notice allergy">' + icon('info') + '<div>Prices have been updated by the store.</div></div>' : '') +
       (d.promos_removed ? '<div class="notice allergy">' + icon('info') + '<div>Voucher ' + esc(d.voucher_code || '') + ' cannot be combined with promos, so the promo was not applied to this order.</div></div>' : '') +
       '<section class="ticket"><div class="codebox"><div><div class="k">Tracking code</div><div class="v" id="code-v">' + esc(d.tracking_code) + '</div></div>' +
       '<button class="btn sec small" type="button" data-action="copy" data-text="' + esc(d.tracking_code) + '" data-msg="Tracking code copied">' + icon('copy') + 'Copy code</button></div>' +
       (store && store.receipt_text ? '<p class="muted" style="font-size:15px">' + esc(store.receipt_text) + '</p>' : '') +
       '<hr class="sep"><dl class="kv"><dt>Name</dt><dd>' + esc(d.customer_name) + '</dd><dt>Placed on</dt><dd>' + esc(fmtDate(d.created_at)) + '</dd><dt>Payment</dt><dd>' + esc(methodLabel(d.payment_method)) + '</dd>' + voucherKvHtml(d) + '</dl>' +
+      buyerNoteHtml(d) +
       '<hr class="sep">' + itemsHtml(d.items || []) + '<hr class="sep">' + totalsHtml(d) + '</section>' +
+      ucNoteHtml(d.payment_method) +
       payBlock(d.payment_method, d.total) +
       rcProofBoxHtml(d) +
       '<div class="actions"><button class="btn" type="button" data-action="dl-receipt" data-src="receipt">' + icon('down') + 'Download receipt (PNG)</button>' +
       '<a class="btn sec" href="#/track/' + esc(d.tracking_code) + '">Track this order</a></div>' +
       '<p style="margin-top:14px"><a href="#/">Back to menu</a></p></div>');
+    recheckReceipt(d.tracking_code);
+  }
+  // Stage 9: the shop may change the payment method of an unpaid order. The receipt page asks the server once
+  // per visit and, when the method or total changed, saves the new values and shows a notice.
+  var recheckDone = {};
+  async function recheckReceipt(code) {
+    if (recheckDone[code]) return;
+    recheckDone[code] = true;
+    var f = null;
+    try { f = await rpc('get_order_tracking', { p_code: code }); } catch (e) { recheckDone[code] = false; return; }
+    var d = getReceipt();
+    if (!f || !d || d.tracking_code !== code) return;
+    var sameMethod = f.payment_method === d.payment_method;
+    var sameTotal = Number(f.total) === Number(d.total);
+    if (sameMethod && sameTotal) return;
+    d.payment_method = f.payment_method;
+    d.unique_code = f.unique_code;
+    d.subtotal = f.subtotal;
+    d.total = f.total;
+    d.method_changed = true;
+    lsSet(RECEIPT_KEY, JSON.stringify(d));
+    if (parseRoute().name === 'receipt') viewReceipt();
   }
 
   /* ---------- Receipt image drawn directly on a canvas (no extra library) ---------- */
@@ -1774,6 +1838,11 @@ input[aria-invalid=true]{border-color:var(--berry)}
       if (d.payment_label) row('Payment status', d.payment_label, { size: 24 });
       row('Payment method', methodLabel(d.payment_method), { size: 24 });
       if (d.voucher_code) row('Voucher', d.voucher_code, { size: 24 });
+      var bn = typeof d.buyer_note === 'string' ? d.buyer_note.trim() : '';
+      if (bn) {                                    // Stage 9: the buyer's note, small
+        gap(6);
+        bn.split('\n').forEach(function (ln, i) { if (ln.trim()) txt((i === 0 ? 'Your note: ' : '') + ln, { size: 21, color: '#7B6450' }); });
+      }
       gap(14); dash(); gap(16);
       (d.items || []).forEach(function (it) {
         var isFree = it.type === 'BONUS', isSingle = it.type === 'SINGLE';
@@ -1798,6 +1867,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
       row('Total', rp(d.total), { size: 36, weight: 800, display: true });
       gap(16);
       if (d.payment_status !== 'PAID' && d.payment_method !== 'CASH_COD' && ['PENDING', 'PROCESSING'].indexOf(d.status) !== -1 || d.pay_hint) {
+        if (d.payment_method === 'BCA' || d.payment_method === 'QRIS') { txt(UC_TEXT, { size: 21, weight: 600, color: '#7A4E00' }); gap(10); }   // Stage 9
         dash(); gap(14);
         if (d.payment_method === 'BCA') {
           txt('Pay by bank transfer', { size: 24, weight: 700, display: true });
@@ -1913,7 +1983,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
   function normalizeTrack(d) {
     return {
       tracking_code: d.tracking_code, order_number: d.order_number, customer_name: d.customer_name, created_at: d.created_at,
-      payment_method: d.payment_method, items_total: d.items_total, voucher_code: d.voucher_code, voucher_name: d.voucher_name, voucher_discount: d.voucher_discount,
+      payment_method: d.payment_method, buyer_note: d.buyer_note || '', items_total: d.items_total, voucher_code: d.voucher_code, voucher_name: d.voucher_name, voucher_discount: d.voucher_discount,
       subtotal: d.subtotal, unique_code: d.unique_code, total: d.total,
       status: d.status, payment_status: d.payment_status, status_label: label(d.status), payment_label: label(d.payment_status),
       heading: 'Order receipt',
@@ -1981,8 +2051,9 @@ input[aria-invalid=true]{border-color:var(--berry)}
       '<hr class="sep"><dl class="kv">' + (d.order_number ? '<dt>Order no.</dt><dd>' + esc(d.order_number) + '</dd>' : '') +
       '<dt>Tracking code</dt><dd>' + esc(d.tracking_code) + '</dd><dt>Name</dt><dd>' + esc(d.customer_name) + '</dd><dt>Placed on</dt><dd>' + esc(fmtDate(d.created_at)) + '</dd>' +
       '<dt>Payment</dt><dd>' + esc(methodLabel(d.payment_method)) + '</dd>' + voucherKvHtml(d) + '</dl>' +
+      buyerNoteHtml(d) +
       '<hr class="sep">' + itemsHtml(n.items) + '<hr class="sep">' + totalsHtml(d) + '</section>' +
-      (showPay ? payBlock(d.payment_method, d.total) : '') +
+      (showPay ? ucNoteHtml(d.payment_method) + payBlock(d.payment_method, d.total) : '') +
       proofBlockHtml(d) + reviewBlockHtml(d) +
       '<div class="actions"><button class="btn" type="button" data-action="dl-receipt" data-src="track">' + icon('down') + 'Download receipt (PNG)</button>' +
       '<button class="btn sec" type="button" data-action="copy" data-text="' + esc(d.tracking_code) + '" data-msg="Tracking code copied">' + icon('copy') + 'Copy tracking code</button>' +
@@ -2222,6 +2293,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
   });
   document.addEventListener('input', function (ev) {
     if (ev.target.id === 'f-name' || ev.target.id === 'f-wa') saveDraft();
+    if (ev.target.id === 'f-note') { saveDraft(); noteCount(); setErr('err-note', ''); }
     if (ev.target.id === 'rv-text') { track.draft.text = ev.target.value; var c = $('#rv-count'); if (c) c.textContent = ev.target.value.length + ' / 1000'; }
   });
   document.addEventListener('keydown', function (ev) {
