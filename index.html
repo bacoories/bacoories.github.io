@@ -390,6 +390,142 @@ input[aria-invalid=true]{border-color:var(--berry)}
 .items .row{display:flex;justify-content:space-between;gap:12px;font-weight:600}
 .items .sub{font-size:14px;color:var(--cocoa-soft);margin-top:2px;overflow-wrap:anywhere}
 
+/* ---------- Stage 10: page tabs (Home / Order / FAQ / Contact / Review) ---------- */
+.tabs{position:sticky;top:0;z-index:25;background:var(--milk);margin:0 -16px 10px;padding:6px 16px 8px;border-bottom:1.5px solid var(--line)}
+.tabs-in{display:flex;justify-content:space-between;gap:2px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tabs-in::-webkit-scrollbar{display:none}
+@media(min-width:640px){.tabs-in{justify-content:center;gap:8px}}
+.tab{flex:none;display:inline-flex;align-items:center;min-height:44px;padding:0 7px;border-radius:999px;font-weight:700;font-size:15px;text-decoration:none;color:var(--cocoa-soft);white-space:nowrap}
+.tab[aria-current="page"]{color:var(--cocoa);box-shadow:inset 0 0 0 2px var(--cocoa)}
+.tab.order{padding:0 12px;background:var(--blue);color:#fff;box-shadow:0 3px 0 rgba(47,86,136,.28)}
+.tab.order[aria-current="page"]{background:var(--blue-deep);box-shadow:0 0 0 3px var(--blue-soft)}
+@media(min-width:640px){.tab{padding:0 16px;font-size:16px}.tab.order{padding:0 22px}}
+
+/* ---------- Stage 10: Home cards ---------- */
+.home{max-width:760px;margin:0 auto}
+.hc{background:var(--paper);border:1.5px solid var(--line);border-radius:var(--r-card);padding:16px;margin:0 0 16px;overflow:hidden}
+.hc h2{margin:0 0 8px}
+.hc .txt{white-space:pre-line;overflow-wrap:anywhere;color:var(--cocoa-soft);margin:0 0 12px}
+.hc .txt:last-child{margin-bottom:0}
+.hc .txt a,.faq .ans a,.ct-intro a{color:var(--blue-deep);font-weight:600;overflow-wrap:anywhere}
+.hc-photo{margin:-16px -16px 14px;background:var(--cream)}
+.hc-photo img{width:100%;height:auto}
+.hc .btn{margin-top:4px}
+.hc.hero{padding:18px}
+.hc.hero .hc-photo{margin:-18px -18px 16px}
+.hc.hero h2{font-size:clamp(28px,7.5vw,40px);line-height:1.06;letter-spacing:-.02em}
+.hc.hero .txt{font-size:17px}
+.hcd-label{font:700 13px/1.2 var(--font-display);letter-spacing:.09em;text-transform:uppercase;color:var(--cocoa-soft);margin:0 0 10px}
+.hcd-tiles{display:flex;align-items:flex-start;gap:6px;font-variant-numeric:tabular-nums;margin:0 0 12px;flex-wrap:wrap}
+.hcd-t{display:flex;flex-direction:column;align-items:center;min-width:60px;padding:8px 8px 6px;border-radius:14px;background:var(--blue-deep);color:#fff}
+.hcd-t b{font:800 30px/1 var(--font-display)}
+.hcd-t i{font:600 10px/1 var(--font-body);font-style:normal;letter-spacing:.1em;text-transform:uppercase;opacity:.85;margin-top:4px}
+.hc.cd[data-mode="open"] .hcd-t{background:var(--cocoa)}
+.hc.cd .info{display:block;white-space:pre-line;overflow-wrap:anywhere;font-weight:600;margin:0 0 12px}
+.mini-grid{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(min-width:640px){.mini-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.mini{display:flex;flex-direction:column;border:1.5px solid var(--line);border-radius:16px;overflow:hidden;background:var(--paper)}
+.mini .mp{aspect-ratio:4/3;background:var(--cream);overflow:hidden}
+.mini .mp img{width:100%;height:100%;object-fit:cover}
+.mini .mb{display:flex;flex-direction:column;gap:4px;padding:10px 10px 12px;flex:1}
+.mini .mn{font:700 16px/1.25 var(--font-display);overflow-wrap:anywhere}
+.mini .mpr{font:800 17px/1.2 var(--font-display)}
+.mini .btn{margin-top:auto}
+.plist{display:grid;gap:8px;margin:0 0 12px}
+.rvs{display:grid;gap:10px;margin:0 0 12px}
+.rv{border:1.5px solid var(--line);border-radius:16px;padding:12px 14px;background:var(--paper)}
+.rv .rstars{display:flex;gap:2px;color:#CBB9A0;margin:0 0 6px}
+.rv .rstars svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round}
+.rv .rstars .on{color:var(--cocoa)}
+.rv .rstars .on svg{fill:var(--gold);stroke:var(--cocoa)}
+.rv .rt{white-space:pre-line;overflow-wrap:anywhere;margin:0 0 6px}
+.rv .rw{font-size:14px;color:var(--cocoa-soft);font-weight:600}
+.how{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.how li{display:flex;gap:12px;align-items:flex-start}
+.how .n{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--blue);color:#fff;font:800 18px var(--font-display)}
+.how strong{display:block;font:700 17px/1.3 var(--font-display)}
+.how span{display:block;color:var(--cocoa-soft);overflow-wrap:anywhere}
+.vid{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:14px;overflow:hidden;margin:0 0 12px}
+.vid.tall{aspect-ratio:auto;height:min(640px,150vw);max-width:360px;margin-left:auto;margin-right:auto;background:var(--cream)}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vid-tap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;width:100%;border:0;background:var(--cream);color:var(--cocoa);font-weight:700;text-align:center;padding:16px}
+.vid-tap .play{width:64px;height:64px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center}
+.vid-tap .play svg{width:28px;height:28px;fill:currentColor;stroke:none}
+.vid-tap small{font-weight:600;color:var(--cocoa-soft)}
+.jump{animation:jump 2.2s ease-out}
+@keyframes jump{0%,55%{box-shadow:0 0 0 4px var(--blue)}100%{box-shadow:0 0 0 0 rgba(63,107,166,0)}}
+
+/* ---------- Stage 10: FAQ, Contact, Reviews pages ---------- */
+.faq{display:grid;gap:10px}
+.faq details{background:var(--paper);border:1.5px solid var(--line);border-radius:16px;overflow:hidden}
+.faq summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;padding:12px 16px;font:700 17px/1.3 var(--font-display);cursor:pointer;list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";flex:none;font:800 24px/1 var(--font-display);color:var(--blue-deep)}
+.faq details[open] summary::after{content:"−"}
+.faq .ans{padding:0 16px 16px;white-space:pre-line;overflow-wrap:anywhere;color:var(--cocoa-soft)}
+.ct-intro{white-space:pre-line;overflow-wrap:anywhere;color:var(--cocoa-soft);margin:0 0 16px}
+.ct-list{display:grid;gap:10px}
+@media(min-width:640px){.ct-list{grid-template-columns:1fr 1fr}}
+.ct{display:flex;align-items:center;gap:14px;min-height:64px;padding:10px 16px;border:2px solid var(--line);border-radius:16px;background:var(--paper);text-decoration:none}
+.ct:hover{border-color:var(--blue)}
+.ct .ci{flex:none;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--blue-soft);color:var(--blue-deep)}
+.ct .ci svg.i{width:22px;height:22px}
+.ct strong{display:block}
+.ct span{display:block;font-size:14px;color:var(--cocoa-soft);overflow-wrap:anywhere}
+
+/* ---------- Stage 11C: sub-sales page (#/sales/<code>) and manual order mode (#/manual/<key>) ---------- */
+body[data-route="sales"] .promo-bar,body[data-route="sales"] #tabs,body[data-route="sales"] #trackPill,
+body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-route="sales"] #topCd{display:none!important}
+.notice.manual{background:#FFF1CC;border-color:#E3BE5C}
+.notice.manual span{display:block}
+.mm-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+#f-sales{width:100%;min-height:52px;padding:12px 14px;border:2px solid var(--line);border-radius:14px;background:var(--paper);font-size:16px;color:var(--cocoa)}
+#f-sales:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(79,124,182,.28)}
+#f-sales[aria-invalid=true]{border-color:var(--berry)}
+.sx{max-width:760px;margin:0 auto}
+.sx-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:0 0 12px}
+.sx-head h1{margin:10px 0 2px;overflow-wrap:anywhere}
+.sx-head .btn{flex:none;margin-top:12px}
+#sp-pin{width:100%;min-height:56px;padding:10px 14px;border:2px solid var(--line);border-radius:14px;background:var(--paper);font:800 26px/1 var(--font-display);letter-spacing:.35em;text-align:center}
+#sp-pin:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(79,124,182,.28)}
+.sx-ok{color:var(--ok);font-weight:600;margin:0 0 12px}
+.sx-quick{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.sx-chip{min-height:44px;padding:0 16px;border:2px solid var(--blue);border-radius:999px;background:var(--paper);color:var(--blue-deep);font-weight:700}
+.sx-chip[aria-pressed="true"]{background:var(--blue);color:#fff}
+.sx-dates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.sx-dates .field{margin:0}
+.sx-dates input[type=date]{display:block;width:100%;min-width:0;min-height:52px;padding:10px 12px;border:2px solid var(--line);border-radius:14px;background:var(--paper);font-size:16px;color:var(--cocoa)}
+.sx-dates .btn{grid-column:1/-1}
+.sx-range{font-size:14px;margin:-4px 0 12px}
+.sx-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 16px}
+@media(min-width:640px){.sx-tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.sx-tile{background:var(--paper);border:1.5px solid var(--line);border-radius:16px;padding:12px 14px;min-width:0}
+.sx-tile .k{font-size:13px;font-weight:700;color:var(--cocoa-soft)}
+.sx-tile .v{font:800 22px/1.15 var(--font-display);margin-top:4px;overflow-wrap:anywhere}
+.sx-tile .s{font-size:13px;color:var(--cocoa-soft);margin-top:2px}
+.sx-tile.main{background:var(--blue-soft);border-color:#C5D6EE}
+.sx-tile.ok .v{color:var(--ok)}
+.sx-two{display:grid;gap:0 16px}
+@media(min-width:640px){.sx-two{grid-template-columns:1fr 1fr}}
+.sx-list{list-style:none;margin:0;padding:0}
+.sx-list li{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1.5px solid var(--line)}
+.sx-list li:first-child{border-top:0}
+.sx-list li span:last-child{font-weight:700;white-space:nowrap}
+.sx-order{background:var(--paper);border:1.5px solid var(--line);border-radius:16px;padding:12px 14px;margin:0 0 10px}
+.sx-oh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.sx-on{font:700 17px/1.25 var(--font-display);overflow-wrap:anywhere}
+.sx-od{font-size:14px;color:var(--cocoa-soft)}
+.sx-oc{text-align:right;flex:none}
+.sx-oc .amt{font:800 18px/1.2 var(--font-display)}
+.sx-oc .st{font-size:13px;font-weight:700;color:var(--cocoa-soft)}
+.sx-oc .st.PAID,.sx-oc .st.COUNTED{color:var(--ok)}
+.sx-order .chips{margin:8px 0 6px}
+.sx-order .chip{padding:3px 10px;font-size:13px}
+.sx-items{list-style:none;margin:0;padding:0;font-size:15px}
+.sx-items li{padding:3px 0;overflow-wrap:anywhere}
+.sx-items .sub{display:block;font-size:13px;color:var(--cocoa-soft)}
+.sx-foot{font-size:14px;color:var(--cocoa-soft);margin:12px 0 0}
+
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -414,6 +550,14 @@ input[aria-invalid=true]{border-color:var(--berry)}
     <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3 9a2 2 0 0 0 0 6v3h18v-3a2 2 0 0 1 0-6V6H3z"/><path d="M14 6v12" stroke-dasharray="2 2.4"/></symbol>
     <symbol id="i-cookiebs" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9 4 4 0 0 1-4-4 4 4 0 0 1-5-5z" fill="#F2C14E" stroke="#6B4B2C" stroke-width="1.6"/><circle cx="8.5" cy="11" r="1.2" fill="#6B4B2C" stroke="none"/><circle cx="12.5" cy="15.5" r="1.2" fill="#6B4B2C" stroke="none"/><circle cx="16" cy="12.5" r="1.2" fill="#6B4B2C" stroke="none"/><circle cx="8" cy="15.5" r="1.2" fill="#6B4B2C" stroke="none"/></symbol>
     <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></symbol>
+    <symbol id="i-photo" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.6"/><path d="M16.6 7.4v.1"/></symbol>
+    <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="4"/><path d="M10.5 9.5v5l4-2.5z"/></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24"><path d="M9 18V5l10-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></symbol>
+    <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.2"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="16.8" cy="9.5" r="2.4"/><path d="M15.5 14.2c2.4.2 4.2 1.8 4.8 4.8"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 1 3.4 6.5L4 19.5l1.1-3.3A8 8 0 0 1 4 12z"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M4 7l8 6 8-6"/></symbol>
+    <symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5H5V6h5"/></symbol>
   </defs>
 </svg>
 
@@ -432,6 +576,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
     <div class="top-cd" id="topCd" role="timer" aria-live="off" hidden></div>
     <a class="pill" id="trackPill" href="#/track">Track order</a>
   </header>
+  <nav class="tabs" id="tabs" aria-label="Pages" hidden></nav>
   <main id="app" aria-live="polite">
     <noscript><div class="notice error"><div>This website needs JavaScript to work. Please enable it in your browser settings.</div></div></noscript>
   </main>
@@ -454,6 +599,11 @@ input[aria-invalid=true]{border-color:var(--berry)}
   var MAX_NOTE = 200;              // Stage 9: note for the shop
   var UC_TEXT = 'The unique code helps us match your payment quickly. Please pay the exact total, including the unique code.';
   var SALES_KEY = 'ck_sales_v1';   // sales code from the last sales link opened on this phone (kept until another sales link is opened)
+  // Stage 11C: sub-sales page (#/sales/<code>) and manual order mode for the shop owner (#/manual/<key>)
+  var SPAGE_KEY = 'ck_salespage_v1';          // sub-sales page login on this phone: {<code>: {t: token, n: name, e: expires_at}}
+  var SPAGE_TIP_KEY = 'ck_salespage_tip_v1';  // the "Add to Home screen" tip was closed
+  var MANUAL_KEY = 'ck_manual_v1';            // manual order mode: this browser tab only (sessionStorage)
+  var MANUAL_CART_KEY = 'ck_cart_manual_v1', MANUAL_RECEIPT_KEY = 'ck_receipt_manual_v1', MANUAL_DRAFT_KEY = 'ck_draft_manual_v1';
   var MAX_LINES = 40, MAX_QTY = 20, MAX_SINGLE = 99;   // lines per order; bundles per line; singles per flavor
   var MAX_PROOF_BYTES = 500000;           // server limit is 512000 bytes
   var SVG_NS = 'http://www.w3.org/2000/svg';
@@ -492,6 +642,10 @@ input[aria-invalid=true]{border-color:var(--berry)}
     VOUCHER_ALREADY_USED: 'You have already used this voucher.',
     VOUCHER_UNAVAILABLE: 'This voucher is not available right now.',
     VOUCHER_EMPTY: 'Enter your voucher code first.',
+    MANUAL_KEY_EXPIRED: 'This manual order link has ended. Make a new link in the Orders tab.',
+    SALES_PAGE_LOGIN_FAILED: 'Wrong PIN.',
+    SALES_PAGE_LOCKED: 'Too many wrong PINs. Please try again in 15 minutes.',
+    SALES_PAGE_EXPIRED: 'Please enter your PIN again.',
     FAILED: 'Failed, please try again.',
     NETWORK: 'Connection problem. Please check your internet and try again.'
   };
@@ -629,10 +783,13 @@ input[aria-invalid=true]{border-color:var(--berry)}
   var voucher = null, vErrText = '', vBusy = false, vPending = false;        // voucher applied at checkout: { data: check_voucher result, key: who it was checked for }
   var skew = 0, cdKey = null, cdTries = 0, cdBusy = false;  // countdown: server clock minus phone clock, retry bookkeeping
   var topSig = '';
+  // Stage 10: content of the Home, FAQ, Contact and Review tabs (get_site_content), filled in the admin tab Pages
+  var site = null, siteAt = 0, siteBusy = null, homeReviews = null, homeReviewsAt = 0, jumpTo = null;
+  var rvPage = { list: [], total: 0, busy: false };
 
   function loadCart() {
     try {
-      var a = JSON.parse(lsGet(CART_KEY) || '[]');
+      var a = JSON.parse(lsGet(cartKey()) || '[]');
       cart = Array.isArray(a) ? a.filter(function (l) {
         if (!l || typeof l.name !== 'string' || !Number.isInteger(l.qty) || l.qty < 1 || typeof l.price !== 'number') return false;
         if (l.type === 'SINGLE') return Number.isInteger(l.flavor_id) && l.qty <= MAX_SINGLE;
@@ -640,7 +797,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
       }).slice(0, MAX_LINES) : [];
     } catch (e) { cart = []; }
   }
-  function saveCart() { lsSet(CART_KEY, JSON.stringify(cart)); }
+  function saveCart() { lsSet(cartKey(), JSON.stringify(cart)); }
   function lineKey(item) {
     if (item.type === 'SINGLE') return 'S|' + item.flavor_id;
     return item.package_id + '|' + item.flavors.map(function (f) { return f.id + ':' + f.qty; }).sort().join(',');
@@ -856,7 +1013,94 @@ input[aria-invalid=true]{border-color:var(--berry)}
     } catch (e) { return null; }
   }
 
-  function getReceipt() { try { return JSON.parse(lsGet(RECEIPT_KEY) || 'null'); } catch (e) { return null; } }
+
+  /* ======================================================================
+     Stage 11C: manual order mode for the shop owner (K161, K165)
+     The admin app (Orders tab, depii only) makes a link #/manual/<key> that works for 2 hours. While it works,
+     this browser tab can order also when ordering is closed, and the sales person is chosen before Place order.
+     Every rule of a normal order still applies (checked again by the database with the key).
+     The key, cart, receipt and typed details of this mode are kept apart from the buyer's own ones;
+     the sales link of this phone (ck_sales_v1) is never used or changed.
+     ====================================================================== */
+  var manual = null;          // {key, expires_at, sales:[{id, name, main_name}]}
+  function ssGet(k) { var v = null; try { v = sessionStorage.getItem(k); } catch (e) { /* storage blocked */ } return v === null && MEM['s:' + k] !== undefined ? MEM['s:' + k] : v; }
+  function ssSet(k, v) { MEM['s:' + k] = v; try { sessionStorage.setItem(k, v); } catch (e) { /* keep in memory */ } }
+  function ssDel(k) { delete MEM['s:' + k]; try { sessionStorage.removeItem(k); } catch (e) { /* ignore */ } }
+  function manualOn() { return !!manual; }
+  function canOrder() { return isOpen() || manualOn(); }
+  function cartKey() { return manual ? MANUAL_CART_KEY : CART_KEY; }
+  function receiptKey() { return manual ? MANUAL_RECEIPT_KEY : RECEIPT_KEY; }
+  function draftKey() { return manual ? MANUAL_DRAFT_KEY : DRAFT_KEY; }
+  function readManual() {
+    var m = null;
+    try { m = JSON.parse(ssGet(MANUAL_KEY) || 'null'); } catch (e) { m = null; }
+    manual = m && typeof m.key === 'string' && /^[0-9a-f]{64}$/.test(m.key) && Date.parse(m.expires_at) > Date.now() ? m : null;
+    if (m && !manual) ssDel(MANUAL_KEY);
+    if (manual && !Array.isArray(manual.sales)) manual.sales = [];
+  }
+  function saveManual() { if (manual) ssSet(MANUAL_KEY, JSON.stringify(manual)); else ssDel(MANUAL_KEY); }
+  function endManual(why) {
+    if (!manual) return;
+    manual = null; saveManual();
+    lsDel(MANUAL_CART_KEY); lsDel(MANUAL_DRAFT_KEY);
+    loadCart();
+    voucher = null; vErrText = '';
+    if (why === 'expired') toast(errText('MANUAL_KEY_EXPIRED'), true);
+    else if (why === 'left') toast('Manual order mode is off on this phone.');
+  }
+  async function refreshManual() {
+    if (!manual) return;
+    var r = null;
+    try { r = await rpc('manual_order_check', { p_key: manual.key }); } catch (e) { return; }   // no connection: keep what we have
+    if (!manual) return;
+    if (!r || r.ok !== true) { endManual('expired'); return; }
+    manual.expires_at = r.expires_at || manual.expires_at;
+    manual.sales = Array.isArray(r.sales) ? r.sales : [];
+    saveManual();
+  }
+  async function enterManual(key, seq) {
+    setApp('<div class="empty"><h1>Opening manual order mode…</h1></div>');
+    var r = null;
+    try { r = await rpc('manual_order_check', { p_key: key }); } catch (e) {
+      if (seq !== routeSeq) return;
+      setApp('<div class="empty"><h1>Manual order mode</h1><p class="muted">' + esc(errText(e.code)) + '</p><button class="btn" type="button" data-action="retry">Try again</button></div>');
+      return;
+    }
+    if (seq !== routeSeq) return;
+    if (!r || r.ok !== true) {
+      if (manual && manual.key === key) endManual();
+      setApp('<div class="empty"><h1>This link has ended</h1><p class="muted">' + esc(errText('MANUAL_KEY_EXPIRED')) + '</p><a class="btn" href="#/">Go to the shop</a></div>');
+      renderCartBar();
+      return;
+    }
+    if (!manual || manual.key !== key) {          // a new link: start with an empty order
+      lsDel(MANUAL_CART_KEY); lsDel(MANUAL_RECEIPT_KEY); lsDel(MANUAL_DRAFT_KEY);
+    }
+    manual = { key: key, expires_at: r.expires_at, sales: Array.isArray(r.sales) ? r.sales : [] };
+    saveManual();
+    loadCart();
+    voucher = null; vErrText = '';
+    try { history.replaceState(null, '', '#/'); } catch (e) { location.hash = '#/'; return; }
+    route();
+  }
+  function manualBannerHtml() {
+    if (!manual) return '';
+    return '<div class="notice manual" id="manual-banner" role="status">' + icon('info') + '<div><strong>Manual order mode (admin)</strong>' +
+      '<span>Orders placed here are saved also while ordering is closed. Choose the sales person at checkout. This link works until ' + esc(fmtDate(manual.expires_at)) + '.</span>' +
+      '<div class="mm-row"><a class="btn small" href="#/">New order</a><button class="btn sec small" type="button" data-action="manual-exit">Leave manual mode</button></div></div></div>';
+  }
+  function manualSalesHtml() {
+    if (!manual) return '';
+    var opts = manual.sales.map(function (x) {
+      return '<option value="' + esc(x.id) + '">' + esc(x.name + (x.main_name ? ' (sub-sales of ' + x.main_name + ')' : '')) + '</option>';
+    }).join('');
+    return '<div class="panel" id="mm-sales-panel"><div class="field" style="margin-bottom:0"><label for="f-sales">Sales person</label>' +
+      '<select id="f-sales" aria-describedby="mm-sales-hint err-sales"><option value="">Choose…</option><option value="none">No sales person</option>' + opts + '</select>' +
+      '<p class="hint" id="mm-sales-hint">A customer with a fixed sales person always goes to that sales person, whatever you choose here.</p>' +
+      '<p class="err" id="err-sales" hidden></p></div></div>';
+  }
+
+  function getReceipt() { try { return JSON.parse(lsGet(receiptKey()) || 'null'); } catch (e) { return null; } }
 
   /* ======================================================================
      Shop status and catalog
@@ -899,7 +1143,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
     try {
       await loadStore();
       var r = parseRoute().name;
-      if ((r === 'catalog' || r === 'checkout') && (rerender || was !== isOpen())) route(true);
+      if ((r === 'catalog' || r === 'checkout' || r === 'home') && (rerender || was !== isOpen())) route(true);
       else renderCartBar();
     } catch (e) { /* keep what we have */ }
   }
@@ -949,16 +1193,22 @@ input[aria-invalid=true]{border-color:var(--berry)}
     if (eh) eh.textContent = pad2(h); if (em) em.textContent = pad2(m); if (es) es.textContent = pad2(x);
   }
   function tickCountdown() {
+    if (manual && !(Date.parse(manual.expires_at) > serverNow())) {      // Stage 11C: the manual order link ended
+      var mr = parseRoute().name;
+      endManual('expired');
+      if (mr === 'catalog' || mr === 'checkout') route(true);
+    }
     var t = cdTarget();
     if (!t) { renderTopCd(); return; }
     var rem = t.at - serverNow();
     if (rem > 0) {
       renderTopCd();
+      renderHomeCd();
       return;
     }
     // zero: ask the server again; the page switches by itself (a few quick retries in case the server clock is a moment behind)
     var r = parseRoute().name;
-    if (r !== 'catalog' && r !== 'checkout') return;
+    if (r !== 'catalog' && r !== 'checkout' && r !== 'home') return;
     var key = t.mode + t.at;
     if (cdKey !== key) { cdKey = key; cdTries = 0; }
     if (cdBusy || cdTries >= 10) return;
@@ -974,7 +1224,13 @@ input[aria-invalid=true]{border-color:var(--berry)}
     if (h === '#' || h === '#/') return { name: 'catalog' };
     if (h === '#/checkout') return { name: 'checkout' };
     if (h === '#/receipt') return { name: 'receipt' };
+    if (h === '#/home') return { name: 'home' };          // Stage 10: page tabs
+    if (h === '#/faq') return { name: 'faq' };
+    if (h === '#/contact') return { name: 'contact' };
+    if (h === '#/reviews') return { name: 'reviews' };
     if ((m = /^#\/track(?:\/([A-Za-z0-9]{1,16}))?\/?$/.exec(h))) return { name: 'track', code: (m[1] || '').toUpperCase() };
+    if ((m = /^#\/sales\/([A-Za-z0-9][A-Za-z0-9-]{1,29})\/?$/.exec(h))) return { name: 'sales', code: m[1].toLowerCase() };   // Stage 11C
+    if ((m = /^#\/manual\/([0-9A-Fa-f]{64})\/?$/.exec(h))) return { name: 'manual', key: m[1].toLowerCase() };
     return { name: 'catalog' };
   }
   function setApp(html) { $('#app').innerHTML = html; }
@@ -995,15 +1251,20 @@ input[aria-invalid=true]{border-color:var(--berry)}
     $('#menuBtn').hidden = r.name === 'catalog';       // F10: "Menu" button on every page except the main menu
     $('#trackPill').hidden = r.name === 'track';
     renderTopCd();
+    renderTabs();
     if (!soft) window.scrollTo(0, 0);
     if (!configOk() || !keyOk()) {
       setApp('<div class="notice error"><div>This website is not set up correctly. Please contact the shop.</div></div>');
       renderCartBar(); return;
     }
+    if (r.name === 'sales') { viewSalesPage(r.code, seq); renderCartBar(); return; }     // Stage 11C
+    if (r.name === 'manual') { await enterManual(r.key, seq); return; }
+    if (TAB_PAGES[r.name]) { await viewTabPage(r, seq); return; }
+    loadSite().catch(function () { /* the tabs stay hidden; ordering works as before */ });
     if (r.name === 'catalog' || r.name === 'checkout') {
       if (!store || !catalog) setApp(skeleton());
       try {
-        await Promise.all([loadStore(), loadCatalog()]);
+        await Promise.all([loadStore(), loadCatalog(), manual ? refreshManual() : null]);
       } catch (e) {
         if (seq !== routeSeq) return;
         if (!store || !catalog) { setApp(loadError('retry')); renderCartBar(); return; }
@@ -1077,7 +1338,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
     var action = !open ? '<span class="muted">Ordering is closed</span>' :
       p.type === 'COMBO' ? '<button class="btn small" type="button" data-action="add-combo" data-id="' + p.id + '">Add to order</button>'
         : '<button class="btn small" type="button" data-action="pick" data-id="' + p.id + '">Choose flavors</button>';
-    return '<article class="card"><div class="pic">' + photo(p.image_url) + (p.best_seller === true ? bsLabel() : '') + '</div><div class="body"><h3>' + esc(p.name) + '</h3>' + body +
+    return '<article class="card" id="pk-' + p.id + '"><div class="pic">' + photo(p.image_url) + (p.best_seller === true ? bsLabel() : '') + '</div><div class="body"><h3>' + esc(p.name) + '</h3>' + body +
       '<div class="foot"><span class="price">' + rp(p.price) + '</span>' + action + '</div></div></article>';
   }
   // Running banners at the very top of the page (above the logo): the owner's text (F2) and the promos.
@@ -1139,14 +1400,14 @@ input[aria-invalid=true]{border-color:var(--berry)}
     var f = singleFlavor(fid), row = $('#sg-' + fid);
     if (!f || !row) return;
     var d = document.createElement('div');
-    d.innerHTML = singleRowHtml(f, isOpen());
+    d.innerHTML = singleRowHtml(f, canOrder());
     row.replaceWith(d.firstChild);
     var b = $('#sg-' + fid + ' [data-action="' + focusAction + '"]') || $('#sg-' + fid + ' button');
     if (b && !b.disabled) b.focus();
   }
   function changeSingle(fid, delta) {
     var f = singleFlavor(fid);
-    if (!f || typeof f.single_price !== 'number' || !isOpen()) return;
+    if (!f || typeof f.single_price !== 'number' || !canOrder()) return;
     var ex = cart.filter(function (x) { return x.type === 'SINGLE' && x.flavor_id === fid; })[0];
     if (delta > 0) {
       if (ex) {
@@ -1165,13 +1426,13 @@ input[aria-invalid=true]{border-color:var(--berry)}
     renderCartBar();
   }
   function viewCatalog() {
-    var open = isOpen();
+    var open = canOrder();
     var singles = catalog.flavors.filter(function (f) { return typeof f.single_price === 'number'; });
     var bundles = catalog.packages.map(function (p, i) { return { p: p, pos: typeof p.sort_order === 'number' ? p.sort_order : i + 1, id: p.id }; });
     bundles.sort(function (a, b) { return (a.pos - b.pos) || (a.id - b.id); });
     var singleItems = singles.map(function (f, i) { return { f: f, pos: typeof f.single_sort === 'number' ? f.single_sort : 1000000 + i, id: f.id }; });
     singleItems.sort(function (a, b) { return (a.pos - b.pos) || (a.id - b.id); });
-    var html = '<h1>' + (open ? 'Choose your cookies' : 'Our menu') + '</h1>' + statusNotice() + allergyNotice();
+    var html = '<h1>' + (open ? 'Choose your cookies' : 'Our menu') + '</h1>' + manualBannerHtml() + statusNotice() + allergyNotice();
     // bundles always first, single cookies below (the order inside each part is set in the admin Layout screen)
     if (bundles.length) {
       html += '<h2>Bundles</h2><div class="grid">' + bundles.map(function (it) { return packageCard(it.p, open); }).join('') + '</div>';
@@ -1184,12 +1445,21 @@ input[aria-invalid=true]{border-color:var(--berry)}
       html += '<div class="empty"><p class="muted">No packages are available right now. Please check back soon.</p></div>';
     }
     setApp(html);
+    if (jumpTo) {                    // Stage 10: "Order" on a Home best seller opens the menu at that item
+      var target = $('#' + jumpTo);
+      jumpTo = null;
+      if (target) {
+        target.scrollIntoView({ block: 'center' });
+        target.classList.remove('jump'); void target.offsetWidth; target.classList.add('jump');
+        var tb = $('button', target); if (tb) { try { tb.focus({ preventScroll: true }); } catch (e) { /* ignore */ } }
+      }
+    }
   }
 
   /* ---------- Flavor picker ---------- */
   function openPicker(pkgId) {
     var p = catalog && catalog.packages.filter(function (x) { return x.id === pkgId; })[0];
-    if (!p || !isOpen()) return;
+    if (!p || !canOrder()) return;
     picker = { pkg: p, counts: {}, seq: [], opener: document.activeElement };
     var many = p.pick_count > 12;
     var html = '<div class="overlay" id="overlay"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="pk-title">' +
@@ -1287,7 +1557,8 @@ input[aria-invalid=true]{border-color:var(--berry)}
 
   function renderCartBar() {
     var bar = $('#cartbar'), n = cartCount();
-    var show = parseRoute().name === 'catalog' && n > 0 && isOpen() && catalog;
+    var rn = parseRoute().name;
+    var show = (rn === 'catalog' || TAB_PAGES[rn]) && n > 0 && canOrder() && catalog;
     if (!show) { bar.hidden = true; bar.innerHTML = ''; return; }
     bar.hidden = false;
     bar.innerHTML = '<a href="#/checkout" aria-label="View your order, ' + n + ' ' + plural(n, 'item', 'items') + ', ' + rp(cartTotal()) + '">' + icon('bag') +
@@ -1361,7 +1632,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
   }
   function viewCheckout(priceChanged) {
     var back = '';       // the "Menu" button in the page header takes the buyer back (F10)
-    if (!isOpen()) {
+    if (!canOrder()) {
       setApp(back + '<div class="narrow"><h1>Your order</h1>' + statusNotice() + '<a class="btn" href="#/">See the menu</a></div>');
       return;
     }
@@ -1369,13 +1640,14 @@ input[aria-invalid=true]{border-color:var(--berry)}
       setApp(back + '<div class="empty"><h1>Your order is empty</h1><p class="muted">Add a package from the menu to get started.</p><a class="btn" href="#/">Browse the menu</a></div>');
       return;
     }
-    var html = back + '<div class="narrow"><h1>Your order</h1>' +
+    var html = back + '<div class="narrow"><h1>Your order</h1>' + manualBannerHtml() +
       (priceChanged ? '<div class="notice allergy">' + icon('info') + '<div>Prices have been updated by the store.</div></div>' : '') +
       '<div class="panel"><div id="co-lines"></div><div class="totals" id="co-totals"></div></div>' +
       '<form id="co-form" novalidate>' +
       '<div class="panel"><h3 style="margin-bottom:12px">Your details</h3>' +
       '<div class="field"><label for="f-name">Your name</label><input type="text" id="f-name" name="name" autocomplete="name" maxlength="60" aria-describedby="err-name"><p class="err" id="err-name" hidden></p></div>' +
       '<div class="field" style="margin-bottom:0"><label for="f-wa">WhatsApp number</label><input type="tel" id="f-wa" name="wa" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="081234567890" aria-describedby="err-wa"><p class="hint">We use it to confirm your order.</p><p class="err" id="err-wa" hidden></p></div></div>' +
+      manualSalesHtml() +
       voucherPanelHtml() +
       '<div class="panel"><fieldset style="border:0;padding:0;margin:0"><legend class="lbl" style="padding:0">Payment method</legend><div class="pm" id="pm">' + pmHtml() + '</div></fieldset><p class="err" id="err-pm" hidden></p></div>' +
       checkoutNoteHtml() + allergyNotice() +
@@ -1394,11 +1666,14 @@ input[aria-invalid=true]{border-color:var(--berry)}
   function saveDraft() {
     var n = $('#f-name'), w = $('#f-wa'), pm = $('input[name="pm"]:checked'), nt = $('#f-note');
     if (!n || !w) return;
-    lsSet(DRAFT_KEY, JSON.stringify({ name: n.value, wa: w.value, pm: pm ? pm.value : '', note: nt ? nt.value : '' }));
+    var dr = { name: n.value, wa: w.value, pm: pm ? pm.value : '', note: nt ? nt.value : '' };
+    if (manual) dr.sales = ($('#f-sales') || {}).value || '';
+    lsSet(draftKey(), JSON.stringify(dr));
   }
   // Stage 9: after an order is sent the note is cleared (name, WhatsApp and payment method stay)
   function clearDraftNote() {
     var d = null;
+    if (manual) { lsDel(MANUAL_DRAFT_KEY); return; }      // manual order: the next order starts empty
     try { d = JSON.parse(lsGet(DRAFT_KEY) || 'null'); } catch (e) { d = null; }
     if (d && d.note) { d.note = ''; lsSet(DRAFT_KEY, JSON.stringify(d)); }
   }
@@ -1408,7 +1683,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
   }
   function restoreDraft() {
     var d = null;
-    try { d = JSON.parse(lsGet(DRAFT_KEY) || 'null'); } catch (e) { d = null; }
+    try { d = JSON.parse(lsGet(draftKey()) || 'null'); } catch (e) { d = null; }
     if (!d) return;
     var n = $('#f-name'), w = $('#f-wa');
     if (n && d.name) n.value = String(d.name).slice(0, 60);
@@ -1416,6 +1691,8 @@ input[aria-invalid=true]{border-color:var(--berry)}
     if (d.pm) { var r = $('input[name="pm"][value="' + String(d.pm).replace(/[^A-Z_]/g, '') + '"]'); if (r) r.checked = true; }
     var nt = $('#f-note');
     if (nt && d.note) { nt.value = String(d.note).slice(0, MAX_NOTE); noteCount(); }
+    var fs = $('#f-sales');
+    if (fs && d.sales && $('option[value="' + String(d.sales).replace(/[^0-9a-z]/g, '') + '"]', fs)) fs.value = String(d.sales).replace(/[^0-9a-z]/g, '');
   }
   function renderCheckoutLines() {
     var l = $('#co-lines'), t = $('#co-totals');
@@ -1552,7 +1829,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
     if (submitting) return;
     var name = $('#f-name').value.trim(), wa = $('#f-wa').value, pmEl = $('input[name="pm"]:checked');
     var bad = null;
-    setErr('err-name', ''); setErr('err-wa', ''); setErr('err-pm', ''); setErr('err-note', '');
+    setErr('err-name', ''); setErr('err-wa', ''); setErr('err-pm', ''); setErr('err-note', ''); setErr('err-sales', '');
     var note = $('#f-note') ? $('#f-note').value.replace(/\r\n?/g, '\n').trim() : '';
     $('#f-name').removeAttribute('aria-invalid'); $('#f-wa').removeAttribute('aria-invalid');
     var box = $('#co-error'); box.hidden = true;
@@ -1560,6 +1837,9 @@ input[aria-invalid=true]{border-color:var(--berry)}
     if (!normalizeWa(wa)) { setErr('err-wa', errText('INVALID_WHATSAPP')); $('#f-wa').setAttribute('aria-invalid', 'true'); bad = bad || $('#f-wa'); }
     if (!pmEl) { setErr('err-pm', errText('INVALID_PAYMENT_METHOD')); bad = bad || $('input[name="pm"]'); }
     if (note.length > MAX_NOTE) { setErr('err-note', errText('NOTE_TOO_LONG')); bad = bad || $('#f-note'); }
+    var fSales = manual ? $('#f-sales') : null;               // Stage 11C: manual order, the sales person is chosen first
+    if (fSales) fSales.removeAttribute('aria-invalid');
+    if (fSales && !fSales.value) { setErr('err-sales', 'Choose a sales person, or No sales person.'); fSales.setAttribute('aria-invalid', 'true'); bad = bad || fSales; }
     if (!cart.length) { box.textContent = errText('INVALID_ITEMS'); box.hidden = false; return; }
     if (bad) { bad.focus(); bad.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
 
@@ -1575,9 +1855,16 @@ input[aria-invalid=true]{border-color:var(--berry)}
       var args = { p_name: name, p_wa: wa, p_method: pmEl.value, p_items: items, p_website: $('#f-website').value,
         p_voucher: vc ? voucher.data.code : null, p_sales: salesCode() };
       if (note) args.p_note = note;          // Stage 9: only sent when the buyer wrote a note
-      var r = await rpc('submit_order', args);
+      var r;
+      if (manual) {                           // Stage 11C: manual order with the owner's key (never the sales link of this phone)
+        r = await rpc('manual_order_submit', { p_key: manual.key, p_name: name, p_wa: wa, p_method: pmEl.value, p_items: items,
+          p_website: $('#f-website').value, p_voucher: args.p_voucher, p_note: note || null,
+          p_sales_id: fSales.value === 'none' ? null : Number(fSales.value) });
+      } else {
+        r = await rpc('submit_order', args);
+      }
       r.estimated_subtotal = estimate;
-      lsSet(RECEIPT_KEY, JSON.stringify(r));
+      lsSet(receiptKey(), JSON.stringify(r));
       clearDraftNote();
       cart = []; saveCart();
       voucher = null; vErrText = '';
@@ -1589,6 +1876,11 @@ input[aria-invalid=true]{border-color:var(--berry)}
       var again = $('#co-submit');
       if (again) { again.disabled = false; again.textContent = 'Place order'; }
       var eb = $('#co-error');
+      if (c === 'MANUAL_KEY_EXPIRED') {
+        endManual('expired');
+        route(true);
+        return;
+      }
       if (c === 'STORE_CLOSED') {
         try { await loadStore(); } catch (x) { /* ignore */ }
         route(true);
@@ -1691,7 +1983,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
       return;
     }
     var changed = typeof d.estimated_subtotal === 'number' && d.estimated_subtotal !== d.subtotal;
-    setApp('<div class="narrow"><h1>Order received</h1><p class="lead">Waiting for admin confirmation.</p>' +
+    setApp('<div class="narrow"><h1>Order received</h1><p class="lead">Waiting for admin confirmation.</p>' + manualBannerHtml() +
       (d.method_changed ? '<div class="notice allergy" id="method-changed" role="status">' + icon('info') + '<div>The shop changed your payment method. Your new total is ' + esc(rp(d.total)) + '.</div></div>' : '') +
       (changed ? '<div class="notice allergy">' + icon('info') + '<div>Prices have been updated by the store.</div></div>' : '') +
       (d.promos_removed ? '<div class="notice allergy">' + icon('info') + '<div>Voucher ' + esc(d.voucher_code || '') + ' cannot be combined with promos, so the promo was not applied to this order.</div></div>' : '') +
@@ -1727,7 +2019,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
     d.subtotal = f.subtotal;
     d.total = f.total;
     d.method_changed = true;
-    lsSet(RECEIPT_KEY, JSON.stringify(d));
+    lsSet(receiptKey(), JSON.stringify(d));
     if (parseRoute().name === 'receipt') viewReceipt();
   }
 
@@ -2190,7 +2482,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
       clearRcProof();
       d.proof_sent = (Number(d.proof_sent) || 0) + 1;
       d.proof_uploads_left = typeof r.uploads_left === 'number' ? r.uploads_left : Math.max(0, 3 - d.proof_sent);
-      lsSet(RECEIPT_KEY, JSON.stringify(d));
+      lsSet(receiptKey(), JSON.stringify(d));
       toast('Payment proof uploaded');
       var box = $('#rc-proof-box');
       if (box) box.innerHTML = rcProofInnerHtml(d);
@@ -2222,6 +2514,533 @@ input[aria-invalid=true]{border-color:var(--berry)}
   }
 
   /* ======================================================================
+     Stage 10: page tabs Home / Order / FAQ / Contact / Review (K126, K127)
+     The content comes from get_site_content (admin tab Pages, Apply to website) and get_public_reviews
+     (reviews the shop chose, names hidden). If it cannot be loaded, only the Order page shows, as before.
+     ====================================================================== */
+  var TAB_PAGES = { home: true, faq: true, contact: true, reviews: true };
+  var TAB_LIST = [['home', 'Home', '#/home'], ['catalog', 'Order', '#/'], ['faq', 'FAQ', '#/faq'], ['contact', 'Contact', '#/contact'], ['reviews', 'Review', '#/reviews']];
+  var MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  function normSite(x) {
+    x = x && typeof x === 'object' ? x : {};
+    return {
+      home: Array.isArray(x.home) ? x.home.filter(function (c) { return c && typeof c.kind === 'string'; }) : [],
+      faqs: Array.isArray(x.faqs) ? x.faqs.filter(function (f) { return f && f.question && f.answer; }) : [],
+      contact: x.contact && typeof x.contact === 'object' && !Array.isArray(x.contact) ? x.contact : {},
+      reviews_total: Number(x.reviews_total) || 0
+    };
+  }
+  function loadSite(force) {
+    if (!force && site && Date.now() - siteAt < 60000) return Promise.resolve(site);
+    if (siteBusy) return siteBusy;
+    siteBusy = rpc('get_site_content').then(function (x) {
+      site = normSite(x); siteAt = Date.now(); siteBusy = null; renderTabs(); return site;
+    }, function (e) { siteBusy = null; renderTabs(); throw e; });
+    return siteBusy;
+  }
+  function tabAvailable(name) {
+    if (name === 'catalog') return true;
+    if (!site) return false;
+    if (name === 'home') return site.home.length > 0;
+    if (name === 'faq') return site.faqs.length > 0;
+    if (name === 'contact') return contactLinks().length > 0 || !!contactIntro();
+    if (name === 'reviews') return site.reviews_total > 0;
+    return false;
+  }
+  function renderTabs() {
+    var nav = $('#tabs'); if (!nav) return;
+    var list = TAB_LIST.filter(function (t) { return tabAvailable(t[0]); });
+    var r = parseRoute().name, cur = r === 'checkout' ? 'catalog' : r, mb = $('#menuBtn');
+    // the "Menu" button is not needed on Home / FAQ / Contact / Review: the Order tab is right below it
+    if (mb) mb.hidden = r === 'catalog' || (!!TAB_PAGES[r] && list.length >= 2);
+    if (list.length < 2) { nav.hidden = true; nav.innerHTML = ''; return; }      // only Order: the page looks like before
+    var html = '<div class="tabs-in">' + list.map(function (t) {
+      return '<a class="tab' + (t[0] === 'catalog' ? ' order' : '') + '" href="' + t[2] + '"' + (t[0] === cur ? ' aria-current="page"' : '') + '>' + t[1] + '</a>';
+    }).join('') + '</div>';
+    if (nav.innerHTML !== html) nav.innerHTML = html;
+    nav.hidden = false;
+    var on = $('[aria-current="page"]', nav), inner = $('.tabs-in', nav);
+    if (on && inner && inner.scrollWidth > inner.clientWidth) inner.scrollLeft = on.offsetLeft - (inner.clientWidth - on.offsetWidth) / 2;
+  }
+  function goOrder() {
+    try { history.replaceState(null, '', '#/'); } catch (e) { location.hash = '#/'; return; }
+    route(true);
+  }
+
+  // Owner text: escaped, line breaks kept (CSS), https links can be tapped
+  function richText(t) {
+    return esc(String(t || '')).replace(/https:\/\/[^\s<]+/g, function (u) {
+      var clean = u.replace(/[).,;:!?\]]+$/, ''), tail = u.slice(clean.length);
+      return '<a href="' + clean + '" target="_blank" rel="noopener nofollow">' + clean + '</a>' + tail;
+    });
+  }
+  function httpsUrl(u) { return typeof u === 'string' && /^https:\/\/[^\s"'<>]+$/i.test(u) ? u : ''; }
+  function tabHref(link) {
+    if (link === 'tab:order') return '#/';
+    if (link === 'tab:faq') return '#/faq';
+    if (link === 'tab:contact') return '#/contact';
+    if (link === 'tab:review') return '#/reviews';
+    return '';
+  }
+  function buttonHtml(label, link) {
+    if (!label || !link) return '';
+    var t = tabHref(link);
+    if (t) return '<a class="btn' + (link === 'tab:order' ? ' big' : '') + '" href="' + t + '">' + esc(label) + '</a>';
+    var u = httpsUrl(link);
+    return u ? '<a class="btn sec" href="' + esc(u) + '" target="_blank" rel="noopener nofollow">' + esc(label) + icon('ext') + '</a>' : '';
+  }
+  function cardPhoto(url) {
+    var u = safeUrl(url);
+    return u && /^https:/i.test(u) ? '<div class="hc-photo"><img src="' + esc(u) + '" alt="" loading="lazy" decoding="async"></div>' : '';
+  }
+  function monthText(ym) {
+    var m = /^(\d{4})-(\d{2})$/.exec(String(ym || ''));
+    return m ? MONTH_NAMES[Number(m[2]) - 1] + ' ' + m[1] : '';
+  }
+  function starRow(n) {
+    var o = '<div class="rstars" role="img" aria-label="' + n + ' out of 5 stars">';
+    for (var i = 1; i <= 5; i++) o += '<span class="' + (i <= n ? 'on' : '') + '"><svg aria-hidden="true"><use href="#i-star"/></svg></span>';
+    return o + '</div>';
+  }
+  function reviewHtml(r) {
+    var n = Math.max(1, Math.min(5, Number(r.rating) || 0)), when = monthText(r.month);
+    return '<article class="rv">' + starRow(n) + (r.text ? '<p class="rt">' + esc(r.text) + '</p>' : '') +
+      '<div class="rw">' + esc(r.name || '') + (when ? ' · ' + esc(when) : '') + '</div></article>';
+  }
+
+  /* ---------- Video: YouTube plays on the page; TikTok and Instagram load after a tap ---------- */
+  function videoInfo(u) {
+    var m;
+    u = httpsUrl(u);
+    if (!u) return null;
+    if ((m = /^https:\/\/(?:www\.|m\.|music\.)?youtube\.com\/watch\?(?:[^#]*&)?v=([\w-]{6,20})/i.exec(u)) || (m = /^https:\/\/youtu\.be\/([\w-]{6,20})/i.exec(u)) ||
+        (m = /^https:\/\/(?:www\.|m\.)?youtube\.com\/(?:live|embed)\/([\w-]{6,20})/i.exec(u))) {
+      return { site: 'YouTube', url: u, embed: 'https://www.youtube-nocookie.com/embed/' + m[1] + '?rel=0&playsinline=1', tall: false, tap: false };
+    }
+    if ((m = /^https:\/\/(?:www\.|m\.)?youtube\.com\/shorts\/([\w-]{6,20})/i.exec(u))) {
+      return { site: 'YouTube', url: u, embed: 'https://www.youtube-nocookie.com/embed/' + m[1] + '?rel=0&playsinline=1', tall: true, tap: false };
+    }
+    if ((m = /^https:\/\/(?:www\.|m\.)?tiktok\.com\/@[^\/?#\s]+\/video\/(\d{6,25})/i.exec(u))) {
+      return { site: 'TikTok', url: u, embed: 'https://www.tiktok.com/embed/v2/' + m[1], tall: true, tap: true };
+    }
+    if ((m = /^https:\/\/(?:www\.)?instagram\.com\/(p|reel|reels|tv)\/([\w-]{5,40})/i.exec(u))) {
+      return { site: 'Instagram', url: u, embed: 'https://www.instagram.com/' + (m[1].toLowerCase() === 'reels' ? 'reel' : m[1].toLowerCase()) + '/' + m[2] + '/embed/', tall: true, tap: true };
+    }
+    return { site: '', url: u, embed: '', tall: false, tap: false };
+  }
+  function iframeHtml(v, title) {
+    return '<iframe src="' + esc(v.embed) + '" title="' + esc(title || (v.site + ' video')) + '" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+  }
+  function videoCardHtml(c) {
+    var v = videoInfo(c.video_url);
+    if (!v) return '';
+    var h = '<section class="hc" id="hc-' + c.id + '">' + (c.title ? '<h2>' + esc(c.title) + '</h2>' : '');
+    if (v.embed) {
+      h += '<div class="vid' + (v.tall ? ' tall' : '') + '" id="vid-' + c.id + '" data-embed="' + esc(v.embed) + '" data-title="' + esc(c.title || '') + '">' +
+        (v.tap ? '<button type="button" class="vid-tap" data-action="video-load" data-card="' + c.id + '"><span class="play">' + icon('play') + '</span>Tap to play the video<small>Loads from ' + esc(v.site) + '</small></button>'
+          : iframeHtml(v, c.title)) + '</div>';
+    }
+    if (c.body) h += '<p class="txt">' + richText(c.body) + '</p>';
+    h += '<a class="btn sec" href="' + esc(v.url) + '" target="_blank" rel="noopener nofollow">' + (v.site ? 'Watch on ' + esc(v.site) : 'Watch the video') + icon('ext') + '</a>';
+    return h + '</section>';
+  }
+  function loadVideo(btn) {
+    var box = $('#vid-' + btn.getAttribute('data-card'));
+    if (!box) return;
+    box.innerHTML = iframeHtml({ embed: box.getAttribute('data-embed'), site: '' }, box.getAttribute('data-title') || 'Video');
+    var f = $('iframe', box); if (f) f.focus();
+  }
+
+  /* ---------- Home countdown card (follows the schedule of the Store tab, like the header countdown) ---------- */
+  function homeCdState() {
+    var t = cdTarget(), rem = t ? t.at - serverNow() : 0;
+    return t && rem > 0 ? { mode: t.mode, rem: rem } : null;
+  }
+  function countdownCardHtml(c) {
+    if (!store) return '';
+    var st = homeCdState(), open = isOpen(), label, extra = '';
+    if (st) label = c.title || (st.mode === 'close' ? 'Orders close in' : 'Orders open in');
+    else label = c.title || (open ? 'Open for orders' : 'Orders are closed');
+    var info = open && c.show_info === true && typeof store.store_info === 'string' ? store.store_info.trim() : '';
+    if (!open && !st && store.closed_message) extra = '<p class="txt">' + esc(store.closed_message) + '</p>';
+    var h = '<section class="hc cd" id="hc-' + c.id + '" data-mode="' + (st ? st.mode : open ? 'open' : 'closed') + '">' +
+      '<p class="hcd-label">' + esc(label) + '</p>';
+    if (st) {
+      h += '<div class="hcd-tiles" data-hcd role="timer" aria-live="off">' +
+        '<div class="hcd-t" data-u="dbox"><b data-u="d">0</b><i>days</i></div><div class="hcd-t"><b data-u="h">00</b><i>hrs</i></div>' +
+        '<div class="hcd-t"><b data-u="m">00</b><i>min</i></div><div class="hcd-t"><b data-u="s">00</b><i>sec</i></div></div>';
+      h += '<p class="txt">' + esc(st.mode === 'close' ? 'Orders close on ' + fmtDate(store.close_at) + '.' : 'Orders open on ' + fmtDate(store.open_at) + '.') + '</p>';
+    }
+    h += extra + (info ? '<span class="info">' + esc(info) + '</span>' : '') + (c.body ? '<p class="txt">' + richText(c.body) + '</p>' : '');
+    if (open) h += '<a class="btn" href="#/">Order now</a>';
+    return h + '</section>';
+  }
+  function renderHomeCd() {
+    if (parseRoute().name !== 'home') return;
+    var st = homeCdState();
+    $$('[data-hcd]').forEach(function (box) {
+      if (!st) return;
+      var sec = Math.floor(st.rem / 1000), d = Math.floor(sec / 86400), h = Math.floor((sec % 86400) / 3600), m = Math.floor((sec % 3600) / 60), x = sec % 60;
+      var set = function (u, v) { var e = box.querySelector('[data-u="' + u + '"]'); if (e) e.textContent = v; };
+      var db = box.querySelector('[data-u="dbox"]'); if (db) db.hidden = d === 0;
+      set('d', String(d)); set('h', pad2(h)); set('m', pad2(m)); set('s', pad2(x));
+    });
+  }
+
+  /* ---------- Home cards ---------- */
+  function bestSellerItems() {
+    if (!catalog) return [];
+    var out = [];
+    catalog.packages.forEach(function (p) { if (p.best_seller === true) out.push({ to: 'pk-' + p.id, name: p.name, price: p.price, image_url: p.image_url }); });
+    catalog.flavors.forEach(function (f) { if (f.best_seller === true && typeof f.single_price === 'number') out.push({ to: 'sg-' + f.id, name: f.name, price: f.single_price, image_url: f.image_url }); });
+    return out;
+  }
+  function homeCardHtml(c) {
+    var k = c.kind;
+    if (k === 'HERO') {
+      return '<section class="hc hero" id="hc-' + c.id + '">' + cardPhoto(c.image_url) + '<h2>' + esc(c.title || '') + '</h2>' +
+        (c.body ? '<p class="txt">' + richText(c.body) + '</p>' : '') + '<a class="btn big" href="#/">' + esc(c.button_label || 'Order now') + '</a></section>';
+    }
+    if (k === 'COUNTDOWN') return countdownCardHtml(c);
+    if (k === 'TEXT') {
+      return '<section class="hc" id="hc-' + c.id + '">' + cardPhoto(c.image_url) + '<h2>' + esc(c.title || '') + '</h2>' +
+        (c.body ? '<p class="txt">' + richText(c.body) + '</p>' : '') + buttonHtml(c.button_label, c.button_link) + '</section>';
+    }
+    if (k === 'VIDEO') return videoCardHtml(c);
+    if (k === 'BEST_SELLERS') {
+      var items = bestSellerItems();
+      if (!items.length) return '';
+      var open = isOpen();
+      return '<section class="hc" id="hc-' + c.id + '"><h2>' + esc(c.title || 'Best sellers') + '</h2>' + (c.body ? '<p class="txt">' + richText(c.body) + '</p>' : '') +
+        '<div class="mini-grid">' + items.map(function (it) {
+          return '<div class="mini"><div class="mp">' + photo(it.image_url) + '</div><div class="mb"><div class="mn">' + esc(it.name) + '</div><div class="mpr">' + rp(it.price) + '</div>' +
+            '<button class="btn small" type="button" data-action="jump" data-to="' + it.to + '">' + (open ? 'Order' : 'See in menu') + '</button></div></div>';
+        }).join('') + '</div></section>';
+    }
+    if (k === 'PROMOS') {
+      var list = (catalog && catalog.promotions) || [];
+      if (!list.length) return '';
+      return '<section class="hc" id="hc-' + c.id + '"><h2>' + esc(c.title || 'Promos') + '</h2>' + (c.body ? '<p class="txt">' + richText(c.body) + '</p>' : '') +
+        '<div class="plist">' + list.map(function (pr) {
+          return '<div class="offer">' + icon('gift') + '<div><strong>' + esc(pr.name) + '</strong><span>' + esc(promoCond(pr) + ', ' + promoGet(pr)) + '</span></div></div>';
+        }).join('') + '</div><a class="btn" href="#/">Order now</a></section>';
+    }
+    if (k === 'REVIEWS') {
+      var rv = homeReviews && homeReviews.reviews ? homeReviews.reviews.slice(0, 3) : [];
+      if (!rv.length) return '';
+      return '<section class="hc" id="hc-' + c.id + '"><h2>' + esc(c.title || 'What our customers say') + '</h2>' + (c.body ? '<p class="txt">' + richText(c.body) + '</p>' : '') +
+        '<div class="rvs">' + rv.map(reviewHtml).join('') + '</div><a class="btn sec" href="#/reviews">See all reviews</a></section>';
+    }
+    if (k === 'HOW_TO') {
+      var steps = Array.isArray(c.steps) ? c.steps.slice(0, 3) : [];
+      if (!steps.length) return '';
+      return '<section class="hc" id="hc-' + c.id + '"><h2>' + esc(c.title || 'How to order') + '</h2>' + (c.body ? '<p class="txt">' + richText(c.body) + '</p>' : '') +
+        '<ol class="how">' + steps.map(function (st, i) {
+          return '<li><span class="n" aria-hidden="true">' + (i + 1) + '</span><div><strong>' + esc(st.title || '') + '</strong>' + (st.text ? '<span>' + esc(st.text) + '</span>' : '') + '</div></li>';
+        }).join('') + '</ol></section>';
+    }
+    return '';
+  }
+  function viewHome() {
+    var cards = site.home.map(homeCardHtml).filter(Boolean);
+    if (!cards.length) { goOrder(); return; }
+    setApp('<div class="home"><h1 class="sr-only">Home</h1>' + cards.join('') + '</div>');
+    renderHomeCd();
+  }
+
+  /* ---------- FAQ and Contact ---------- */
+  function viewFaq() {
+    setApp('<div class="narrow"><h1>FAQ</h1><div class="faq">' + site.faqs.map(function (f, i) {
+      return '<details id="faq-' + esc(f.id) + '"' + (i === 0 && site.faqs.length === 1 ? ' open' : '') + '><summary>' + esc(f.question) + '</summary><div class="ans">' + richText(f.answer) + '</div></details>';
+    }).join('') + '</div></div>');
+  }
+  var CONTACTS = [
+    ['instagram', 'Instagram', 'photo'], ['youtube', 'YouTube', 'video'], ['tiktok', 'TikTok', 'note'], ['facebook', 'Facebook', 'people'],
+    ['whatsapp', 'WhatsApp', 'chat'], ['wa_channel', 'WhatsApp Channel', 'mega'], ['email', 'Email', 'mail']
+  ];
+  function contactIntro() { var t = site && site.contact.intro; return typeof t === 'string' ? t.trim() : ''; }
+  function handleOf(u) {
+    var m = /^https:\/\/[^\/]+\/(@?[A-Za-z0-9._-]{1,60})\/?(?:[?#].*)?$/.exec(u);
+    return m ? (m[1].charAt(0) === '@' ? m[1] : '@' + m[1]) : '';
+  }
+  function contactLinks() {
+    if (!site) return [];
+    var c = site.contact, out = [];
+    CONTACTS.forEach(function (k) {
+      var v = typeof c[k[0]] === 'string' ? c[k[0]].trim() : '';
+      if (!v) return;
+      var href = '', sub = '';
+      if (k[0] === 'whatsapp') {
+        if (!/^62[0-9]{8,13}$/.test(v)) return;
+        href = 'https://wa.me/' + v; sub = '+' + v;
+      } else if (k[0] === 'email') {
+        if (!/^[^@\s"'<>]+@[^@\s"'<>]+\.[^@\s"'<>]+$/.test(v)) return;
+        href = 'mailto:' + v; sub = v;
+      } else {
+        href = httpsUrl(v);
+        if (!href) return;
+        sub = k[0] === 'wa_channel' ? 'Follow our channel' : (k[0] === 'facebook' ? '' : handleOf(href));
+      }
+      out.push({ key: k[0], label: k[1], icon: k[2], href: href, sub: sub });
+    });
+    return out;
+  }
+  function viewContact() {
+    var intro = contactIntro(), links = contactLinks();
+    setApp('<div class="narrow"><h1>Contact us</h1>' + (intro ? '<p class="ct-intro">' + richText(intro) + '</p>' : '') +
+      (links.length ? '<div class="ct-list">' + links.map(function (l) {
+        return '<a class="ct" id="ct-' + l.key + '" href="' + esc(l.href) + '"' + (l.key === 'email' ? '' : ' target="_blank" rel="noopener nofollow"') + '>' +
+          '<span class="ci">' + icon(l.icon) + '</span><span><strong>' + esc(l.label) + '</strong>' + (l.sub ? '<span>' + esc(l.sub) + '</span>' : '') + '</span></a>';
+      }).join('') + '</div>' : '') + '</div>');
+  }
+
+  /* ---------- Reviews page: only the reviews the shop chose, newest first, 20 at a time ---------- */
+  function reviewsListHtml() {
+    var more = rvPage.list.length < rvPage.total;
+    return '<div class="rvs" id="rv-list">' + rvPage.list.map(reviewHtml).join('') + '</div>' +
+      (more ? '<button class="btn sec block" type="button" id="rv-more" data-action="rv-more">Show more reviews</button>' : '');
+  }
+  function viewReviews() {
+    setApp('<div class="narrow"><h1>Reviews</h1><p class="lead">What our customers say about their orders.</p><div id="rv-box">' + reviewsListHtml() + '</div></div>');
+  }
+  async function moreReviews(btn) {
+    if (rvPage.busy) return;
+    rvPage.busy = true;
+    if (btn) { btn.disabled = true; btn.textContent = 'Loading…'; }
+    try {
+      var r = await rpc('get_public_reviews', { p_limit: 20, p_offset: rvPage.list.length });
+      var add = r && Array.isArray(r.reviews) ? r.reviews : [];
+      rvPage.list = rvPage.list.concat(add);
+      rvPage.total = add.length ? Number(r.total) || rvPage.list.length : rvPage.list.length;
+      var box = $('#rv-box'); if (box) box.innerHTML = reviewsListHtml();
+    } catch (e) {
+      toast(errText(e.code), true);
+      var b2 = $('#rv-more'); if (b2) { b2.disabled = false; b2.textContent = 'Show more reviews'; }
+    } finally { rvPage.busy = false; }
+  }
+
+  async function viewTabPage(r, seq) {
+    if (!site) setApp(skeleton());
+    try { await loadSite(r.name === 'reviews' || r.name === 'home'); } catch (e) { /* use what we have */ }
+    if (seq !== routeSeq) return;
+    if (!tabAvailable(r.name)) { goOrder(); return; }
+    renderTabs();
+    if (r.name === 'home') {
+      var jobs = [loadStore().catch(function () { return null; }), loadCatalog().catch(function () { return null; })];
+      var wantReviews = site.reviews_total > 0 && site.home.some(function (c) { return c.kind === 'REVIEWS'; });
+      if (wantReviews && (!homeReviews || Date.now() - homeReviewsAt > 60000)) {
+        jobs.push(rpc('get_public_reviews', { p_limit: 3, p_offset: 0 }).then(function (x) { homeReviews = x; homeReviewsAt = Date.now(); }, function () { /* card hidden */ }));
+      }
+      if (!wantReviews) homeReviews = null;
+      await Promise.all(jobs);
+      if (seq !== routeSeq) return;
+      viewHome();
+    } else if (r.name === 'faq') {
+      viewFaq();
+    } else if (r.name === 'contact') {
+      viewContact();
+    } else {
+      try {
+        var x = await rpc('get_public_reviews', { p_limit: 20, p_offset: 0 });
+        rvPage = { list: x && Array.isArray(x.reviews) ? x.reviews : [], total: Number(x && x.total) || 0, busy: false };
+      } catch (e) {
+        if (seq !== routeSeq) return;
+        setApp(loadError('retry')); renderCartBar(); return;
+      }
+      if (seq !== routeSeq) return;
+      if (!rvPage.list.length) { goOrder(); return; }
+      viewReviews();
+    }
+    renderCartBar();
+    // the cart bar needs the menu and the shop status; load them quietly when they are missing
+    if (!store || !catalog) {
+      Promise.all([store ? null : loadStore(), catalog ? null : loadCatalog()]).then(function () {
+        if (seq === routeSeq) { reconcileCart(); renderCartBar(); }
+      }, function () { /* no cart bar */ });
+    }
+  }
+
+
+  /* ======================================================================
+     Stage 11C: sub-sales page #/sales/<code> (K138, K154, K157)
+     Hidden page: no button or tab leads here; the owner sends the link by WhatsApp. Login with the 6-digit PIN
+     the owner set in the admin app, remembered on this phone for 30 days. Shows only this sub-sales person's
+     own orders (no WhatsApp numbers, no tracking codes) and their own share of the commission.
+     ====================================================================== */
+  var sp = { code: '', data: null, busy: false, from: '', to: '' };
+  function spAll() {
+    try { var o = JSON.parse(lsGet(SPAGE_KEY) || '{}'); return o && typeof o === 'object' && !Array.isArray(o) ? o : {}; } catch (e) { return {}; }
+  }
+  function spGet(code) {
+    var x = spAll()[code];
+    return x && typeof x.t === 'string' && /^[0-9a-f]{64}$/.test(x.t) && !(Date.parse(x.e) <= Date.now()) ? x : null;
+  }
+  function spSet(code, x) { var o = spAll(); if (x) o[code] = x; else delete o[code]; lsSet(SPAGE_KEY, JSON.stringify(o)); }
+  function wibToday() { return new Date(Date.now() + 7 * 3600000).toISOString().slice(0, 10); }
+  function monthRange(back) {
+    var t = wibToday(), y = Number(t.slice(0, 4)), m = Number(t.slice(5, 7)) - back;
+    while (m < 1) { m += 12; y--; }
+    var first = y + '-' + pad2(m) + '-01';
+    if (!back) return [first, t];
+    var last = new Date(Date.UTC(y, m, 0)).toISOString().slice(0, 10);
+    return [first, last];
+  }
+  function dayText(iso) {
+    var mm = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso || ''));
+    return mm ? Number(mm[3]) + ' ' + MONTH_NAMES[Number(mm[2]) - 1] + ' ' + mm[1] : '';
+  }
+
+  function viewSalesPage(code, seq) {
+    document.title = 'My sales';
+    if (sp.code !== code) sp = { code: code, data: null, busy: false, from: '', to: '' };
+    if (!spGet(code)) { spLoginView('', false); return; }
+    if (sp.data) renderSalesPage();
+    else setApp('<div class="sx"><div class="sk" style="height:46px;width:60%;margin:12px 0"></div><div class="sk" style="height:150px;margin-bottom:16px"></div>' +
+      '<div class="sx-tiles"><div class="sk" style="height:84px"></div><div class="sk" style="height:84px"></div><div class="sk" style="height:84px"></div><div class="sk" style="height:84px"></div></div></div>');
+    loadSalesData(seq);
+  }
+  function spLoginView(msg, good) {
+    setApp('<div class="narrow sx"><h1>Sales page</h1><p class="lead">Enter your 6-digit PIN to see your orders and commission.</p>' +
+      (msg && good ? '<p class="sx-ok" role="status">' + esc(msg) + '</p>' : '') +
+      '<form class="panel" id="sp-form" novalidate><div class="field"><label for="sp-pin">PIN</label>' +
+      '<input type="password" id="sp-pin" inputmode="numeric" autocomplete="off" maxlength="12" aria-describedby="sp-err"></div>' +
+      '<p class="err" id="sp-err" role="alert"' + (msg && !good ? '' : ' hidden') + '>' + (msg && !good ? esc(msg) : '') + '</p>' +
+      '<button class="btn big block" type="submit" id="sp-btn">Log in</button></form>' +
+      '<p class="muted" style="font-size:14px">You stay logged in on this phone for 30 days. Forgot your PIN? Ask the shop for a new one.</p></div>');
+  }
+  async function spLogin() {
+    var inp = $('#sp-pin'), err = $('#sp-err'), btn = $('#sp-btn');
+    if (sp.busy || !inp) return;
+    var pin = inp.value.replace(/\s+/g, '');
+    err.hidden = true;
+    if (!/^[0-9]{6}$/.test(pin)) { err.textContent = 'Your PIN has 6 numbers.'; err.hidden = false; inp.focus(); return; }
+    sp.busy = true; btn.disabled = true; btn.textContent = 'Checking…';
+    var r = null, code = sp.code;
+    try { r = await rpc('sales_page_login', { p_code: code, p_pin: pin }); } catch (e) {
+      sp.busy = false; btn.disabled = false; btn.textContent = 'Log in';
+      err.textContent = errText(e.code); err.hidden = false; return;
+    }
+    sp.busy = false;
+    if (sp.code !== code || parseRoute().name !== 'sales') return;
+    if (!r || r.ok !== true) {
+      var c = (r && r.error) || 'FAILED', left = r && typeof r.attempts_left === 'number' ? r.attempts_left : null;
+      btn.disabled = false; btn.textContent = 'Log in';
+      err.textContent = c === 'SALES_PAGE_LOGIN_FAILED' && left !== null ? 'Wrong PIN. ' + left + ' ' + plural(left, 'try', 'tries') + ' left.' : errText(c);
+      err.hidden = false; inp.value = ''; inp.focus();
+      return;
+    }
+    spSet(code, { t: r.token, n: r.name || '', e: r.expires_at });
+    sp.data = null;
+    viewSalesPage(code, routeSeq);
+  }
+  async function loadSalesData(seq) {
+    var code = sp.code, x = spGet(code);
+    if (!x) { spLoginView('', false); return; }
+    var args = { p_token: x.t };
+    if (sp.from) args.p_from = sp.from;
+    if (sp.to) args.p_to = sp.to;
+    sp.busy = true;
+    var btn = $('#sp-show');
+    if (btn) { btn.disabled = true; btn.textContent = 'Loading…'; }
+    var r = null;
+    try { r = await rpc('sales_page_data', args); } catch (e) {
+      sp.busy = false;
+      if (seq !== routeSeq || sp.code !== code) return;
+      if (!sp.data) setApp('<div class="empty"><h2>We could not load your sales page</h2><p class="muted">' + esc(errText(e.code)) + '</p>' +
+        '<button class="btn" type="button" data-action="sp-retry">Try again</button></div>');
+      else { toast(errText(e.code), true); var b2 = $('#sp-show'); if (b2) { b2.disabled = false; b2.textContent = 'Show'; } }
+      return;
+    }
+    sp.busy = false;
+    if (seq !== routeSeq || sp.code !== code) return;
+    if (!r || r.ok !== true) {                 // PIN changed or removed, sales person turned off, or 30 days passed
+      spSet(code, null); sp.data = null;
+      spLoginView(errText((r && r.error) || 'SALES_PAGE_EXPIRED'), false);
+      return;
+    }
+    sp.data = r; sp.from = r.from || ''; sp.to = r.to || '';
+    if (r.name && r.name !== x.n) spSet(code, { t: x.t, n: r.name, e: x.e });
+    renderSalesPage();
+  }
+  var SP_STATE = { PAID: 'Paid to you', COUNTED: 'Earned, not paid yet', WAITING: 'Waiting', NOT_YET: 'Not counted yet' };
+  function spItemsHtml(items) {
+    return '<ul class="sx-items">' + (items || []).map(function (it) {
+      var t = it.type, sub = '';
+      if (t === 'BONUS') sub = 'Free item';
+      else if (t === 'SINGLE') sub = 'Single';
+      else if (it.flavors && it.flavors.length) sub = flavText(it.flavors, t === 'COMBO');
+      return '<li>' + esc(it.qty + ' × ' + it.name) + (sub ? '<span class="sub">' + esc(sub) + '</span>' : '') + '</li>';
+    }).join('') + '</ul>';
+  }
+  function spTile(k, v, s, cls) {
+    return '<div class="sx-tile' + (cls ? ' ' + cls : '') + '"><div class="k">' + esc(k) + '</div><div class="v">' + esc(v) + '</div>' + (s ? '<div class="s">' + esc(s) + '</div>' : '') + '</div>';
+  }
+  function renderSalesPage() {
+    var d = sp.data, sm = d.summary || {}, today = wibToday(), tm = monthRange(0), lm = monthRange(1);
+    var orders = Array.isArray(d.orders) ? d.orders : [];
+    var tip = lsGet(SPAGE_TIP_KEY) ? '' : '<div class="notice note" id="sp-tip">' + icon('info') + '<div><span>Tip: open the browser menu (⋮) and tap <b>Add to Home screen</b>. ' +
+      'This page then opens like an app.</span><button class="link-btn" type="button" data-action="sp-tip-close">OK, got it</button></div></div>';
+    var pcs = Number(sm.pcs) || 0, free = Number(sm.free_pcs) || 0;
+    var h = '<div class="sx"><div class="sx-head"><div><h1>Hi, ' + esc(d.name || '') + '</h1><p class="muted" style="margin:0">Your orders and commission</p></div>' +
+      '<button class="btn sec small" type="button" data-action="sp-logout">Log out</button></div>' + tip +
+      '<form class="panel" id="sp-dates" novalidate><div class="sx-quick" role="group" aria-label="Quick dates">' +
+      '<button class="sx-chip" type="button" data-action="sp-range" data-from="' + tm[0] + '" data-to="' + tm[1] + '" aria-pressed="' + (d.from === tm[0] && d.to === tm[1]) + '">This month</button>' +
+      '<button class="sx-chip" type="button" data-action="sp-range" data-from="' + lm[0] + '" data-to="' + lm[1] + '" aria-pressed="' + (d.from === lm[0] && d.to === lm[1]) + '">Last month</button></div>' +
+      '<div class="sx-dates"><div class="field"><label for="sp-from">From</label><input type="date" id="sp-from" value="' + esc(d.from || '') + '" max="' + today + '"></div>' +
+      '<div class="field"><label for="sp-to">To</label><input type="date" id="sp-to" value="' + esc(d.to || '') + '" max="' + today + '"></div>' +
+      '<button class="btn block" type="submit" id="sp-show">Show</button></div></form>' +
+      '<p class="muted sx-range">Orders placed ' + esc(dayText(d.from)) + ' – ' + esc(dayText(d.to)) + ' (WIB). Cancelled orders are not shown.</p>' +
+      '<div class="sx-tiles">' +
+      spTile('Commission earned', rp(sm.commission_total), 'Completed and paid orders', 'main') +
+      spTile('Paid to you', rp(sm.commission_paid), '', 'ok') +
+      spTile('Not paid yet', rp(sm.commission_unpaid), '') +
+      spTile('Waiting', rp(sm.commission_waiting), 'Orders not completed and paid yet') +
+      spTile('Orders', String(Number(sm.orders) || 0), '') +
+      spTile('Cookies', pcs + ' pcs', free ? '+ ' + free + ' free' : '') + '</div>';
+    var singles = Array.isArray(sm.singles) ? sm.singles : [], bundles = Array.isArray(sm.bundles) ? sm.bundles : [];
+    if (singles.length || bundles.length) {
+      h += '<div class="panel"><div class="sx-two">' +
+        (singles.length ? '<div><h3 style="margin:0 0 6px">Singles</h3><ul class="sx-list">' + singles.map(function (x) {
+          return '<li><span>' + esc(x.name) + '</span><span>' + (Number(x.pcs) || 0) + ' pcs</span></li>'; }).join('') + '</ul></div>' : '') +
+        (bundles.length ? '<div><h3 style="margin:' + (singles.length ? '14px' : '0') + ' 0 6px">Bundles</h3><ul class="sx-list">' + bundles.map(function (x) {
+          var q = Number(x.qty) || 0; return '<li><span>' + esc(x.name) + '</span><span>' + q + ' ' + plural(q, 'bundle', 'bundles') + '</span></li>'; }).join('') + '</ul></div>' : '') +
+        '</div></div>';
+    }
+    h += '<h2>Orders</h2>';
+    if (!orders.length) h += '<div class="panel"><p class="muted" style="margin:0">No orders on these dates.</p></div>';
+    h += orders.map(function (o) {
+      var st = SP_STATE[o.commission_state] ? o.commission_state : 'NOT_YET';
+      var amt = o.commission === null || o.commission === undefined ? '–' : rp(o.commission);
+      var status = typeof o.status === 'string' ? o.status : '';
+      return '<article class="sx-order"><div class="sx-oh"><div><div class="sx-on">' + esc(o.name || '') + '</div>' +
+        '<div class="sx-od">' + esc(fmtDate(o.created_at)) + (o.order_number ? ' · ' + esc(o.order_number) : '') + '</div></div>' +
+        '<div class="sx-oc"><div class="amt">' + amt + '</div><div class="st ' + st + '">' + esc(SP_STATE[st]) + '</div></div></div>' +
+        '<div class="chips"><span class="chip ' + esc(status) + '">' + esc(status ? label(status) : '') + '</span>' +
+        '<span class="chip ' + (o.paid ? 'PAID' : 'UNPAID') + '">' + (o.paid ? 'Paid' : 'Unpaid') + '</span></div>' +
+        spItemsHtml(o.items) + '</article>';
+    }).join('');
+    if (d.more) h += '<p class="sx-foot">Only the newest 500 orders are shown. Choose fewer dates to see older orders.</p>';
+    h += '<p class="sx-foot">Commission is earned when an order is completed and paid. “Not counted yet” means the shop has not updated this order yet. ' +
+      'Numbers change when the shop updates its orders' + (d.last_update ? ' (last update ' + esc(fmtDate(d.last_update)) + ')' : '') + '.</p></div>';
+    setApp(h);
+  }
+  function spDates(from, to) {
+    if (sp.busy) return;
+    var f = from || ($('#sp-from') || {}).value || '', t = to || ($('#sp-to') || {}).value || '';
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(f) || !/^\d{4}-\d{2}-\d{2}$/.test(t)) { toast('Choose both dates.', true); return; }
+    if (t < f) { var x = f; f = t; t = x; }
+    sp.from = f; sp.to = t;
+    loadSalesData(routeSeq);
+  }
+  async function spLogout() {
+    var code = sp.code, x = spGet(code);
+    spSet(code, null); sp.data = null;
+    if (x) { try { await rpc('sales_page_logout', { p_token: x.t }); } catch (e) { /* the token is gone from this phone anyway */ } }
+    if (parseRoute().name === 'sales' && sp.code === code) spLoginView('You are logged out.', true);
+  }
+
+  /* ======================================================================
      Events
      ====================================================================== */
   document.addEventListener('click', function (ev) {
@@ -2233,7 +3052,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
       case 'retry': route(); break;
       case 'add-combo': {
         var p = catalog.packages.filter(function (x) { return x.id === id; })[0];
-        if (!p || !isOpen()) break;
+        if (!p || !canOrder()) break;
         var ok = addToCart({ package_id: p.id, name: p.name, type: 'COMBO', price: p.price, image_url: p.image_url || null,
           flavors: p.flavors.map(function (f) { return { id: f.id, name: f.name, qty: f.qty }; }) });
         if (ok) { toast('Added to your order'); renderCartBar(); }
@@ -2278,22 +3097,34 @@ input[aria-invalid=true]{border-color:var(--berry)}
       }
       case 'review-send': sendReview(); break;
       case 'v-apply': applyVoucher(); break;
+      case 'jump': jumpTo = el.getAttribute('data-to'); if (parseRoute().name === 'catalog') route(true); else location.hash = '#/'; break;
+      case 'video-load': loadVideo(el); break;
+      case 'rv-more': moreReviews(el); break;
       case 'v-remove': removeVoucher(); break;
+      case 'manual-exit': endManual('left'); if (parseRoute().name === 'catalog') route(true); else location.hash = '#/'; break;      // Stage 11C
+      case 'sp-retry': loadSalesData(routeSeq); break;
+      case 'sp-range': spDates(el.getAttribute('data-from'), el.getAttribute('data-to')); break;
+      case 'sp-logout': spLogout(); break;
+      case 'sp-tip-close': { lsSet(SPAGE_TIP_KEY, '1'); var tp = $('#sp-tip'); if (tp) tp.remove(); break; }
     }
   });
   document.addEventListener('submit', function (ev) {
     if (ev.target.id === 'co-form') { ev.preventDefault(); submitOrder(); }
     else if (ev.target.id === 'track-form') { ev.preventDefault(); runTrack(); }
+    else if (ev.target.id === 'sp-form') { ev.preventDefault(); spLogin(); }          // Stage 11C
+    else if (ev.target.id === 'sp-dates') { ev.preventDefault(); spDates(); }
   });
   document.addEventListener('change', function (ev) {
     if (ev.target.id === 'proof-file') onProofChosen(ev.target);
     else if (ev.target.id === 'rc-proof-file') onRcProofChosen(ev.target);
     else if (ev.target.name === 'pm') saveDraft();
     else if (ev.target.id === 'f-name' || ev.target.id === 'f-wa') recheckVoucher();
+    else if (ev.target.id === 'f-sales') { saveDraft(); setErr('err-sales', ''); ev.target.removeAttribute('aria-invalid'); }   // Stage 11C
   });
   document.addEventListener('input', function (ev) {
     if (ev.target.id === 'f-name' || ev.target.id === 'f-wa') saveDraft();
     if (ev.target.id === 'f-note') { saveDraft(); noteCount(); setErr('err-note', ''); }
+    if (ev.target.id === 'sp-pin') { var pv = ev.target.value.replace(/[^0-9]/g, '').slice(0, 6); if (pv !== ev.target.value) ev.target.value = pv; }   // Stage 11C
     if (ev.target.id === 'rv-text') { track.draft.text = ev.target.value; var c = $('#rv-count'); if (c) c.textContent = ev.target.value.length + ' / 1000'; }
   });
   document.addEventListener('keydown', function (ev) {
@@ -2314,10 +3145,10 @@ input[aria-invalid=true]{border-color:var(--berry)}
   window.addEventListener('hashchange', function () { route(); });
   setInterval(function () {
     var r = parseRoute().name;
-    if (document.visibilityState === 'visible' && (r === 'catalog' || r === 'checkout') && !picker) refreshStore(false);
+    if (document.visibilityState === 'visible' && (r === 'catalog' || r === 'checkout' || r === 'home') && !picker) refreshStore(false);
   }, 60000);
   document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'visible') { var r = parseRoute().name; if (r === 'catalog' || r === 'checkout') refreshStore(true); }
+    if (document.visibilityState === 'visible') { var r = parseRoute().name; if (r === 'catalog' || r === 'checkout' || r === 'home') refreshStore(true); }
   });
 
   /* ======================================================================
@@ -2331,6 +3162,7 @@ input[aria-invalid=true]{border-color:var(--berry)}
     logo.src = LOGO_URL;
   })();
   readSalesFromLink();
+  readManual();                 // Stage 11C: manual order mode of this browser tab (if any)
   loadCart();
   route();
   setInterval(tickCountdown, 1000);
