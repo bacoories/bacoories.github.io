@@ -175,7 +175,7 @@ p{margin:0 0 10px}
   .promo-set[aria-hidden="true"]{display:none}
   .promo-set{display:flex;flex-wrap:wrap;justify-content:center}
 }
-.tile .nd{padding:0 10px 8px;font-size:13px;line-height:1.3;color:var(--cocoa-soft);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tile .nd{padding:0 10px 8px;font-size:13px;line-height:1.3;color:var(--cocoa-soft)}
 .offers{display:grid;gap:8px;margin-top:12px}
 .offer{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:14px;background:var(--blue-soft);font-size:15px}
 .offer .i{margin-top:2px;color:var(--blue-deep)}
@@ -526,6 +526,52 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
 .sx-items .sub{display:block;font-size:13px;color:var(--cocoa-soft)}
 .sx-foot{font-size:14px;color:var(--cocoa-soft);margin:12px 0 0}
 
+/* ---------- Stage 11B: long descriptions scroll inside their box (K143) ---------- */
+.dscroll{max-height:calc(1.45em * 4 + 2px);overflow-y:auto;overscroll-behavior:contain;line-height:1.45;-webkit-overflow-scrolling:touch;padding-right:4px;scrollbar-width:thin}
+.dscroll::-webkit-scrollbar{width:4px}
+.dscroll::-webkit-scrollbar-thumb{background:#D9CCB8;border-radius:4px}
+.tile .nd.dscroll{max-height:calc(1.3em * 4 + 2px);line-height:1.3}
+
+/* ---------- Stage 11B: frames made by the shop (K171): colours come from the admin app ---------- */
+.fr{border:2.5px solid var(--fr-line);box-shadow:0 0 0 3px var(--fr-glow),0 6px 18px var(--fr-shadow)}
+.band{display:flex;align-items:center;justify-content:center;gap:7px;padding:6px 10px;color:var(--fr-text);background:var(--fr-band);font:800 12px/1.15 var(--font-display);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;overflow:hidden;flex:none}
+.band .bt{overflow:hidden;text-overflow:clip}
+.band .bi{flex:none;font-size:1.05em;letter-spacing:0;text-transform:none}
+.srow.fr{padding-top:0}
+.srow .band{margin-bottom:-8px}
+
+/* ---------- Stage 11B: stock, limits, sold out (K148, K149) ---------- */
+.stk{display:inline-flex;align-items:center;gap:4px;align-self:flex-start;margin-top:6px;padding:2px 10px;border-radius:999px;font-size:13px;font-weight:700;background:var(--cream);color:var(--cocoa)}
+.stk.low{background:#FFF1CC;color:#7A4E00}
+.card .stk{margin-top:0}
+.srow .stk{font-size:12px;border-radius:10px;line-height:1.3}
+.so-badge{position:absolute;left:8px;bottom:8px;z-index:2;padding:4px 10px;border-radius:999px;background:var(--cocoa);color:#fff;font:800 12px/1 var(--font-display);letter-spacing:.06em;text-transform:uppercase}
+.is-soldout .pic img,.is-soldout .sp img,.is-soldout .pic .ph,.is-soldout .sp .ph{filter:grayscale(.85);opacity:.6}
+.soldout{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--cocoa-soft)}
+.soldout strong{color:var(--cocoa);font:800 16px/1.2 var(--font-display)}
+.soldout p{margin:0;overflow-wrap:anywhere}
+.soldout .btn{align-self:flex-start}
+.srow .soldout{margin:0 12px}
+.card .soldout{margin-top:auto}
+.tile.is-out{opacity:.55}
+.tile .outtag{position:absolute;left:8px;bottom:8px;padding:3px 8px;border-radius:999px;background:var(--cocoa);color:#fff;font:800 11px/1 var(--font-display);letter-spacing:.05em;text-transform:uppercase}
+.tile .lefttag{display:block;padding:0 10px 4px;font-size:12px;font-weight:700;color:#7A4E00}
+.limit-note{margin:0 0 12px}
+
+/* ---------- Stage 11B: choice card in the Singles (K140) ---------- */
+.copts{display:grid;gap:6px;margin:8px 0 0}
+.copt{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;column-gap:8px;row-gap:0;width:100%;min-height:44px;padding:7px 10px;border:2px solid var(--line);border-radius:12px;background:var(--paper);text-align:left;font-size:14px;font-weight:600;line-height:1.25}
+.copt b{font:800 14px/1.25 var(--font-display);white-space:nowrap}
+.copt[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-soft)}
+.copt:disabled{opacity:.5;cursor:not-allowed}
+.copt .os{font-size:12px;font-weight:700;color:var(--cocoa-soft)}
+.copt-hint{font-size:13px;color:var(--cocoa-soft);margin:0 12px}
+
+/* ---------- Stage 11B: quantity in the bundle window (K142) ---------- */
+.pk-qty{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.pk-qty span{font-weight:700}
+.card .foot .qty output{min-width:26px}
+
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -619,8 +665,10 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
     PACKAGE_UNAVAILABLE: 'A menu item or package is no longer available. The menu has been updated.',
     TOO_MANY_LINES: 'Your order has too many different items. Please remove some items.',
     INVALID_PACKAGE: 'This package has a problem. Please contact the admin.',
-    INVALID_FLAVOR: 'A flavor is not available. Please choose your flavors again.',
-    WRONG_PICK_COUNT: 'The number of flavors chosen is not correct yet.',
+    INVALID_FLAVOR: 'An item is not available. Please choose again.',
+    WRONG_PICK_COUNT: 'The number of items chosen is not correct yet.',
+    OUT_OF_STOCK: 'Sorry, part of your order is sold out. Your cart has been updated.',
+    ORDER_LIMIT: 'You have reached the limit per customer for an item. Your cart has been updated.',
     TRACKING_CODE_FAILED: 'The system is busy. Please try again in a moment.',
     UNIQUE_CODE_EXHAUSTED: 'The system is busy. Please try again in a moment.',
     ORDER_NOT_FOUND: 'Order not found. Please check the code.',
@@ -755,7 +803,9 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
     try { data = text ? JSON.parse(text) : null; } catch (e) { data = null; }
     if (!res.ok) {
       var m = data && typeof data.message === 'string' ? data.message.trim() : '';
-      throw appErr(/^[A-Z_]{3,40}$/.test(m) ? m : 'FAILED');
+      var mm = /^([A-Z_]{3,40})(?::([\s\S]*))?$/.exec(m), err = appErr(mm ? mm[1] : 'FAILED');
+      if (mm && mm[2]) { try { err.detail = JSON.parse(mm[2]); } catch (x) { err.detail = null; } }   // Stage 11B: OUT_OF_STOCK / ORDER_LIMIT
+      throw err;
     }
     return data;
   }
@@ -806,15 +856,16 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
   function cartTotal() { return getPlan().total; }
   function maxQtyOf(l) { return l.type === 'SINGLE' ? MAX_SINGLE : MAX_QTY; }
 
-  function addToCart(item) {
+  function addToCart(item, n) {
+    n = Math.max(1, n || 1);
     var key = lineKey(item);
     var ex = cart.filter(function (l) { return lineKey(l) === key; })[0];
     if (ex) {
-      if (ex.qty >= maxQtyOf(ex)) { toast('You can order at most ' + maxQtyOf(ex) + ' of the same item.', true); return false; }
-      ex.qty += 1;
+      if (ex.qty + n > maxQtyOf(ex)) { toast('You can order at most ' + maxQtyOf(ex) + ' of the same item.', true); return false; }
+      ex.qty += n;
     } else {
       if (cart.length >= MAX_LINES) { toast('Your order can have at most ' + MAX_LINES + ' different items.', true); return false; }
-      item.qty = 1;
+      item.qty = Math.min(n, maxQtyOf(item));
       cart.push(item);
     }
     saveCart();
@@ -829,9 +880,9 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
     cart.forEach(function (l) {
       if (l.type === 'SINGLE') {
         var sf = singleFlavor(l.flavor_id);
-        if (!sf || typeof sf.single_price !== 'number') { removed++; return; }
-        if (l.price !== sf.single_price) priceChanged = true;
-        l.price = sf.single_price; l.name = sf.name; l.image_url = sf.image_url || null;
+        if (!sf || typeof sf.price !== 'number') { removed++; return; }
+        if (l.price !== sf.price) priceChanged = true;
+        l.price = sf.price; l.name = sf.name; l.image_url = sf.image_url || null;
         keep.push(l); return;
       }
       var p = catalog.packages.filter(function (x) { return x.id === l.package_id; })[0];
@@ -852,6 +903,7 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
       keep.push(l);
     });
     cart = keep; saveCart();
+    if (fitCartToRules()) removed++;            // Stage 11B: stock or limit went down since the item was added
     return { removed: removed, priceChanged: priceChanged };
   }
 
@@ -860,8 +912,186 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
      1) "buy N get M free" promos, 2) bundle price on the leftover singles, 3) plain singles.
      The server prices everything again; this only shows the buyer what to expect.
      ====================================================================== */
-  function singleFlavor(fid) { return catalog && catalog.flavors.filter(function (f) { return f.id === fid; })[0]; }
+  // Stage 11B: a menu item can be bought as a single when it has a single price (Sell as single) OR when it is an
+  // option of a choice card (K140). IDX.singles holds both, IDX.flavors every active menu item (also free items).
+  var IDX = { singles: {}, flavors: {}, cards: {}, frames: {} };
+  function indexCatalog() {
+    IDX = { singles: {}, flavors: {}, cards: {}, frames: {} };
+    if (!catalog) return;
+    catalog.flavors.forEach(function (f) {
+      IDX.flavors[f.id] = f;
+      if (typeof f.single_price === 'number') {
+        IDX.singles[f.id] = { id: f.id, name: f.name, price: f.single_price, image_url: f.image_url || null, description: f.description || '',
+          stock_left: typeof f.stock_left === 'number' ? f.stock_left : null, sold_out: f.sold_out === true,
+          max: typeof f.max_per_customer === 'number' ? f.max_per_customer : null };
+      }
+    });
+    catalog.choice_cards.forEach(function (c) {
+      c.options = Array.isArray(c.options) ? c.options.filter(function (o) { return o && Number.isInteger(o.flavor_id) && typeof o.price === 'number'; }) : [];
+      IDX.cards[c.id] = c;
+      c.options.forEach(function (o) {
+        if (!IDX.singles[o.flavor_id]) {
+          IDX.singles[o.flavor_id] = { id: o.flavor_id, name: o.name, price: o.price, image_url: o.image_url || null, description: o.description || '',
+            stock_left: typeof o.stock_left === 'number' ? o.stock_left : null, sold_out: o.sold_out === true,
+            max: typeof o.max_per_customer === 'number' ? o.max_per_customer : null };
+        }
+        if (!IDX.flavors[o.flavor_id]) IDX.flavors[o.flavor_id] = { id: o.flavor_id, name: o.name, image_url: o.image_url, stock_left: o.stock_left, sold_out: o.sold_out };
+      });
+    });
+    catalog.packages.forEach(function (p) {
+      (p.flavors || []).forEach(function (f) { if (!IDX.flavors[f.id]) IDX.flavors[f.id] = f; });
+    });
+    catalog.frames.forEach(function (fr) {
+      if (fr && /^#[0-9A-Fa-f]{6}$/.test(fr.text_color) && /^#[0-9A-Fa-f]{6}$/.test(fr.line_color) && /^#[0-9A-Fa-f]{6}$/.test(fr.box_color)) IDX.frames[String(fr.id)] = fr;
+    });
+  }
+  function singleFlavor(fid) { return IDX.singles[fid]; }
+  function flavorById(fid) { return IDX.flavors[fid]; }
   function catPackage(id) { return catalog && catalog.packages.filter(function (p) { return p.id === id; })[0]; }
+
+  /* ---------- Stage 11B: stock (K148) and limits per customer (K149) ---------- */
+  // Cookies of one menu item already in the cart: singles + inside bundles (stock counts every kind)
+  function pcsInCart(fid) {
+    var n = 0;
+    cart.forEach(function (l) {
+      if (l.type === 'SINGLE') { if (l.flavor_id === fid) n += l.qty; return; }
+      (l.flavors || []).forEach(function (f) { if (f.id === fid) n += f.qty * l.qty; });
+    });
+    return n;
+  }
+  function stockLeft(fid) { var f = flavorById(fid); return f && typeof f.stock_left === 'number' ? Math.max(0, f.stock_left) : null; }
+  var custLimits = { wa: '', singles: {}, bundles: {} };   // from get_customer_limits for the WhatsApp number at checkout
+  function limitsOn() { return !!(catalog && catalog.order_limits_on); }
+  function singleMax(fid) { var s = singleFlavor(fid); return limitsOn() && s && typeof s.max === 'number' ? s.max : null; }
+  function bundleMax(pid) { var p = catPackage(pid); return limitsOn() && p && typeof p.max_per_customer === 'number' ? p.max_per_customer : null; }
+  // how many singles of fid / bundles of pid this customer may still have in this order (Infinity = no limit)
+  function singleAllowed(fid) { var m = singleMax(fid); if (m === null) return Infinity; var o = custLimits.singles[fid]; return Math.max(0, m - (o ? o.ordered : 0)); }
+  function bundleAllowed(pid) { var m = bundleMax(pid); if (m === null) return Infinity; var o = custLimits.bundles[pid]; return Math.max(0, m - (o ? o.ordered : 0)); }
+  function singleQty(fid) {
+    var l = cart.filter(function (x) { return x.type === 'SINGLE' && x.flavor_id === fid; })[0];
+    return l ? l.qty : 0;
+  }
+  function bundleQtyInCart(pid) { return cart.reduce(function (n, l) { return n + (l.type !== 'SINGLE' && l.package_id === pid ? l.qty : 0); }, 0); }
+  // highest quantity the single line of fid may have
+  function singleCap(fid) {
+    var cap = Math.min(MAX_SINGLE, singleAllowed(fid)), st = stockLeft(fid);
+    if (st !== null) cap = Math.min(cap, st - (pcsInCart(fid) - singleQty(fid)));
+    return Math.max(0, cap);
+  }
+  // can `n` more bundles of package p with these contents be added?
+  function bundleRoom(p, flavors, n) {
+    if (bundleQtyInCart(p.id) + n > bundleAllowed(p.id)) return { ok: false, why: 'limit' };
+    for (var i = 0; i < flavors.length; i++) {
+      var st = stockLeft(flavors[i].id);
+      if (st !== null && pcsInCart(flavors[i].id) + flavors[i].qty * n > st) return { ok: false, why: 'stock', name: flavors[i].name, left: Math.max(0, st - pcsInCart(flavors[i].id)) };
+    }
+    return { ok: true };
+  }
+  function roomToast(r, p) {
+    if (r.why === 'limit') toast('You can order at most ' + bundleMax(p.id) + ' ' + p.name + ' per customer.', true);
+    else toast(r.left > 0 ? 'Only ' + r.left + ' ' + r.name + ' left.' : r.name + ' is sold out.', true);
+  }
+  // Remove cookies of fid from the cart until at most `left` remain (singles first, then bundles). Returns true if changed.
+  function trimFlavor(fid, left) {
+    var changed = false, over = pcsInCart(fid) - left;
+    if (over <= 0) return false;
+    cart.forEach(function (l) {
+      if (over <= 0 || l.type !== 'SINGLE' || l.flavor_id !== fid) return;
+      var cut = Math.min(over, l.qty); l.qty -= cut; over -= cut; changed = true;
+    });
+    for (var i = cart.length - 1; i >= 0 && over > 0; i--) {
+      var l = cart[i];
+      if (l.type === 'SINGLE') continue;
+      var per = (l.flavors || []).reduce(function (n, f) { return n + (f.id === fid ? f.qty : 0); }, 0);
+      while (per > 0 && l.qty > 0 && over > 0) { l.qty--; over -= per; changed = true; }
+    }
+    cart = cart.filter(function (l) { return l.qty > 0; });
+    if (changed) saveCart();
+    return changed;
+  }
+  // Keep the cart inside the stock and the limits we know of. Returns true if something was cut.
+  function fitCartToRules() {
+    var changed = false;
+    Object.keys(IDX.flavors).forEach(function (k) { var st = stockLeft(Number(k)); if (st !== null && trimFlavor(Number(k), st)) changed = true; });
+    cart.forEach(function (l) {
+      if (l.type === 'SINGLE') { var a = singleAllowed(l.flavor_id); if (l.qty > a) { l.qty = a; changed = true; } }
+    });
+    var seen = {};
+    cart.forEach(function (l) {
+      if (l.type === 'SINGLE') return;
+      var a = bundleAllowed(l.package_id) - (seen[l.package_id] || 0);
+      if (l.qty > a) { l.qty = Math.max(0, a); changed = true; }
+      seen[l.package_id] = (seen[l.package_id] || 0) + l.qty;
+    });
+    if (changed) { cart = cart.filter(function (l) { return l.qty > 0; }); saveCart(); }
+    return changed;
+  }
+  async function loadCustLimits(wa) {
+    var n = normalizeWa(wa);
+    if (!limitsOn() || !n) { custLimits = { wa: n || '', singles: {}, bundles: {} }; return custLimits; }
+    if (custLimits.wa === n && custLimits.at && Date.now() - custLimits.at < 30000) return custLimits;
+    var r = await rpc('get_customer_limits', { p_wa: n });
+    var out = { wa: n, at: Date.now(), singles: {}, bundles: {} };
+    if (r && r.limits_on) {
+      (r.singles || []).forEach(function (x) { out.singles[x.flavor_id] = { max: x.max, ordered: Number(x.ordered) || 0 }; });
+      (r.bundles || []).forEach(function (x) { out.bundles[x.package_id] = { max: x.max, ordered: Number(x.ordered) || 0 }; });
+    }
+    custLimits = out;
+    return out;
+  }
+  // "Only 3 left" / "Max 2 per customer" (K149: with both, the limit shows until the stock is lower than it)
+  function stockLabel(left, max) {
+    if (left !== null && left <= 0) return '';
+    if (max !== null && (left === null || left >= max)) return '<span class="stk">Max ' + max + ' per customer</span>';
+    if (left !== null) return '<span class="stk low">Only ' + left + ' left</span>';
+    return '';
+  }
+  function comboLeft(p) {        // how many COMBO bundles the stock still allows (null = no stock limit)
+    var n = null;
+    (p.flavors || []).forEach(function (f) {
+      var st = stockLeft(f.id);
+      if (st !== null) { var k = Math.floor(st / Math.max(1, f.qty)); n = n === null ? k : Math.min(n, k); }
+    });
+    return n;
+  }
+  function soldOutHtml() {
+    var link = store && typeof store.sold_out_link === 'string' ? safeUrl(store.sold_out_link.trim()) : '';
+    var text = store && typeof store.sold_out_text === 'string' ? store.sold_out_text.trim() : '';
+    if (!link) return '<div class="soldout"><strong>Sold out</strong></div>';
+    return '<div class="soldout">' + (text ? '<p>' + esc(text) + '</p>' : '<strong>Sold out</strong>') +
+      '<a class="btn sec small" href="' + esc(link) + '" target="_blank" rel="noopener nofollow">Let me know' + icon('ext') + '</a></div>';
+  }
+
+  /* ---------- Stage 11B: frames (K171) ---------- */
+  function hexRgb(h) { return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]; }
+  function shade(h, t) {           // t < 0 darker, t > 0 lighter
+    return '#' + hexRgb(h).map(function (c) { var v = t < 0 ? c * (1 + t) : c + (255 - c) * t; return ('0' + Math.round(Math.max(0, Math.min(255, v))).toString(16)).slice(-2); }).join('');
+  }
+  function rgba(h, a) { var c = hexRgb(h); return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
+  function frameOf(item) { return item && item.frame !== null && item.frame !== undefined && item.frame !== '' ? IDX.frames[String(item.frame)] || null : null; }
+  function frameStyle(fr) {
+    if (!fr) return '';
+    return ' style="--fr-line:' + fr.line_color + ';--fr-glow:' + rgba(fr.line_color, 0.2) + ';--fr-shadow:' + rgba(fr.line_color, 0.25) +
+      ';--fr-text:' + fr.text_color + ';--fr-band:linear-gradient(90deg,' + shade(fr.box_color, -0.22) + ',' + shade(fr.box_color, 0.18) + ',' + shade(fr.box_color, -0.22) + ')"';
+  }
+  function frameBand(fr) {
+    if (!fr) return '';
+    return '<div class="band" aria-label="' + esc(fr.label) + '">' + (fr.icon_left ? '<span class="bi" aria-hidden="true">' + esc(fr.icon_left) + '</span>' : '') +
+      '<span class="bt">' + esc(fr.label) + '</span>' + (fr.icon_right ? '<span class="bi" aria-hidden="true">' + esc(fr.icon_right) + '</span>' : '') + '</div>';
+  }
+  // the frame text always fits on one line: letters move closer, then get smaller
+  function fitBands(root) {
+    $$('.band', root || document).forEach(function (b) {
+      b.style.letterSpacing = ''; b.style.fontSize = '';
+      var t = $('.bt', b), ls = 0.14, fs = 12;
+      if (!t) return;
+      while (t.scrollWidth > t.clientWidth + 1 && (ls > 0.02 || fs > 8.5)) {
+        if (ls > 0.02) ls = Math.max(0.02, ls - 0.03); else fs -= 0.5;
+        b.style.letterSpacing = ls + 'em'; b.style.fontSize = fs + 'px';
+      }
+    });
+  }
+  window.addEventListener('resize', function () { clearTimeout(fitBands.t); fitBands.t = setTimeout(function () { fitBands(); }, 150); });
 
   // Can one copy of bundle p be made from the loose singles in L (flavor id -> count)?
   // PICK takes the most expensive allowed singles first. COMBO needs its exact contents.
@@ -915,9 +1145,12 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
 
     // 2) bundle price on what is left (largest saving per cookie first; on a tie the bigger bundle)
     var absorbed = {}, groups = {}, groupOrder = [], saving = 0, guard = 0;
+    var usedB = {};                // Stage 11B: bundles of each package in this order (limit per customer, K149)
+    manual.forEach(function (l) { usedB[l.package_id] = (usedB[l.package_id] || 0) + l.qty; });
     while (auto && guard++ < 2000) {
       var best = null;
       cat.packages.forEach(function (p) {
+        if ((usedB[p.id] || 0) >= bundleAllowed(p.id)) return;
         var t = tryBundle(p, L, price);
         if (!t) return;
         var gain = t.value - p.price;
@@ -929,11 +1162,12 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
       var key = best.p.id + '|' + Object.keys(best.t.use).sort().map(function (k) { return k + ':' + best.t.use[k]; }).join(',');
       if (!groups[key]) {
         groups[key] = { pkg: best.p, qty: 0, gain: 0, flavors: Object.keys(best.t.use).map(Number).sort(function (a, b) { return a - b; }).map(function (id) {
-          return { id: id, name: (singleFlavor(id) || info[id] || {}).name || '', qty: best.t.use[id] };
+          return { id: id, name: (flavorById(id) || info[id] || {}).name || '', qty: best.t.use[id] };
         }) };
         groupOrder.push(key);
       }
       groups[key].qty++; groups[key].gain += best.gain; saving += best.gain;
+      usedB[best.p.id] = (usedB[best.p.id] || 0) + 1;
       Object.keys(best.t.use).forEach(function (id) { L[id] -= best.t.use[id]; absorbed[id] = (absorbed[id] || 0) + best.t.use[id]; });
     }
 
@@ -1133,7 +1367,11 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
   }
   async function loadCatalog() {
     var c = await rpc('get_catalog');
-    catalog = { packages: (c && c.packages) || [], flavors: (c && c.flavors) || [], promotions: (c && c.promotions) || [] };
+    catalog = { packages: (c && c.packages) || [], flavors: (c && c.flavors) || [], promotions: (c && c.promotions) || [],
+      choice_cards: Array.isArray(c && c.choice_cards) ? c.choice_cards : [],        // Stage 11B (K140)
+      frames: Array.isArray(c && c.frames) ? c.frames : [],                          // Stage 11B (K171)
+      order_limits_on: !!(c && c.order_limits_on) };
+    indexCatalog();
     renderTopBars();
     return catalog;
   }
@@ -1270,6 +1508,10 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
         if (!store || !catalog) { setApp(loadError('retry')); renderCartBar(); return; }
       }
       if (seq !== routeSeq) return;
+      if (limitsOn()) {                          // Stage 11B (K149): what this WhatsApp number already ordered
+        try { await loadCustLimits(draftWa()); } catch (e) { /* the server checks again at Place order */ }
+        if (seq !== routeSeq) return;
+      }
       var rc = reconcileCart();
       if (rc.removed) toast('Some items are no longer available and were removed from your order.', true);
       if (r.name === 'catalog') viewCatalog(); else viewCheckout(rc.priceChanged);
@@ -1316,30 +1558,74 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
   }
   function pickRule(p) {
     var n = p.pick_count;
-    if (!p.allow_same_flavor) return 'Choose ' + n + ' different ' + plural(n, 'flavor', 'flavors') + '.';
-    if (n === 1) return 'Choose 1 flavor.';
-    return 'Choose ' + n + ' flavors. You can repeat a flavor.';
+    if (n === 1) return 'Choose 1.';                                        // Stage 11B (K141): no "flavor" on the website
+    if (!p.allow_same_flavor) return 'Choose ' + n + ' different items.';
+    return 'Choose ' + n + '. You can pick the same one more than once.';
   }
   function bsLabel() { return '<span class="bs"><svg class="i" aria-hidden="true"><use href="#i-cookiebs"/></svg>Best seller</span>'; }
+  function comboLine(p) { return cart.filter(function (l) { return l.type === 'COMBO' && l.package_id === p.id; })[0]; }
   function packageCard(p, open) {
-    var body = '';
-    if (p.description) body += '<p class="desc">' + esc(p.description) + '</p>';
+    var body = '', so = p.sold_out === true, fr = frameOf(p);
+    if (p.description) body += '<p class="desc dscroll">' + esc(p.description) + '</p>';
     if (p.type === 'COMBO') {
-      body += '<ul class="inc" aria-label="Included flavors">' + p.flavors.map(function (f) {
+      body += '<ul class="inc" aria-label="Included items">' + p.flavors.map(function (f) {
         return '<li>' + esc(f.qty + ' × ' + f.name) + '</li>';
       }).join('') + '</ul>';
     } else {
       body += '<p class="rule">' + esc(pickRule(p)) + '</p>';
       var shown = p.flavors.slice(0, 5), more = p.flavors.length - shown.length;
-      body += '<div class="thumbs" aria-label="' + esc(p.flavors.length + ' flavors to choose from') + '">' +
+      body += '<div class="thumbs" aria-label="' + esc(p.flavors.length + ' to choose from') + '">' +
         shown.map(function (f) { return '<span class="t">' + photo(f.image_url) + '</span>'; }).join('') +
         (more > 0 ? '<span class="t more">+' + more + '</span>' : '') + '</div>';
     }
-    var action = !open ? '<span class="muted">Ordering is closed</span>' :
-      p.type === 'COMBO' ? '<button class="btn small" type="button" data-action="add-combo" data-id="' + p.id + '">Add to order</button>'
-        : '<button class="btn small" type="button" data-action="pick" data-id="' + p.id + '">Choose flavors</button>';
-    return '<article class="card" id="pk-' + p.id + '"><div class="pic">' + photo(p.image_url) + (p.best_seller === true ? bsLabel() : '') + '</div><div class="body"><h3>' + esc(p.name) + '</h3>' + body +
-      '<div class="foot"><span class="price">' + rp(p.price) + '</span>' + action + '</div></div></article>';
+    if (!so) body += stockLabel(p.type === 'COMBO' ? comboLeft(p) : null, bundleMax(p.id));
+    var action;
+    if (so) action = '';
+    else if (!open) action = '<span class="muted">Ordering is closed</span>';
+    else if (p.type === 'COMBO') {
+      var cl = comboLine(p), q = cl ? cl.qty : 0;
+      var room = bundleRoom(p, p.flavors, 1).ok && q < MAX_QTY;
+      action = q === 0
+        ? '<button class="btn small" type="button" data-action="add-combo" data-id="' + p.id + '" aria-label="Add one ' + esc(p.name) + '">Add</button>'
+        : '<div class="qty" role="group" aria-label="Quantity of ' + esc(p.name) + '">' +
+          '<button class="qbtn" type="button" data-action="combo-dec" data-id="' + p.id + '" aria-label="Remove one ' + esc(p.name) + '">' + icon('minus') + '</button>' +
+          '<output>' + q + '</output>' +
+          '<button class="qbtn" type="button" data-action="add-combo" data-id="' + p.id + '" aria-label="Add one ' + esc(p.name) + '"' + (room ? '' : ' disabled') + '>' + icon('plus') + '</button></div>';
+    } else {
+      action = '<button class="btn small" type="button" data-action="pick" data-id="' + p.id + '">Add</button>';   // K141
+    }
+    return '<article class="card' + (fr ? ' fr' : '') + (so ? ' is-soldout' : '') + '" id="pk-' + p.id + '"' + frameStyle(fr) + '>' + frameBand(fr) +
+      '<div class="pic">' + photo(p.image_url) + (p.best_seller === true ? bsLabel() : '') + (so ? '<span class="so-badge">Sold out</span>' : '') + '</div><div class="body"><h3>' + esc(p.name) + '</h3>' + body +
+      (so ? '<div class="foot"><span class="price">' + rp(p.price) + '</span></div>' + soldOutHtml()
+          : '<div class="foot"><span class="price">' + rp(p.price) + '</span>' + action + '</div>') + '</div></article>';
+  }
+  function refreshPackageCard(pid, focusAction) {
+    var p = catPackage(pid), el = $('#pk-' + pid);
+    if (!p || !el) return;
+    var d = document.createElement('div');
+    d.innerHTML = packageCard(p, canOrder());
+    el.replaceWith(d.firstChild);
+    fitBands($('#pk-' + pid));
+    var b = $('#pk-' + pid + ' [data-action="' + focusAction + '"]') || $('#pk-' + pid + ' .foot button');
+    if (b && !b.disabled) b.focus();
+  }
+  function changeCombo(pid, delta) {
+    var p = catPackage(pid);
+    if (!p || p.type !== 'COMBO' || !canOrder()) return;
+    var cl = comboLine(p);
+    if (delta > 0) {
+      if (p.sold_out) return;
+      var room = bundleRoom(p, p.flavors, 1);
+      if (!room.ok) { roomToast(room, p); return; }
+      if (!addToCart({ package_id: p.id, name: p.name, type: 'COMBO', price: p.price, image_url: p.image_url || null,
+        flavors: p.flavors.map(function (f) { return { id: f.id, name: f.name, qty: f.qty }; }) })) return;
+    } else if (cl) {
+      cl.qty--;
+      if (cl.qty < 1) cart = cart.filter(function (x) { return x !== cl; });
+      saveCart();
+    }
+    refreshPackageCard(pid, delta > 0 ? 'add-combo' : 'combo-dec');
+    renderCartBar();
   }
   // Running banners at the very top of the page (above the logo): the owner's text (F2) and the promos.
   // "Combine with promos" on = one running line holding both; off = two lines, the owner's text above the promos.
@@ -1375,55 +1661,126 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
   var promoResizeTimer = null;
   window.addEventListener('resize', function () { clearTimeout(promoResizeTimer); promoResizeTimer = setTimeout(function () { renderTopBars(true); }, 250); });
 
-  function singleQty(fid) {
-    var l = cart.filter(function (x) { return x.type === 'SINGLE' && x.flavor_id === fid; })[0];
-    return l ? l.qty : 0;
-  }
   function flavorDesc(fid) {
-    var f = singleFlavor(fid);
+    var f = flavorById(fid);
     return f && typeof f.description === 'string' ? f.description : '';
   }
-  function singleRowHtml(f, open) {
-    var q = singleQty(f.id), ctl = '';
-    if (open) {
-      ctl = q === 0
-        ? '<button class="btn small" type="button" data-action="sg-inc" data-fid="' + f.id + '" aria-label="Add one ' + esc(f.name) + '">Add</button>'
-        : '<div class="qty" role="group" aria-label="Quantity of ' + esc(f.name) + '">' +
-          '<button class="qbtn" type="button" data-action="sg-dec" data-fid="' + f.id + '" aria-label="Remove one ' + esc(f.name) + '">' + icon('minus') + '</button>' +
-          '<output>' + q + '</output>' +
-          '<button class="qbtn" type="button" data-action="sg-inc" data-fid="' + f.id + '" aria-label="Add one ' + esc(f.name) + '"' + (q >= MAX_SINGLE ? ' disabled' : '') + '>' + icon('plus') + '</button></div>';
-    }
-    return '<div class="srow" id="sg-' + f.id + '"><div class="sp">' + photo(f.image_url) + (f.best_seller === true ? bsLabel() : '') + '</div><div class="sm"><div class="sn">' + esc(f.name) + '</div>' +
-      '<div class="spr">' + rp(f.single_price) + '</div>' + (f.description ? '<div class="sd">' + esc(f.description) + '</div>' : '') + '</div>' + ctl + '</div>';
+  // quantity control of one single (also used inside a choice card)
+  function singleCtl(fid, name, open, act) {
+    if (!open) return '';
+    var q = singleQty(fid), cap = singleCap(fid);
+    return q === 0
+      ? '<button class="btn small" type="button" data-action="' + act + '-inc" data-fid="' + fid + '" aria-label="Add one ' + esc(name) + '"' + (cap < 1 ? ' disabled' : '') + '>Add</button>'
+      : '<div class="qty" role="group" aria-label="Quantity of ' + esc(name) + '">' +
+        '<button class="qbtn" type="button" data-action="' + act + '-dec" data-fid="' + fid + '" aria-label="Remove one ' + esc(name) + '">' + icon('minus') + '</button>' +
+        '<output>' + q + '</output>' +
+        '<button class="qbtn" type="button" data-action="' + act + '-inc" data-fid="' + fid + '" aria-label="Add one ' + esc(name) + '"' + (q >= cap ? ' disabled' : '') + '>' + icon('plus') + '</button></div>';
   }
-  function refreshSingleRow(fid, focusAction) {
-    var f = singleFlavor(fid), row = $('#sg-' + fid);
-    if (!f || !row) return;
+  function singleRowHtml(f, open) {
+    var s = singleFlavor(f.id) || {}, so = s.sold_out === true, fr = frameOf(f);
+    return '<div class="srow' + (fr ? ' fr' : '') + (so ? ' is-soldout' : '') + '" id="sg-' + f.id + '"' + frameStyle(fr) + '>' + frameBand(fr) +
+      '<div class="sp">' + photo(f.image_url) + (f.best_seller === true ? bsLabel() : '') + (so ? '<span class="so-badge">Sold out</span>' : '') + '</div><div class="sm"><div class="sn">' + esc(f.name) + '</div>' +
+      '<div class="spr">' + rp(f.single_price) + '</div>' + (so ? '' : stockLabel(s.stock_left, singleMax(f.id))) +
+      (f.description ? '<div class="sd dscroll">' + esc(f.description) + '</div>' : '') + '</div>' + (so ? soldOutHtml() : singleCtl(f.id, f.name, open, 'sg')) + '</div>';
+  }
+
+  /* ---------- Stage 11B: choice card (K140): 2 to 4 menu items in one card, each at its own single price ---------- */
+  var choiceSel = {};        // card id -> chosen menu item id
+  function choicePick(c) {
+    var sel = choiceSel[c.id];
+    if (sel && c.options.some(function (o) { return o.flavor_id === sel; })) return sel;
+    var inCart = c.options.filter(function (o) { return singleQty(o.flavor_id) > 0; })[0];      // something of this card already ordered
+    if (inCart) return inCart.flavor_id;
+    var avail = c.options.filter(function (o) { return !o.sold_out; });
+    return avail.length === 1 ? avail[0].flavor_id : null;
+  }
+  function choiceCardHtml(c, open) {
+    var so = c.sold_out === true || !c.options.some(function (o) { return !o.sold_out; }), fr = frameOf(c);
+    var sel = so ? null : choicePick(c), opt = sel ? c.options.filter(function (o) { return o.flavor_id === sel; })[0] : null;
+    var prices = c.options.map(function (o) { return o.price; }), lo = Math.min.apply(null, prices), hi = Math.max.apply(null, prices);
+    var img = c.image_url || (opt && opt.image_url) || (c.options[0] && c.options[0].image_url);
+    var desc = c.description || (opt && opt.description) || '';
+    var s = opt ? singleFlavor(opt.flavor_id) : null;
+    var h = '<div class="srow' + (fr ? ' fr' : '') + (so ? ' is-soldout' : '') + '" id="ch-' + c.id + '"' + frameStyle(fr) + '>' + frameBand(fr) +
+      '<div class="sp">' + photo(img) + (c.best_seller === true ? bsLabel() : '') + (so ? '<span class="so-badge">Sold out</span>' : '') + '</div>' +
+      '<div class="sm"><div class="sn">' + esc(c.name) + '</div>' +
+      '<div class="spr">' + (opt ? rp(opt.price) : lo === hi ? rp(lo) : rp(lo) + ' – ' + rp(hi)) + '</div>' +
+      (opt && s ? stockLabel(s.stock_left, singleMax(opt.flavor_id)) : '') +
+      (desc ? '<div class="sd dscroll">' + esc(desc) + '</div>' : '');
+    if (!so) {
+      h += '<div class="copts" role="group" aria-label="Choose one">' + c.options.map(function (o) {
+        return '<button type="button" class="copt" data-action="ch-pick" data-card="' + c.id + '" data-fid="' + o.flavor_id + '" aria-pressed="' + (o.flavor_id === sel) + '"' + (o.sold_out ? ' disabled' : '') + '>' +
+          '<span>' + esc(o.name) + (o.sold_out ? ' <span class="os">Sold out</span>' : '') + '</span><b>' + rp(o.price) + '</b></button>';
+      }).join('') + '</div>';
+    }
+    h += '</div>';
+    if (so) h += soldOutHtml();
+    else if (open) h += opt ? singleCtl(opt.flavor_id, opt.name, open, 'sg') : '<p class="copt-hint">Choose one above, then tap Add.</p><button class="btn small" type="button" disabled style="margin:0 12px">Add</button>';
+    return h + '</div>';
+  }
+  function refreshChoiceCard(cid, focusAction, fid) {
+    var c = IDX.cards[cid], el = $('#ch-' + cid);
+    if (!c || !el) return;
     var d = document.createElement('div');
-    d.innerHTML = singleRowHtml(f, canOrder());
-    row.replaceWith(d.firstChild);
-    var b = $('#sg-' + fid + ' [data-action="' + focusAction + '"]') || $('#sg-' + fid + ' button');
+    d.innerHTML = choiceCardHtml(c, canOrder());
+    el.replaceWith(d.firstChild);
+    fitBands($('#ch-' + cid));
+    var b = focusAction ? $('#ch-' + cid + ' [data-action="' + focusAction + '"]' + (fid ? '[data-fid="' + fid + '"]' : '')) : null;
     if (b && !b.disabled) b.focus();
   }
-  function changeSingle(fid, delta) {
+  // fromCard = id of the choice card that was tapped (focus stays there), otherwise the single card keeps the focus
+  function refreshSingleRow(fid, focusAction, fromCard) {
+    var f = catalog && catalog.flavors.filter(function (x) { return x.id === fid && typeof x.single_price === 'number'; })[0], row = $('#sg-' + fid);
+    if (f && row) {
+      var d = document.createElement('div');
+      d.innerHTML = singleRowHtml(f, canOrder());
+      row.replaceWith(d.firstChild);
+      fitBands($('#sg-' + fid));
+    }
+    // the same menu item can also be in a choice card: keep both in step
+    (catalog ? catalog.choice_cards : []).forEach(function (c) {
+      if (c.options.some(function (o) { return o.flavor_id === fid; })) refreshChoiceCard(c.id, c.id === fromCard ? focusAction : null, fid);
+    });
+    if (fromCard) {
+      var cb = $('#ch-' + fromCard + ' [data-action="' + focusAction + '"]') || $('#ch-' + fromCard + ' .qty button, #ch-' + fromCard + ' > .btn');
+      if (cb && !cb.disabled) cb.focus();
+    } else if (f && focusAction) {
+      var b = $('#sg-' + fid + ' [data-action="' + focusAction + '"]') || $('#sg-' + fid + ' button');
+      if (b && !b.disabled) b.focus();
+    }
+  }
+  function changeSingle(fid, delta, fromCard) {
     var f = singleFlavor(fid);
-    if (!f || typeof f.single_price !== 'number' || !canOrder()) return;
+    if (!f || typeof f.price !== 'number' || !canOrder()) return;
     var ex = cart.filter(function (x) { return x.type === 'SINGLE' && x.flavor_id === fid; })[0];
     if (delta > 0) {
-      if (ex) {
-        if (ex.qty >= MAX_SINGLE) { toast('You can order at most ' + MAX_SINGLE + ' of the same item.', true); return; }
-        ex.qty++;
-      } else {
+      if (f.sold_out) return;
+      var cap = singleCap(fid), q = ex ? ex.qty : 0;
+      if (q >= cap) {
+        var st = stockLeft(fid), mx = singleMax(fid);
+        if (q >= MAX_SINGLE) toast('You can order at most ' + MAX_SINGLE + ' of the same item.', true);
+        else if (st !== null && pcsInCart(fid) >= st) toast(st > 0 ? 'Only ' + st + ' ' + f.name + ' left.' : f.name + ' is sold out.', true);
+        else if (mx !== null) toast('You can order at most ' + mx + ' ' + f.name + ' per customer.', true);
+        return;
+      }
+      if (ex) ex.qty++;
+      else {
         if (cart.length >= MAX_LINES) { toast('Your order can have at most ' + MAX_LINES + ' different items.', true); return; }
-        cart.push({ type: 'SINGLE', package_id: null, flavor_id: fid, name: f.name, price: f.single_price, image_url: f.image_url || null, flavors: [], qty: 1 });
+        cart.push({ type: 'SINGLE', package_id: null, flavor_id: fid, name: f.name, price: f.price, image_url: f.image_url || null, flavors: [], qty: 1 });
       }
     } else if (ex) {
       ex.qty--;
       if (ex.qty < 1) cart = cart.filter(function (x) { return x !== ex; });
     }
     saveCart();
-    refreshSingleRow(fid, delta > 0 ? 'sg-inc' : 'sg-dec');
+    refreshSingleRow(fid, delta > 0 ? 'sg-inc' : 'sg-dec', fromCard);
     renderCartBar();
+  }
+  function pickChoice(cid, fid) {
+    var c = IDX.cards[cid];
+    if (!c) return;
+    choiceSel[cid] = fid;
+    refreshChoiceCard(cid, 'ch-pick', fid);
   }
   function viewCatalog() {
     var open = canOrder();
@@ -1431,6 +1788,8 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
     var bundles = catalog.packages.map(function (p, i) { return { p: p, pos: typeof p.sort_order === 'number' ? p.sort_order : i + 1, id: p.id }; });
     bundles.sort(function (a, b) { return (a.pos - b.pos) || (a.id - b.id); });
     var singleItems = singles.map(function (f, i) { return { f: f, pos: typeof f.single_sort === 'number' ? f.single_sort : 1000000 + i, id: f.id }; });
+    // Stage 11B (K140): choice cards share the Singles part and its order (Layout)
+    catalog.choice_cards.forEach(function (c) { if (c.options.length) singleItems.push({ c: c, pos: typeof c.single_sort === 'number' ? c.single_sort : 1000000, id: c.id + 0.5 }); });
     singleItems.sort(function (a, b) { return (a.pos - b.pos) || (a.id - b.id); });
     var html = '<h1>' + (open ? 'Choose your cookies' : 'Our menu') + '</h1>' + manualBannerHtml() + statusNotice() + allergyNotice();
     // bundles always first, single cookies below (the order inside each part is set in the admin Layout screen)
@@ -1439,12 +1798,13 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
     }
     if (singleItems.length) {
       html += '<h2>Singles</h2><p class="muted sec-note">Single cookies can be ordered one at a time. Bundle prices are applied automatically when they save you money.</p>' +
-        '<div class="singles">' + singleItems.map(function (it) { return singleRowHtml(it.f, open); }).join('') + '</div>';
+        '<div class="singles">' + singleItems.map(function (it) { return it.c ? choiceCardHtml(it.c, open) : singleRowHtml(it.f, open); }).join('') + '</div>';
     }
     if (!bundles.length && !singleItems.length) {
       html += '<div class="empty"><p class="muted">No packages are available right now. Please check back soon.</p></div>';
     }
     setApp(html);
+    fitBands($('#app'));
     if (jumpTo) {                    // Stage 10: "Order" on a Home best seller opens the menu at that item
       var target = $('#' + jumpTo);
       jumpTo = null;
@@ -1459,8 +1819,8 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
   /* ---------- Flavor picker ---------- */
   function openPicker(pkgId) {
     var p = catalog && catalog.packages.filter(function (x) { return x.id === pkgId; })[0];
-    if (!p || !canOrder()) return;
-    picker = { pkg: p, counts: {}, seq: [], opener: document.activeElement };
+    if (!p || !canOrder() || p.sold_out) return;
+    picker = { pkg: p, counts: {}, seq: [], qty: 1, opener: document.activeElement };
     var many = p.pick_count > 12;
     var html = '<div class="overlay" id="overlay"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="pk-title">' +
       '<div class="sheet-head"><div><h2 id="pk-title">' + esc(p.name) + '</h2><p class="muted" style="margin:2px 0 0">' + esc(pickRule(p)) + '</p></div>' +
@@ -1468,7 +1828,11 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
       '<div class="boxbar"><div class="count" id="pk-count" aria-live="polite"></div>' +
       (many ? '<div class="meter" aria-hidden="true"><i id="pk-meter"></i></div>' : '<div class="slots" id="pk-slots" aria-hidden="true"></div>') + '</div>' +
       '<div class="tiles" id="pk-tiles">' + p.flavors.map(function (f) { return tileHtml(p, f); }).join('') + '</div>' +
-      '<div class="sheet-foot"><div class="row"><span>Price</span><span class="price">' + rp(p.price) + '</span></div>' +
+      '<div class="sheet-foot"><div class="row"><span>Price</span><span class="price" id="pk-price">' + rp(p.price) + '</span></div>' +
+      '<div class="pk-qty"><span id="pk-qty-label">How many of this bundle</span><div class="qty" role="group" aria-labelledby="pk-qty-label">' +      // Stage 11B (K142)
+      '<button class="qbtn" type="button" data-action="pk-qty-dec" aria-label="One bundle less">' + icon('minus') + '</button>' +
+      '<output id="pk-qty">1</output>' +
+      '<button class="qbtn" type="button" data-action="pk-qty-inc" aria-label="One bundle more">' + icon('plus') + '</button></div></div>' +
       '<button class="btn big block" type="button" id="pk-confirm" data-action="pk-confirm" disabled></button></div></div></div>';
     $('#modal-root').innerHTML = html;
     document.body.classList.add('lock');
@@ -1476,15 +1840,20 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
     var x = $('.xbtn', $('#modal-root')); if (x) x.focus();
   }
   function tileHtml(p, f) {
-    var fid = f.id;
+    var fid = f.id, out = f.sold_out === true;             // Stage 11B (K148): a sold-out item cannot be chosen
+    var st = typeof f.stock_left === 'number' && !out ? '<span class="lefttag">Only ' + f.stock_left + ' left</span>' : '';
+    if (out) {
+      return '<div class="tile is-out" data-fid="' + fid + '" aria-disabled="true"><span class="shot">' + photo(f.image_url) + '<span class="outtag">Sold out</span></span>' +
+        '<span class="nm">' + esc(f.name) + '</span></div>';
+    }
     if (!p.allow_same_flavor || p.pick_count === 1) {
-      // choose-one style: whole tile toggles
-      return '<button type="button" class="tile pickone" data-fid="' + fid + '" data-action="pk-toggle" aria-pressed="false">' +
+      // choose-one style: whole tile toggles (a bundle of 1: tapping another item swaps the choice, K144)
+      return '<div class="tile pickone" data-fid="' + fid + '" data-action="pk-toggle" role="button" tabindex="0" aria-pressed="false">' +
         '<span class="shot">' + photo(f.image_url) + '<span class="badge">' + icon('check') + '</span></span>' +
-        '<span class="nm">' + esc(f.name) + '</span>' + (flavorDesc(fid) ? '<span class="nd">' + esc(flavorDesc(fid)) + '</span>' : '') + '</button>';
+        '<span class="nm">' + esc(f.name) + '</span>' + st + (flavorDesc(fid) ? '<span class="nd dscroll">' + esc(flavorDesc(fid)) + '</span>' : '') + '</div>';
     }
     return '<div class="tile" data-fid="' + fid + '"><button type="button" class="shot" data-action="pk-add" data-fid="' + fid + '" aria-label="Add one ' + esc(f.name) + '">' +
-      photo(f.image_url) + '<span class="badge"></span></button><div class="nm">' + esc(f.name) + '</div>' + (flavorDesc(fid) ? '<div class="nd">' + esc(flavorDesc(fid)) + '</div>' : '') +
+      photo(f.image_url) + '<span class="badge"></span></button><div class="nm">' + esc(f.name) + '</div>' + st + (flavorDesc(fid) ? '<div class="nd dscroll">' + esc(flavorDesc(fid)) + '</div>' : '') +
       '<div class="ctl"><button class="qbtn" type="button" data-action="pk-sub" data-fid="' + fid + '" aria-label="Remove one ' + esc(f.name) + '">' + icon('minus') + '</button>' +
       '<output aria-live="off">0</output>' +
       '<button class="qbtn" type="button" data-action="pk-add" data-fid="' + fid + '" aria-label="Add one ' + esc(f.name) + '">' + icon('plus') + '</button></div></div>';
@@ -1507,6 +1876,7 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
       slots.innerHTML = out;
     }
     $$('.tile', $('#pk-tiles')).forEach(function (t) {
+      if (t.classList.contains('is-out')) return;
       var fid = Number(t.getAttribute('data-fid')), c = picker.counts[fid] || 0;
       t.classList.toggle('on', c > 0);
       if (t.classList.contains('pickone')) t.setAttribute('aria-pressed', c > 0 ? 'true' : 'false');
@@ -1514,18 +1884,52 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
         var b = $('.badge', t); if (b) b.textContent = c;
         var o = $('output', t); if (o) o.textContent = c;
         var sub = $('[data-action="pk-sub"]', t); if (sub) sub.disabled = c === 0;
-        $$('[data-action="pk-add"]', t).forEach(function (a) { a.disabled = full; });
+        var noStock = !pickerStockOk(fid, c + 1, picker.qty);
+        $$('[data-action="pk-add"]', t).forEach(function (a) { a.disabled = full || noStock; });
       }
     });
+    // Stage 11B (K142): how many bundles with these same items
+    var q = picker.qty, qo = $('#pk-qty'); if (qo) qo.textContent = q;
+    var qd = $('[data-action="pk-qty-dec"]'), qi = $('[data-action="pk-qty-inc"]');
+    if (qd) qd.disabled = q <= 1;
+    if (qi) qi.disabled = q >= pickerMaxQty();
+    var pr = $('#pk-price'); if (pr) pr.textContent = rp(p.price * q);
     var btn = $('#pk-confirm');
     btn.disabled = !full;
     var left = n - total;
-    btn.textContent = full ? 'Add to order' : 'Choose ' + left + ' more ' + plural(left, 'flavor', 'flavors');
+    btn.textContent = full ? (q > 1 ? 'Add ' + q + ' to order' : 'Add to order') : 'Choose ' + left + ' more';   // K141
+  }
+  // Stage 11B: stock check inside the bundle window (count of one item in one bundle × number of bundles + what is in the cart)
+  function pickerStockOk(fid, count, qty) {
+    var st = stockLeft(fid);
+    return st === null || pcsInCart(fid) + count * qty <= st;
+  }
+  function pickerMaxQty() {
+    var p = picker.pkg, m = Math.min(MAX_QTY, bundleAllowed(p.id) - bundleQtyInCart(p.id));
+    Object.keys(picker.counts).forEach(function (k) {
+      var c = picker.counts[k], st = stockLeft(Number(k));
+      if (c > 0 && st !== null) m = Math.min(m, Math.floor((st - pcsInCart(Number(k))) / c));
+    });
+    return Math.max(1, m);
+  }
+  function pickerQty(delta) {
+    var q = picker.qty + delta;
+    if (q < 1 || q > pickerMaxQty()) {
+      if (delta > 0 && bundleAllowed(picker.pkg.id) - bundleQtyInCart(picker.pkg.id) <= picker.qty) toast('You can order at most ' + bundleMax(picker.pkg.id) + ' ' + picker.pkg.name + ' per customer.', true);
+      return;
+    }
+    picker.qty = q;
+    updatePicker();
   }
   function pickerAdd(fid) {
     var p = picker.pkg;
     if (pickerTotal() >= p.pick_count) return;
     if (!p.allow_same_flavor && picker.counts[fid]) return;
+    if (!pickerStockOk(fid, (picker.counts[fid] || 0) + 1, picker.qty)) {
+      var f = flavorById(fid), st = stockLeft(fid);
+      toast(st - pcsInCart(fid) > 0 ? 'Only ' + (st - pcsInCart(fid)) + ' ' + (f ? f.name : '') + ' left.' : (f ? f.name : 'This item') + ' is sold out.', true);
+      return;
+    }
     picker.counts[fid] = (picker.counts[fid] || 0) + 1;
     picker.seq.push(fid);
     updatePicker();
@@ -1542,7 +1946,9 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
     if (pickerTotal() !== p.pick_count) return;
     var flavors = p.flavors.filter(function (f) { return picker.counts[f.id] > 0; })
       .map(function (f) { return { id: f.id, name: f.name, qty: picker.counts[f.id] }; });
-    var ok = addToCart({ package_id: p.id, name: p.name, type: 'PICK', price: p.price, image_url: p.image_url || null, flavors: flavors });
+    var room = bundleRoom(p, flavors, picker.qty);
+    if (!room.ok) { roomToast(room, p); return; }
+    var ok = addToCart({ package_id: p.id, name: p.name, type: 'PICK', price: p.price, image_url: p.image_url || null, flavors: flavors }, picker.qty);
     closePicker();
     if (ok) { toast('Added to your order'); renderCartBar(); }
   }
@@ -1571,6 +1977,28 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
   function flavText(flavors, always) {
     return flavors.map(function (f) { return (always || f.qty > 1 ? f.qty + ' × ' : '') + f.name; }).join(', ');
   }
+  // Stage 11B: + stops at the stock and at the limit per customer
+  function lineCanInc(l) {
+    if (l.qty >= maxQtyOf(l)) return false;
+    if (l.type === 'SINGLE') return l.qty < singleCap(l.flavor_id);
+    var p = catPackage(l.package_id);
+    return !p || bundleRoom(p, l.flavors || [], 1).ok;
+  }
+  // Stage 11B (K149): "You can order 1 more ..." for items this WhatsApp number ordered before
+  function limitNotesHtml() {
+    if (!limitsOn() || !custLimits.wa) return '';
+    var out = [], seen = {};
+    cart.forEach(function (l) {
+      var key, name, max, o;
+      if (l.type === 'SINGLE') { key = 'S' + l.flavor_id; o = custLimits.singles[l.flavor_id]; max = singleMax(l.flavor_id); name = l.name; }
+      else { key = 'B' + l.package_id; o = custLimits.bundles[l.package_id]; max = bundleMax(l.package_id); name = l.name; }
+      if (seen[key] || max === null || !o || !o.ordered) return;
+      seen[key] = true;
+      var left = Math.max(0, max - o.ordered);
+      out.push(left > 0 ? 'You can order ' + left + ' more ' + name + '.' : 'You already ordered the most ' + name + ' allowed per customer (' + max + ').');
+    });
+    return out.length ? '<div class="notice allergy limit-note" id="limit-note" role="status">' + icon('info') + '<div>' + out.map(function (t) { return '<span style="display:block">' + esc(t) + '</span>'; }).join('') + '</div></div>' : '';
+  }
   function linesHtml() {
     return cart.map(function (l) {
       var key = lineKey(l);
@@ -1580,7 +2008,7 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
         '<div class="lr"><div class="qty" role="group" aria-label="Quantity of ' + esc(l.name) + '">' +
         '<button class="qbtn" type="button" data-action="qty-dec" data-key="' + esc(key) + '" aria-label="Decrease quantity of ' + esc(l.name) + '"' + (l.qty <= 1 ? ' disabled' : '') + '>' + icon('minus') + '</button>' +
         '<output>' + l.qty + '</output>' +
-        '<button class="qbtn" type="button" data-action="qty-inc" data-key="' + esc(key) + '" aria-label="Increase quantity of ' + esc(l.name) + '"' + (l.qty >= maxQtyOf(l) ? ' disabled' : '') + '>' + icon('plus') + '</button></div>' +
+        '<button class="qbtn" type="button" data-action="qty-inc" data-key="' + esc(key) + '" aria-label="Increase quantity of ' + esc(l.name) + '"' + (lineCanInc(l) ? '' : ' disabled') + '>' + icon('plus') + '</button></div>' +
         '<span class="lt">' + rp(l.price * l.qty) + '</span></div>' +
         '<button class="link-btn" type="button" data-action="remove" data-key="' + esc(key) + '">Remove</button></div></article>';
     }).join('');
@@ -1605,7 +2033,7 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
   }
   function freeLinesHtml(plan) {
     return plan.bonus.map(function (b) {
-      var f = b.promo.free_flavor_id ? singleFlavor(b.promo.free_flavor_id) : null;
+      var f = b.promo.free_flavor_id ? flavorById(b.promo.free_flavor_id) : null;
       return '<article class="line free"><div class="lp">' + (f ? photo(f.image_url) : placeholder()) + '</div><div class="lm">' +
         '<div class="ln">' + esc(b.qty + ' × ' + b.promo.free_name) + '</div><div class="lf">Free · ' + esc(b.promo.name) + '</div>' +
         '<div class="lr"><span class="freetag">FREE</span></div></div></article>';
@@ -1642,7 +2070,7 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
     }
     var html = back + '<div class="narrow"><h1>Your order</h1>' + manualBannerHtml() +
       (priceChanged ? '<div class="notice allergy">' + icon('info') + '<div>Prices have been updated by the store.</div></div>' : '') +
-      '<div class="panel"><div id="co-lines"></div><div class="totals" id="co-totals"></div></div>' +
+      '<div class="panel"><div id="co-lines"></div><div class="totals" id="co-totals"></div></div><div id="co-limits"></div>' +
       '<form id="co-form" novalidate>' +
       '<div class="panel"><h3 style="margin-bottom:12px">Your details</h3>' +
       '<div class="field"><label for="f-name">Your name</label><input type="text" id="f-name" name="name" autocomplete="name" maxlength="60" aria-describedby="err-name"><p class="err" id="err-name" hidden></p></div>' +
@@ -1681,6 +2109,20 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
     var nt = $('#f-note'), c = $('#note-count');
     if (nt && c) c.textContent = nt.value.length + ' / ' + MAX_NOTE;
   }
+  // Stage 11B (K149): WhatsApp number typed now, or saved on this phone
+  function draftWa() {
+    var w = $('#f-wa');
+    if (w && w.value) return w.value;
+    try { var d = JSON.parse(lsGet(draftKey()) || 'null'); return d && d.wa ? String(d.wa) : ''; } catch (e) { return ''; }
+  }
+  async function onWaChanged() {
+    if (!limitsOn()) return;
+    try { await loadCustLimits(draftWa()); } catch (e) { return; }
+    if (parseRoute().name !== 'checkout' || !$('#co-lines')) return;
+    if (fitCartToRules()) toast('Your order was changed to fit the limit per customer.', true);
+    renderCheckoutLines();
+    renderCartBar();
+  }
   function restoreDraft() {
     var d = null;
     try { d = JSON.parse(lsGet(draftKey()) || 'null'); } catch (e) { d = null; }
@@ -1708,6 +2150,7 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
       (vc && vc.ok && vc.disc > 0 ? '<div class="r save"><span>Voucher ' + esc(v.code) + '</span><span>−' + rp(vc.disc) + '</span></div>' : '') +
       (vc && vc.free ? '<div class="r save"><span>Voucher ' + esc(v.code) + '</span><span>Free item</span></div>' : '') +
       '<div class="r"><span>Subtotal (estimate)</span><span>' + rp(plan.total - (vc ? vc.disc : 0)) + '</span></div>' + offersHtml(shown);
+    var ln = $('#co-limits'); if (ln) ln.innerHTML = limitNotesHtml();
     renderVoucherPanel(false);
   }
 
@@ -1740,7 +2183,7 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
       dropPromo: ok && v.combine_with_promos === false && plan.bonus.length > 0 };
   }
   function voucherFreeLineHtml(v) {
-    var f = v.free_flavor_id ? singleFlavor(v.free_flavor_id) : null;
+    var f = v.free_flavor_id ? flavorById(v.free_flavor_id) : null;
     return '<article class="line free"><div class="lp">' + (f ? photo(f.image_url) : placeholder()) + '</div><div class="lm">' +
       '<div class="ln">' + esc((v.free_qty || 1) + ' × ' + (v.free_name || 'Free item')) + '</div><div class="lf">Free · voucher ' + esc(v.code) + '</div>' +
       '<div class="lr"><span class="freetag">FREE</span></div></div></article>';
@@ -1842,6 +2285,17 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
     if (fSales && !fSales.value) { setErr('err-sales', 'Choose a sales person, or No sales person.'); fSales.setAttribute('aria-invalid', 'true'); bad = bad || fSales; }
     if (!cart.length) { box.textContent = errText('INVALID_ITEMS'); box.hidden = false; return; }
     if (bad) { bad.focus(); bad.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
+    if (limitsOn()) {                            // Stage 11B (K149): check the limit for this number before sending
+      submitting = true;
+      try { await loadCustLimits(wa); } catch (e) { /* the server checks anyway */ }
+      submitting = false;
+      if (fitCartToRules()) {
+        renderCheckoutLines(); renderCartBar();
+        box = $('#co-error');
+        if (box) { box.textContent = 'Your order was changed to fit the limit per customer. Please check it and press Place order again.'; box.hidden = false; box.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
+        return;
+      }
+    }
 
     var plan = getPlan();
     if (plan.lineCount > MAX_LINES) { box.textContent = errText('TOO_MANY_LINES'); box.hidden = false; return; }
@@ -1907,6 +2361,28 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
         try { await loadCatalog(); reconcileCart(); } catch (x) { /* ignore */ }
         route(true);
         setTimeout(function () { toast(errText(c), true); }, 50);
+        return;
+      }
+      if (c === 'OUT_OF_STOCK' || c === 'ORDER_LIMIT') {      // Stage 11B (K148, K149): the order was NOT saved
+        var d = e.detail || {}, msg = errText(c);
+        if (c === 'OUT_OF_STOCK' && d.name) {
+          msg = Number(d.left) > 0 ? 'Sorry, only ' + d.left + ' of ' + d.name + ' left. Your cart has been updated.' : 'Sorry, ' + d.name + ' is sold out. Your cart has been updated.';
+          if (Number.isInteger(d.flavor_id)) trimFlavor(d.flavor_id, Math.max(0, Number(d.left) || 0));
+        } else if (c === 'ORDER_LIMIT' && d.name) {
+          msg = 'You can order at most ' + d.max + ' ' + d.name + ' per customer. You can still order ' + (Number(d.left) || 0) + '. Your cart has been updated.';
+          var lw = normalizeWa(wa);
+          if (lw && custLimits.wa !== lw) custLimits = { wa: lw, singles: {}, bundles: {} };
+          var bag = d.kind === 'BUNDLE' ? custLimits.bundles : custLimits.singles;
+          if (Number.isInteger(d.id)) bag[d.id] = { max: d.max, ordered: Math.max(0, Number(d.max) - (Number(d.left) || 0)) };
+          custLimits.at = Date.now();
+        }
+        try { await loadCatalog(); } catch (x) { /* keep what we have */ }
+        reconcileCart();
+        fitCartToRules();
+        if (!cart.length) { route(true); setTimeout(function () { toast(msg, true); }, 50); return; }
+        renderCheckoutLines(); renderCartBar();
+        var eb2 = $('#co-error');
+        if (eb2) { eb2.textContent = msg + ' Please check your order and press Place order again.'; eb2.hidden = false; eb2.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
         return;
       }
       if (c === 'NOTE_TOO_LONG') { setErr('err-note', errText(c)); var fn = $('#f-note'); if (fn) { fn.focus(); fn.scrollIntoView({ block: 'center', behavior: 'smooth' }); } return; }
@@ -2442,10 +2918,10 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
     if (sent > 0 && left <= 0) {
       return '<h3>Payment proof</h3><p style="margin:6px 0 0">Your payment proof was received. Thank you!</p>';
     }
-    return '<h3>Upload payment proof <span class="muted" style="font-weight:600">(optional)</span></h3>' +
+    return '<h3>Upload payment proof</h3>' +                                       // Stage 11B (K147)
       (sent > 0
         ? '<p class="ok-line" style="margin:6px 0 4px">Your payment proof was received. Thank you!</p><p class="muted" style="margin:0 0 10px">You can upload another photo to replace it. You have ' + left + ' ' + plural(left, 'upload', 'uploads') + ' left.</p>'
-        : '<p class="muted" style="margin:6px 0 10px">Already paid? Upload a photo or screenshot of your payment now. You can also skip this and upload it later from Track this order.</p>') +
+        : '<p class="muted" style="margin:6px 0 10px">Please upload your payment proof. You can do it now, or later on the Track page with your tracking code.</p>') +
       '<input class="sr-only" type="file" id="rc-proof-file" accept="image/*">' +
       '<label class="btn sec" for="rc-proof-file" id="rc-proof-pick">' + icon('cam') + (rcProof.blob ? 'Choose another photo' : 'Choose photo') + '</label>' +
       '<div id="rc-proof-prev">' + (rcProof.url ? '<img class="preview" src="' + esc(rcProof.url) + '" alt="Preview of your payment proof">' : '') + '</div>' +
@@ -2694,6 +3170,11 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
     var out = [];
     catalog.packages.forEach(function (p) { if (p.best_seller === true) out.push({ to: 'pk-' + p.id, name: p.name, price: p.price, image_url: p.image_url }); });
     catalog.flavors.forEach(function (f) { if (f.best_seller === true && typeof f.single_price === 'number') out.push({ to: 'sg-' + f.id, name: f.name, price: f.single_price, image_url: f.image_url }); });
+    (catalog.choice_cards || []).forEach(function (c) {          // Stage 11B (K140)
+      if (c.best_seller !== true || !c.options.length) return;
+      var pr = c.options.map(function (o) { return o.price; }), lo = Math.min.apply(null, pr), hi = Math.max.apply(null, pr);
+      out.push({ to: 'ch-' + c.id, name: c.name, price: lo, ptxt: lo === hi ? rp(lo) : rp(lo) + ' – ' + rp(hi), image_url: c.image_url || c.options[0].image_url });
+    });
     return out;
   }
   function homeCardHtml(c) {
@@ -2714,7 +3195,7 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
       var open = isOpen();
       return '<section class="hc" id="hc-' + c.id + '"><h2>' + esc(c.title || 'Best sellers') + '</h2>' + (c.body ? '<p class="txt">' + richText(c.body) + '</p>' : '') +
         '<div class="mini-grid">' + items.map(function (it) {
-          return '<div class="mini"><div class="mp">' + photo(it.image_url) + '</div><div class="mb"><div class="mn">' + esc(it.name) + '</div><div class="mpr">' + rp(it.price) + '</div>' +
+          return '<div class="mini"><div class="mp">' + photo(it.image_url) + '</div><div class="mb"><div class="mn">' + esc(it.name) + '</div><div class="mpr">' + (it.ptxt || rp(it.price)) + '</div>' +
             '<button class="btn small" type="button" data-action="jump" data-to="' + it.to + '">' + (open ? 'Order' : 'See in menu') + '</button></div></div>';
         }).join('') + '</div></section>';
     }
@@ -3050,22 +3531,32 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
     var fid = Number(el.getAttribute('data-fid')), id = Number(el.getAttribute('data-id')), key = el.getAttribute('data-key');
     switch (a) {
       case 'retry': route(); break;
-      case 'add-combo': {
-        var p = catalog.packages.filter(function (x) { return x.id === id; })[0];
-        if (!p || !canOrder()) break;
-        var ok = addToCart({ package_id: p.id, name: p.name, type: 'COMBO', price: p.price, image_url: p.image_url || null,
-          flavors: p.flavors.map(function (f) { return { id: f.id, name: f.name, qty: f.qty }; }) });
-        if (ok) { toast('Added to your order'); renderCartBar(); }
-        break;
-      }
+      case 'add-combo': changeCombo(id, 1); break;            // Stage 11B (K142): COMBO card becomes < n >
+      case 'combo-dec': changeCombo(id, -1); break;
       case 'pick': openPicker(id); break;
       case 'pk-close': closePicker(); break;
       case 'pk-add': pickerAdd(fid); break;
       case 'pk-sub': pickerSub(fid); break;
-      case 'pk-toggle': if (picker.counts[fid]) pickerSub(fid); else pickerAdd(fid); break;
+      case 'pk-toggle': {
+        if (!picker) break;
+        if (picker.counts[fid]) pickerSub(fid);                  // tap the chosen item again = cancel it
+        else if (picker.pkg.pick_count === 1 && pickerTotal() >= 1) {   // K144: a bundle of 1 swaps the choice
+          var was = picker.seq[0];
+          picker.counts = {}; picker.seq = [];
+          pickerAdd(fid);
+          if (!picker.seq.length && was != null) { picker.counts[was] = 1; picker.seq = [was]; updatePicker(); }
+        } else pickerAdd(fid);
+        break;
+      }
+      case 'pk-qty-inc': pickerQty(1); break;
+      case 'pk-qty-dec': pickerQty(-1); break;
       case 'pk-confirm': pickerConfirm(); break;
-      case 'sg-inc': changeSingle(fid, 1); break;
-      case 'sg-dec': changeSingle(fid, -1); break;
+      case 'ch-pick': pickChoice(Number(el.getAttribute('data-card')), fid); break;     // Stage 11B (K140)
+      case 'sg-inc': case 'sg-dec': {
+        var card = el.closest('[id^="ch-"]');
+        changeSingle(fid, a === 'sg-inc' ? 1 : -1, card ? Number(card.id.slice(3)) : null);
+        break;
+      }
       case 'qty-inc': { var l1 = findLine(key); if (l1 && l1.qty < maxQtyOf(l1)) { l1.qty++; saveCart(); renderCheckoutLines(); } break; }
       case 'qty-dec': { var l2 = findLine(key); if (l2 && l2.qty > 1) { l2.qty--; saveCart(); renderCheckoutLines(); } break; }
       case 'remove': cart = cart.filter(function (l) { return lineKey(l) !== key; }); saveCart(); renderCheckoutLines(); break;
@@ -3118,7 +3609,7 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
     if (ev.target.id === 'proof-file') onProofChosen(ev.target);
     else if (ev.target.id === 'rc-proof-file') onRcProofChosen(ev.target);
     else if (ev.target.name === 'pm') saveDraft();
-    else if (ev.target.id === 'f-name' || ev.target.id === 'f-wa') recheckVoucher();
+    else if (ev.target.id === 'f-name' || ev.target.id === 'f-wa') { recheckVoucher(); if (ev.target.id === 'f-wa') onWaChanged(); }
     else if (ev.target.id === 'f-sales') { saveDraft(); setErr('err-sales', ''); ev.target.removeAttribute('aria-invalid'); }   // Stage 11C
   });
   document.addEventListener('input', function (ev) {
@@ -3131,8 +3622,9 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
     if (ev.key === 'Enter' && ev.target.id === 'f-voucher') { ev.preventDefault(); applyVoucher(); return; }   // Enter applies the voucher, it does not place the order
     if (!picker) return;
     if (ev.key === 'Escape') { closePicker(); return; }
+    if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.getAttribute && ev.target.getAttribute('role') === 'button') { ev.preventDefault(); ev.target.click(); return; }
     if (ev.key === 'Tab') {        // keep keyboard focus inside the picker
-      var f = $$('#modal-root button:not([disabled])');
+      var f = $$('#modal-root button:not([disabled]), #modal-root [role="button"]');
       if (!f.length) return;
       var first = f[0], last = f[f.length - 1];
       if (ev.shiftKey && document.activeElement === first) { ev.preventDefault(); last.focus(); }
