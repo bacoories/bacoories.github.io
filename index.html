@@ -1321,7 +1321,7 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
     if (!manual) return '';
     return '<div class="notice manual" id="manual-banner" role="status">' + icon('info') + '<div><strong>Manual order mode (admin)</strong>' +
       '<span>Orders placed here are saved also while ordering is closed. Choose the sales person at checkout. This link works until ' + esc(fmtDate(manual.expires_at)) + '.</span>' +
-      '<div class="mm-row"><a class="btn small" href="#/">New order</a><button class="btn sec small" type="button" data-action="manual-exit">Leave manual mode</button></div></div></div>';
+      '<div class="mm-row"><button class="btn small" type="button" data-action="manual-new">New order</button><button class="btn sec small" type="button" data-action="manual-exit">Leave manual mode</button></div></div></div>';
   }
   function manualSalesHtml() {
     if (!manual) return '';
@@ -2109,10 +2109,13 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
     var nt = $('#f-note'), c = $('#note-count');
     if (nt && c) c.textContent = nt.value.length + ' / ' + MAX_NOTE;
   }
-  // Stage 11B (K149): WhatsApp number typed now, or saved on this phone
+  // Stage 11B (K149): WhatsApp number typed now, or saved on this phone.
+  // Manual order mode (owner): the number of the last customer must not block the next one, so there only the number
+  // typed in the checkout form counts (checked again at Place order), never a number saved earlier.
   function draftWa() {
     var w = $('#f-wa');
     if (w && w.value) return w.value;
+    if (manual) return '';
     try { var d = JSON.parse(lsGet(draftKey()) || 'null'); return d && d.wa ? String(d.wa) : ''; } catch (e) { return ''; }
   }
   async function onWaChanged() {
@@ -3592,6 +3595,10 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
       case 'video-load': loadVideo(el); break;
       case 'rv-more': moreReviews(el); break;
       case 'v-remove': removeVoucher(); break;
+      case 'manual-new':                                       // Stage 11B: the next order starts with empty details
+        lsDel(MANUAL_DRAFT_KEY); custLimits = { wa: '', singles: {}, bundles: {} };
+        if (parseRoute().name === 'catalog') route(true); else location.hash = '#/';
+        break;
       case 'manual-exit': endManual('left'); if (parseRoute().name === 'catalog') route(true); else location.hash = '#/'; break;      // Stage 11C
       case 'sp-retry': loadSalesData(routeSeq); break;
       case 'sp-range': spDates(el.getAttribute('data-from'), el.getAttribute('data-to')); break;
