@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- bacoories buyer website index.html - Tahap 12 -->
+<!-- bacoories buyer website index.html - Tahap 14 -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -1107,7 +1107,7 @@ body[data-route="sales"] #menuBtn,body[data-route="sales"] #cartbar,body[data-ro
       var t = $('.bt', b), ls = 0.14, fs = 12;
       if (!t) return;
       var rg = document.createRange();
-      var over = function () { rg.selectNodeContents(t); return rg.getBoundingClientRect().width > t.getBoundingClientRect().width - 0.5; };
+      var over = function () { rg.selectNodeContents(t); return rg.getBoundingClientRect().width > t.getBoundingClientRect().width + 0.5; };   // Tahap 14 (E1): the same width = it fits
       while (over() && (ls > 0.02 || fs > 9.5)) {
         if (ls > 0.02) ls = Math.max(0.02, ls - 0.03); else fs -= 0.5;
         b.style.letterSpacing = ls + 'em'; b.style.fontSize = fs + 'px';
